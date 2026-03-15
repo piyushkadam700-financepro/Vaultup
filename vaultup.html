@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Vaultup</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --y:#EF9F27;--yd:#BA7517;--ydim:#2a2000;--ybright:#FAC775;
+  --black:#09090b;--s1:#111113;--s2:#18181b;--s3:#222226;
+  --border:#2a2a2e;--text:#f2f2f2;--muted:#888;--dim:#444;
+  --red:#E24B4A;--green:#4ade80;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;background:var(--black);font-family:'DM Sans',sans-serif;color:var(--text);overflow:hidden;}
+.app{display:flex;flex-direction:column;height:100vh;max-width:420px;margin:0 auto;background:var(--black);position:relative;overflow:hidden;}
+.screen{display:none;flex-direction:column;flex:1;overflow:hidden;}
+.screen.active{display:flex;}
+.scroll{flex:1;overflow-y:auto;}
+.scroll::-webkit-scrollbar{display:none;}
+@keyframes slideUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* API OVERLAY */
+.api-overlay{position:fixed;inset:0;background:var(--black);z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;max-width:420px;margin:0 auto;}
+.api-logo{font-family:'Bebas Neue',sans-serif;font-size:52px;color:var(--y);letter-spacing:.06em;margin-bottom:2px;}
+.api-tagline{font-size:13px;color:var(--muted);text-align:center;margin-bottom:32px;letter-spacing:.05em;text-transform:uppercase;}
+.api-box{width:100%;background:var(--s1);border:0.5px solid var(--border);border-radius:20px;padding:24px;}
+.api-label{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;}
+.api-error{font-size:12px;color:var(--red);margin-bottom:10px;display:none;}
+.api-input{width:100%;background:var(--s2);border:0.5px solid var(--border);border-radius:12px;color:var(--text);font-size:14px;padding:12px 16px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;margin-bottom:12px;}
+.api-input:focus{border-color:var(--yd);}
+.api-input::placeholder{color:var(--dim);}
+.api-btn{width:100%;padding:14px;background:var(--y);border:none;border-radius:12px;color:var(--black);font-size:15px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s;}
+.api-btn:hover{background:var(--ybright);}
+.api-hint{font-size:12px;color:var(--dim);text-align:center;margin-top:16px;line-height:1.7;}
+.api-hint a{color:var(--y);text-decoration:none;}
+
+/* SHARED HEADER */
+.page-header{padding:52px 22px 16px;background:var(--s1);border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;position:relative;overflow:hidden;}
+.page-header::before{content:attr(data-bg);position:absolute;top:-10px;right:-6px;font-family:'Bebas Neue',sans-serif;font-size:100px;color:rgba(239,159,39,0.04);pointer-events:none;user-select:none;letter-spacing:.04em;}
+.page-title{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:.04em;line-height:1;}
+.page-sub{font-size:12px;color:var(--muted);margin-top:2px;}
+
+/* HOME */
+.greeting{font-size:12px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px;}
+.username{font-family:'Bebas Neue',sans-serif;font-size:34px;letter-spacing:.04em;line-height:1;}
+.avatar{width:44px;height:44px;border-radius:50%;background:var(--y);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;color:var(--black);cursor:pointer;flex-shrink:0;}
+.balance-card{margin:20px 22px 0;background:var(--y);border-radius:20px;padding:22px 22px 18px;position:relative;overflow:hidden;cursor:pointer;animation:slideUp .4s ease;}
+.balance-card::after{content:'';position:absolute;bottom:-30px;right:-30px;width:130px;height:130px;background:rgba(0,0,0,0.08);border-radius:50%;}
+.balance-card::before{content:'';position:absolute;top:-20px;left:60%;width:80px;height:80px;background:rgba(255,255,255,0.08);border-radius:50%;}
+.bal-lbl{font-size:11px;color:rgba(0,0,0,0.5);letter-spacing:.12em;text-transform:uppercase;}
+.bal-amt{font-family:'Bebas Neue',sans-serif;font-size:52px;color:var(--black);letter-spacing:.02em;line-height:1.05;margin:2px 0;}
+.bal-sub{font-size:13px;color:rgba(0,0,0,0.55);}
+.bal-sub b{color:var(--black);font-weight:700;}
+.bal-badge{position:absolute;top:18px;right:18px;background:rgba(0,0,0,0.12);border-radius:99px;padding:4px 10px;font-size:11px;color:rgba(0,0,0,0.6);font-weight:500;}
+.stat-row{display:flex;gap:10px;margin:14px 22px 0;}
+.stat-card{flex:1;background:var(--s1);border:0.5px solid var(--border);border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:10px;animation:slideUp .4s ease .1s both;}
+.stat-ic{width:34px;height:34px;border-radius:10px;background:var(--ydim);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.stat-lbl{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;}
+.stat-val{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--y);letter-spacing:.04em;line-height:1.2;}
+.sec-hdr{display:flex;justify-content:space-between;align-items:center;padding:20px 22px 10px;}
+.sec-title{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.1em;}
+.sec-link{font-size:12px;color:var(--y);cursor:pointer;}
+.nudge{margin:0 22px;background:var(--s1);border:0.5px solid var(--border);border-left:3px solid var(--y);border-radius:0 14px 14px 0;padding:14px 16px;cursor:pointer;transition:background .2s;animation:slideUp .4s ease .2s both;}
+.nudge:hover{background:var(--s2);}
+.nudge-txt{font-size:14px;color:#ccc;line-height:1.6;}
+.nudge-txt b{color:var(--y);font-weight:500;}
+.nudge-foot{display:flex;align-items:center;gap:6px;margin-top:10px;}
+.nudge-av{width:18px;height:18px;border-radius:50%;background:var(--y);display:flex;align-items:center;justify-content:center;}
+.ndot{width:6px;height:6px;border-radius:50%;background:var(--black);}
+.nudge-name{font-size:11px;color:var(--dim);}
+.nudge-act{margin-left:auto;font-size:11px;color:var(--y);}
+.goals-list{margin:0 22px;display:flex;flex-direction:column;gap:10px;animation:slideUp .4s ease .3s both;}
+.goal-card{background:var(--s1);border:0.5px solid var(--border);border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:background .2s;}
+.goal-card:hover{background:var(--s2);}
+.goal-em{font-size:20px;width:40px;height:40px;background:var(--s2);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.goal-info{flex:1;min-width:0;}
+.goal-name{font-size:14px;font-weight:500;color:var(--text);margin-bottom:6px;}
+.goal-bar-bg{height:4px;background:var(--s3);border-radius:99px;overflow:hidden;margin-bottom:4px;}
+.goal-bar-fill{height:4px;border-radius:99px;}
+.goal-meta{display:flex;justify-content:space-between;}
+.goal-pct{font-size:11px;color:var(--muted);}
+.goal-left{font-size:11px;color:var(--dim);}
+.goal-rv{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--y);letter-spacing:.02em;flex-shrink:0;}
+.add-btn{margin:10px 22px 0;width:calc(100% - 44px);padding:12px;background:transparent;border:0.5px dashed var(--border);border-radius:14px;color:var(--dim);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;}
+.add-btn:hover{border-color:var(--ydim);color:var(--y);}
+.spend-row{display:flex;gap:10px;margin:0 22px;animation:slideUp .4s ease .35s both;}
+.spend-card{flex:1;background:var(--s1);border:0.5px solid var(--border);border-radius:14px;padding:14px 14px 12px;}
+.spend-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
+.spend-lbl{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;}
+.spend-icon{font-size:14px;}
+.spend-amt{font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--text);letter-spacing:.02em;}
+.spend-sub{font-size:11px;color:var(--muted);margin-top:1px;}
+.bar-bg{height:3px;background:var(--s3);border-radius:99px;overflow:hidden;margin-top:10px;}
+.bar-fill{height:3px;border-radius:99px;}
+
+/* CHAT */
+.chat-hdr{padding:52px 20px 14px;background:var(--s1);border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.coach-info{display:flex;align-items:center;gap:12px;}
+.coach-av{width:42px;height:42px;border-radius:50%;background:var(--y);display:flex;align-items:center;justify-content:center;position:relative;}
+.coach-av-in{width:14px;height:14px;border-radius:50%;background:var(--black);}
+.online-dot{width:11px;height:11px;border-radius:50%;background:var(--green);position:absolute;bottom:0;right:0;border:2px solid var(--s1);}
+.coach-nm{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.04em;}
+.coach-st{font-size:11px;color:var(--y);}
+.chat-badge-wrap{display:flex;flex-direction:column;align-items:flex-end;gap:4px;}
+.chat-badge{background:var(--ydim);border:0.5px solid var(--yd);color:var(--y);font-size:11px;padding:4px 10px;border-radius:99px;}
+.change-key{font-size:10px;color:var(--dim);cursor:pointer;}
+.change-key:hover{color:var(--y);}
+.messages{flex:1;overflow-y:auto;padding:20px 18px;display:flex;flex-direction:column;gap:14px;}
+.messages::-webkit-scrollbar{width:3px;}
+.messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px;}
+.mwrap{display:flex;gap:8px;max-width:82%;animation:slideUp .25s ease;}
+.mwrap.user{align-self:flex-end;flex-direction:row-reverse;}
+.mwrap.ai{align-self:flex-start;}
+.mav{width:28px;height:28px;border-radius:50%;background:var(--y);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.mav-in{width:9px;height:9px;border-radius:50%;background:var(--black);}
+.mbody{display:flex;flex-direction:column;gap:3px;}
+.bubble{padding:11px 15px;border-radius:18px;font-size:14px;line-height:1.6;}
+.ai .bubble{background:var(--s2);color:#ccc;border-bottom-left-radius:4px;border:0.5px solid var(--border);}
+.user .bubble{background:var(--y);color:var(--black);font-weight:500;border-bottom-right-radius:4px;}
+.mtime{font-size:10px;color:var(--dim);padding:0 3px;}
+.user .mtime{text-align:right;}
+.typing-b{display:flex;align-items:center;gap:5px;padding:13px 16px;background:var(--s2);border-radius:18px;border-bottom-left-radius:4px;border:0.5px solid var(--border);}
+.typing-b span{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:bounce .9s infinite;}
+.typing-b span:nth-child(2){animation-delay:.15s;}
+.typing-b span:nth-child(3){animation-delay:.3s;}
+.qrs{display:flex;gap:8px;padding:0 18px 10px;flex-wrap:wrap;flex-shrink:0;}
+.qr{padding:7px 14px;border-radius:99px;background:transparent;border:0.5px solid var(--border);color:var(--muted);font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;white-space:nowrap;}
+.qr:hover{border-color:var(--yd);color:var(--y);background:var(--ydim);}
+.input-bar{padding:12px 18px 18px;border-top:0.5px solid var(--border);display:flex;gap:10px;align-items:flex-end;flex-shrink:0;background:var(--s1);}
+textarea{flex:1;background:var(--s2);border:0.5px solid var(--border);border-radius:14px;color:var(--text);font-size:14px;padding:11px 15px;resize:none;font-family:'DM Sans',sans-serif;outline:none;max-height:110px;min-height:44px;line-height:1.5;transition:border-color .2s;}
+textarea::placeholder{color:var(--dim);}
+textarea:focus{border-color:var(--yd);}
+.send-btn{width:44px;height:44px;border-radius:12px;background:var(--y);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;color:var(--black);}
+.send-btn:hover{background:var(--ybright);}
+.send-btn:active{transform:scale(0.95);}
+.send-btn:disabled{opacity:.35;cursor:not-allowed;transform:none;}
+
+/* STATS */
+.stats-hero{margin:20px 22px 0;background:var(--s1);border:0.5px solid var(--border);border-radius:20px;padding:20px;animation:slideUp .4s ease;}
+.sh-lbl{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.1em;}
+.sh-amt{font-family:'Bebas Neue',sans-serif;font-size:44px;color:var(--text);letter-spacing:.02em;line-height:1.1;margin:4px 0;}
+.sh-row{display:flex;gap:16px;}
+.sh-item{display:flex;flex-direction:column;}
+.sh-item-lbl{font-size:11px;color:var(--dim);}
+.sh-item-val{font-size:14px;font-weight:500;color:var(--text);}
+.sh-item-val.up{color:var(--red);}
+.sh-item-val.dn{color:var(--green);}
+.spend-breakdown{margin:0 22px;display:flex;flex-direction:column;gap:10px;animation:slideUp .4s ease .15s both;}
+.sb-row{display:flex;align-items:center;gap:12px;background:var(--s1);border:0.5px solid var(--border);border-radius:14px;padding:14px 16px;}
+.sb-icon{font-size:18px;width:38px;height:38px;background:var(--s2);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.sb-info{flex:1;}
+.sb-name{font-size:14px;font-weight:500;color:var(--text);margin-bottom:5px;}
+.sb-bar-bg{height:3px;background:var(--s3);border-radius:99px;overflow:hidden;}
+.sb-bar-fill{height:3px;border-radius:99px;}
+.sb-right{text-align:right;flex-shrink:0;}
+.sb-amt{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--text);letter-spacing:.02em;}
+.sb-change{font-size:11px;}
+.sb-change.up{color:var(--red);}
+.sb-change.dn{color:var(--green);}
+.month-tabs{display:flex;gap:8px;margin:0 22px 16px;overflow-x:auto;}
+.month-tabs::-webkit-scrollbar{display:none;}
+.mtab{padding:6px 16px;border-radius:99px;font-size:12px;font-weight:500;cursor:pointer;border:0.5px solid var(--border);color:var(--muted);background:transparent;font-family:'DM Sans',sans-serif;white-space:nowrap;transition:all .2s;}
+.mtab.on{background:var(--y);color:var(--black);border-color:var(--y);font-weight:700;}
+
+/* REWARDS */
+.level-card{margin:20px 22px 0;background:var(--s1);border:0.5px solid var(--y);border-radius:20px;padding:20px;animation:slideUp .4s ease;position:relative;overflow:hidden;}
+.level-card::after{content:'';position:absolute;top:-20px;right:-20px;width:100px;height:100px;background:rgba(239,159,39,0.06);border-radius:50%;}
+.lc-top{display:flex;justify-content:space-between;align-items:flex-start;}
+.lc-badge{background:var(--ydim);border:0.5px solid var(--yd);color:var(--y);font-size:11px;padding:4px 12px;border-radius:99px;font-weight:500;}
+.lc-title{font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--y);letter-spacing:.04em;margin:8px 0 4px;}
+.lc-sub{font-size:13px;color:var(--muted);}
+.xp-bar-bg{height:6px;background:var(--s3);border-radius:99px;overflow:hidden;margin-top:14px;}
+.xp-bar-fill{height:6px;background:var(--y);border-radius:99px;transition:width 1s ease;}
+.xp-labels{display:flex;justify-content:space-between;margin-top:6px;}
+.xp-lbl{font-size:11px;color:var(--dim);}
+.badges-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 22px;animation:slideUp .4s ease .2s both;}
+.badge-card{background:var(--s1);border:0.5px solid var(--border);border-radius:14px;padding:14px 10px;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;}
+.badge-card.earned{border-color:var(--yd);background:var(--ydim);}
+.badge-icon{font-size:28px;line-height:1;}
+.badge-name{font-size:11px;font-weight:500;color:var(--text);}
+.badge-card.earned .badge-name{color:var(--y);}
+.badge-desc{font-size:10px;color:var(--dim);line-height:1.4;}
+.badge-card.earned .badge-desc{color:var(--yd);}
+.streak-calendar{margin:0 22px;background:var(--s1);border:0.5px solid var(--border);border-radius:16px;padding:16px;animation:slideUp .4s ease .3s both;}
+.cal-title{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
+.cal-day{height:28px;border-radius:6px;background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--dim);}
+.cal-day.done{background:var(--y);color:var(--black);font-weight:700;}
+.cal-day.today{background:var(--yd);color:var(--black);font-weight:700;}
+
+/* SETTINGS */
+.settings-list{margin:16px 22px 0;display:flex;flex-direction:column;gap:8px;animation:slideUp .4s ease;}
+.setting-section-lbl{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.1em;margin:16px 0 8px;padding:0 4px;}
+.setting-row{background:var(--s1);border:0.5px solid var(--border);border-radius:14px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:background .2s;}
+.setting-row:hover{background:var(--s2);}
+.setting-left{display:flex;align-items:center;gap:12px;}
+.setting-icon{width:36px;height:36px;border-radius:10px;background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:16px;}
+.setting-title{font-size:14px;font-weight:500;color:var(--text);}
+.setting-sub{font-size:12px;color:var(--muted);margin-top:1px;}
+.setting-arrow{font-size:16px;color:var(--dim);}
+.setting-val{font-size:13px;color:var(--muted);}
+.setting-row.danger .setting-title{color:var(--red);}
+.setting-row.danger .setting-icon{background:rgba(226,75,74,0.1);}
+
+/* GROUPS */
+.group-card{margin:0 22px;background:var(--s1);border:0.5px solid var(--border);border-radius:16px;padding:16px;cursor:pointer;transition:background .2s;animation:slideUp .4s ease;}
+.group-card:hover{background:var(--s2);}
+.group-card+.group-card{margin-top:10px;}
+.gc-top{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.gc-icon{width:44px;height:44px;border-radius:12px;background:var(--ydim);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.gc-name{font-size:15px;font-weight:500;color:var(--text);}
+.gc-meta{font-size:12px;color:var(--muted);margin-top:2px;}
+.gc-goal-lbl{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;}
+.gc-goal-name{font-size:14px;font-weight:500;color:var(--y);margin-bottom:8px;}
+.gc-bar-bg{height:5px;background:var(--s3);border-radius:99px;overflow:hidden;margin-bottom:8px;}
+.gc-bar-fill{height:5px;background:var(--y);border-radius:99px;}
+.gc-members{display:flex;align-items:center;justify-content:space-between;}
+.gc-avatars{display:flex;}
+.gc-av{width:26px;height:26px;border-radius:50%;border:2px solid var(--s1);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;margin-left:-6px;}
+.gc-av:first-child{margin-left:0;}
+.gc-progress-txt{font-size:12px;color:var(--muted);}
+.gc-progress-txt b{color:var(--y);}
+.member-rows{display:flex;flex-direction:column;gap:8px;margin-top:12px;padding-top:12px;border-top:0.5px solid var(--border);}
+.member-row{display:flex;align-items:center;gap:10px;}
+.mem-av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
+.mem-info{flex:1;}
+.mem-name{font-size:13px;font-weight:500;color:var(--text);}
+.mem-bar-bg{height:3px;background:var(--s3);border-radius:99px;overflow:hidden;margin-top:4px;}
+.mem-bar-fill{height:3px;border-radius:99px;}
+.mem-amt{font-size:12px;color:var(--muted);flex-shrink:0;}
+
+/* GROUP MODAL */
+.modal-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.75);z-index:50;display:none;align-items:flex-end;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--s1);border-radius:24px 24px 0 0;padding:24px;width:100%;max-height:85vh;overflow-y:auto;}
+.modal-handle{width:36px;height:4px;background:var(--border);border-radius:99px;margin:0 auto 20px;}
+.modal-title{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:.04em;margin-bottom:4px;}
+.modal-sub{font-size:13px;color:var(--muted);margin-bottom:20px;}
+.modal-label{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;}
+.modal-input{width:100%;background:var(--s2);border:0.5px solid var(--border);border-radius:12px;color:var(--text);font-size:14px;padding:12px 16px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;margin-bottom:14px;}
+.modal-input:focus{border-color:var(--yd);}
+.modal-input::placeholder{color:var(--dim);}
+.modal-row{display:flex;gap:10px;margin-bottom:14px;}
+.modal-row .modal-input{margin-bottom:0;}
+.modal-btn{width:100%;padding:13px;background:var(--y);border:none;border-radius:12px;color:var(--black);font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;margin-bottom:10px;transition:background .15s;}
+.modal-btn:hover{background:var(--ybright);}
+.modal-btn.secondary{background:transparent;border:0.5px solid var(--border);color:var(--muted);}
+.modal-divider{display:flex;align-items:center;gap:10px;margin:4px 0 14px;}
+.modal-divider span{font-size:12px;color:var(--dim);}
+.modal-divider::before,.modal-divider::after{content:'';flex:1;height:0.5px;background:var(--border);}
+.invite-link-box{background:var(--s2);border:0.5px solid var(--border);border-radius:12px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.invite-link-txt{font-size:12px;color:var(--muted);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.invite-link-copy{font-size:12px;color:var(--y);cursor:pointer;flex-shrink:0;margin-left:10px;}
+
+/* BANK PLACEHOLDER */
+.bank-card{margin:0 22px;background:var(--s1);border:0.5px solid var(--border);border-radius:16px;padding:16px;animation:slideUp .4s ease .1s both;}
+.bank-top{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.bank-icon{width:40px;height:40px;border-radius:12px;background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:20px;}
+.bank-name{font-size:14px;font-weight:500;color:var(--text);}
+.bank-sub{font-size:12px;color:var(--muted);}
+.bank-connect-btn{width:100%;padding:11px;background:var(--ydim);border:0.5px solid var(--yd);border-radius:10px;color:var(--y);font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;text-align:center;}
+.bank-connect-btn:hover{background:var(--y);color:var(--black);}
+.bank-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(74,222,128,0.1);border:0.5px solid rgba(74,222,128,0.3);color:var(--green);font-size:10px;padding:3px 8px;border-radius:99px;margin-bottom:10px;}
+
+/* HOME GROUP CARD */
+.home-group-card{margin:0 22px;background:var(--s1);border:0.5px solid var(--y);border-radius:16px;padding:14px 16px;cursor:pointer;transition:background .2s;animation:slideUp .4s ease .25s both;}
+.home-group-card:hover{background:var(--s2);}
+.hgc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.hgc-left{display:flex;align-items:center;gap:8px;}
+.hgc-icon{font-size:18px;}
+.hgc-name{font-size:14px;font-weight:500;color:var(--text);}
+.hgc-badge{background:var(--ydim);border:0.5px solid var(--yd);color:var(--y);font-size:10px;padding:3px 8px;border-radius:99px;}
+.hgc-bar-bg{height:4px;background:var(--s3);border-radius:99px;overflow:hidden;margin-bottom:8px;}
+.hgc-bar-fill{height:4px;background:var(--y);border-radius:99px;}
+.hgc-bottom{display:flex;align-items:center;justify-content:space-between;}
+.hgc-avatars{display:flex;}
+.hgc-av{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--s1);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;margin-left:-5px;}
+.hgc-av:first-child{margin-left:0;}
+.hgc-info{font-size:12px;color:var(--muted);}
+.hgc-info b{color:var(--y);}
+
+/* NAV */
+.bottom-nav{display:flex;background:var(--s1);border-top:0.5px solid var(--border);padding:10px 0 22px;flex-shrink:0;}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;padding:4px 0;opacity:.3;transition:opacity .2s;}
+.nav-item.active{opacity:1;}
+.nav-icon{font-size:20px;line-height:1;}
+.nav-lbl{font-size:9px;color:var(--muted);letter-spacing:.07em;text-transform:uppercase;}
+.nav-item.active .nav-lbl{color:var(--y);}
+.nav-dot{width:4px;height:4px;border-radius:50%;background:var(--y);margin-top:1px;}
+</style>
+</head>
+<body>
+
+<!-- API OVERLAY -->
+<div class="api-overlay" id="apiOverlay">
+  <div class="api-logo">Vaultup</div>
+  <div class="api-tagline">Your AI money coach</div>
+  <div class="api-box">
+    <div class="api-label">Enter your Anthropic API key</div>
+    <div class="api-error" id="apiError">Key must start with sk-ant- — check and try again.</div>
+    <input class="api-input" id="apiKeyInput" type="password" placeholder="sk-ant-api03-..." autocomplete="off"/>
+    <button class="api-btn" onclick="saveApiKey()">Start saving →</button>
+    <div class="api-hint">Get your free key at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a><br>Your key stays on your device only.</div>
+  </div>
+</div>
+
+<div class="app">
+
+  <!-- HOME -->
+  <div class="screen active" id="screen-home">
+    <div class="scroll">
+      <div class="page-header" data-bg="VAULTUP">
+        <div><div class="greeting">Good morning</div><div class="username">Piyush 👋</div></div>
+        <div class="avatar" onclick="navigate('settings')">P</div>
+      </div>
+      <div class="balance-card" onclick="goToChat('How am I doing this month?')">
+        <div class="bal-badge">March 2026</div>
+        <div class="bal-lbl">Saved this month</div>
+        <div class="bal-amt">£840</div>
+        <div class="bal-sub">You're <b>£190 ahead</b> of your target 🔥</div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-card"><div class="stat-ic">🔥</div><div><div class="stat-lbl">Streak</div><div class="stat-val">21 days</div></div></div>
+        <div class="stat-card"><div class="stat-ic">⚡</div><div><div class="stat-lbl">XP</div><div class="stat-val">3,210</div></div></div>
+        <div class="stat-card"><div class="stat-ic">🏆</div><div><div class="stat-lbl">Level</div><div class="stat-val">Gold</div></div></div>
+      </div>
+      <div class="sec-hdr"><span class="sec-title">Val says</span><span class="sec-link" onclick="navigate('chat')">chat →</span></div>
+      <div class="nudge" onclick="goToChat('Tell me more about my Deliveroo spending and give me a plan to cut it')">
+        <div class="nudge-txt">Your <b>Deliveroo habit costs £60/month</b> — that's 3 weeks closer to your PS6. Want a plan to cut it?</div>
+        <div class="nudge-foot"><div class="nudge-av"><div class="ndot"></div></div><div class="nudge-name">Val · just now</div><div class="nudge-act">reply →</div></div>
+      </div>
+      <div class="sec-hdr"><span class="sec-title">Group goals</span><span class="sec-link" onclick="navigate('groups')">see all →</span></div>
+      <div class="home-group-card" onclick="navigate('groups')">
+        <div class="hgc-top">
+          <div class="hgc-left"><div class="hgc-icon">✈️</div><div class="hgc-name">Paris Trip</div></div>
+          <div class="hgc-badge">5 members</div>
+        </div>
+        <div class="hgc-bar-bg"><div class="hgc-bar-fill" style="width:38%"></div></div>
+        <div class="hgc-bottom">
+          <div class="hgc-avatars">
+            <div class="hgc-av" style="background:#7F77DD;color:#fff;">P</div>
+            <div class="hgc-av" style="background:#1D9E75;color:#fff;">Sh</div>
+            <div class="hgc-av" style="background:#D85A30;color:#fff;">Pr</div>
+            <div class="hgc-av" style="background:#534AB7;color:#fff;">A</div>
+            <div class="hgc-av" style="background:#0F6E56;color:#fff;">Sw</div>
+          </div>
+          <div class="hgc-info">£760 of <b>£2,000</b> · 52 days left</div>
+        </div>
+      </div>
+      <div class="sec-hdr"><span class="sec-title">Your goals</span><span class="sec-link" onclick="goToChat('Give me a full update on all my goals')">see all →</span></div>
+      <div class="goals-list">
+        <div class="goal-card" onclick="goToChat('How long until I hit my PS6 goal?')"><div class="goal-em">🎮</div><div class="goal-info"><div class="goal-name">PS6</div><div class="goal-bar-bg"><div class="goal-bar-fill" style="width:71%;background:var(--y)"></div></div><div class="goal-meta"><span class="goal-pct">71% done</span><span class="goal-left">£89 to go</span></div></div><div class="goal-rv">71%</div></div>
+        <div class="goal-card" onclick="goToChat('How am I doing on my festival goal?')"><div class="goal-em">🎪</div><div class="goal-info"><div class="goal-name">Festival</div><div class="goal-bar-bg"><div class="goal-bar-fill" style="width:44%;background:var(--yd)"></div></div><div class="goal-meta"><span class="goal-pct">44% done</span><span class="goal-left">£168 to go</span></div></div><div class="goal-rv">44%</div></div>
+        <div class="goal-card" onclick="goToChat('How is my emergency fund looking?')"><div class="goal-em">🛡️</div><div class="goal-info"><div class="goal-name">Emergency fund</div><div class="goal-bar-bg"><div class="goal-bar-fill" style="width:28%;background:#5F5E5A"></div></div><div class="goal-meta"><span class="goal-pct">28% done</span><span class="goal-left">£540 to go</span></div></div><div class="goal-rv">28%</div></div>
+      </div>
+      <button class="add-btn" onclick="goToChat('I want to set up a new savings goal')">+ add a new goal</button>
+      <div class="sec-hdr"><span class="sec-title">This month's spending</span><span class="sec-link" onclick="navigate('stats')">full stats →</span></div>
+      <div class="spend-row">
+        <div class="spend-card"><div class="spend-top"><div class="spend-lbl">Food</div><div class="spend-icon">🍔</div></div><div class="spend-amt">£210</div><div class="spend-sub">+£40 vs last month</div><div class="bar-bg"><div class="bar-fill" style="width:75%;background:var(--red)"></div></div></div>
+        <div class="spend-card"><div class="spend-top"><div class="spend-lbl">Subs</div><div class="spend-icon">📱</div></div><div class="spend-amt">£35</div><div class="spend-sub">5 active</div><div class="bar-bg"><div class="bar-fill" style="width:35%;background:var(--yd)"></div></div></div>
+        <div class="spend-card"><div class="spend-top"><div class="spend-lbl">Travel</div><div class="spend-icon">🚇</div></div><div class="spend-amt">£62</div><div class="spend-sub">-£8 vs last month</div><div class="bar-bg"><div class="bar-fill" style="width:45%;background:var(--y)"></div></div></div>
+      </div>
+      <div style="height:28px;"></div>
+    </div>
+  </div>
+
+  <!-- CHAT -->
+  <div class="screen" id="screen-chat">
+    <div class="chat-hdr">
+      <div class="coach-info">
+        <div class="coach-av"><div class="coach-av-in"></div><div class="online-dot"></div></div>
+        <div><div class="coach-nm">Val</div><div class="coach-st">online · your money coach</div></div>
+      </div>
+      <div class="chat-badge-wrap">
+        <div class="chat-badge">AI coach</div>
+        <div class="change-key" onclick="resetApiKey()">change key</div>
+      </div>
+    </div>
+    <div class="messages" id="messages">
+      <div id="welcome-msg" style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;padding:30px 20px;margin:auto;">
+        <div style="width:56px;height:56px;border-radius:50%;background:var(--y);display:flex;align-items:center;justify-content:center;"><div style="width:18px;height:18px;border-radius:50%;background:var(--black);"></div></div>
+        <div><div style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:.04em;margin-bottom:6px;">Hey Piyush 👋</div><div style="font-size:14px;color:var(--muted);line-height:1.7;">I'm Val, your Vaultup coach. Ask me anything about your money — straight talk, no waffle.</div></div>
+      </div>
+    </div>
+    <div class="qrs" id="quickReplies">
+      <button class="qr" onclick="sendQuick('How am I doing this month?')">How am I doing? 📊</button>
+      <button class="qr" onclick="sendQuick('Where am I wasting money?')">Wasting money?</button>
+      <button class="qr" onclick="sendQuick('How long until I hit my PS6 goal?')">PS6 update 🎮</button>
+      <button class="qr" onclick="sendQuick('Give me one tip to save more this week')">Save more 💡</button>
+    </div>
+    <div class="input-bar">
+      <textarea id="chatInput" placeholder="Ask Val anything..." rows="1"></textarea>
+      <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 9h12M10 4l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="screen" id="screen-stats">
+    <div class="scroll">
+      <div class="page-header" data-bg="STATS"><div><div class="page-title">Stats</div><div class="page-sub">March 2026</div></div></div>
+      <div class="stats-hero">
+        <div class="sh-lbl">Total spent this month</div>
+        <div class="sh-amt">£307</div>
+        <div class="sh-row">
+          <div class="sh-item"><div class="sh-item-lbl">vs last month</div><div class="sh-item-val up">+£32 more</div></div>
+          <div class="sh-item"><div class="sh-item-lbl">biggest leak</div><div class="sh-item-val">Deliveroo 🍔</div></div>
+          <div class="sh-item"><div class="sh-item-lbl">saved</div><div class="sh-item-val dn">£840</div></div>
+        </div>
+      </div>
+      <div class="sec-hdr"><span class="sec-title">By category</span><span class="sec-link" onclick="goToChat('Break down my spending in detail and tell me where I can cut back')">ask Val →</span></div>
+      <div class="spend-breakdown">
+        <div class="sb-row"><div class="sb-icon">🍔</div><div class="sb-info"><div class="sb-name">Food & drink</div><div class="sb-bar-bg"><div class="sb-bar-fill" style="width:68%;background:var(--red)"></div></div></div><div class="sb-right"><div class="sb-amt">£210</div><div class="sb-change up">+£40</div></div></div>
+        <div class="sb-row"><div class="sb-icon">🚇</div><div class="sb-info"><div class="sb-name">Transport</div><div class="sb-bar-bg"><div class="sb-bar-fill" style="width:20%;background:var(--y)"></div></div></div><div class="sb-right"><div class="sb-amt">£62</div><div class="sb-change dn">-£8</div></div></div>
+        <div class="sb-row"><div class="sb-icon">📱</div><div class="sb-info"><div class="sb-name">Subscriptions</div><div class="sb-bar-bg"><div class="sb-bar-fill" style="width:11%;background:var(--yd)"></div></div></div><div class="sb-right"><div class="sb-amt">£35</div><div class="sb-change" style="color:var(--dim)">same</div></div></div>
+        <div class="sb-row"><div class="sb-icon">🛍️</div><div class="sb-info"><div class="sb-name">Shopping</div><div class="sb-bar-bg"><div class="sb-bar-fill" style="width:8%;background:#5F5E5A"></div></div></div><div class="sb-right"><div class="sb-amt">£0</div><div class="sb-change dn">-£45</div></div></div>
+      </div>
+      <div class="sec-hdr"><span class="sec-title">Monthly history</span></div>
+      <div class="month-tabs">
+        <button class="mtab" onclick="switchMonth(this,'Nov')">Nov</button>
+        <button class="mtab" onclick="switchMonth(this,'Dec')">Dec</button>
+        <button class="mtab" onclick="switchMonth(this,'Jan')">Jan</button>
+        <button class="mtab" onclick="switchMonth(this,'Feb')">Feb</button>
+        <button class="mtab on" onclick="switchMonth(this,'Mar')">Mar</button>
+      </div>
+      <div style="margin:0 22px;background:var(--s1);border:0.5px solid var(--border);border-radius:16px;padding:16px 16px 8px;">
+        <div style="display:flex;align-items:flex-end;gap:8px;height:80px;">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;"><div style="flex:1;width:100%;background:var(--s2);border-radius:4px;position:relative;"><div style="position:absolute;bottom:0;width:100%;background:#5F5E5A;border-radius:4px;height:52%"></div></div><div style="font-size:10px;color:var(--dim)">Nov</div></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;"><div style="flex:1;width:100%;background:var(--s2);border-radius:4px;position:relative;"><div style="position:absolute;bottom:0;width:100%;background:#5F5E5A;border-radius:4px;height:70%"></div></div><div style="font-size:10px;color:var(--dim)">Dec</div></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;"><div style="flex:1;width:100%;background:var(--s2);border-radius:4px;position:relative;"><div style="position:absolute;bottom:0;width:100%;background:var(--yd);border-radius:4px;height:45%"></div></div><div style="font-size:10px;color:var(--dim)">Jan</div></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;"><div style="flex:1;width:100%;background:var(--s2);border-radius:4px;position:relative;"><div style="position:absolute;bottom:0;width:100%;background:var(--yd);border-radius:4px;height:60%"></div></div><div style="font-size:10px;color:var(--dim)">Feb</div></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;"><div style="flex:1;width:100%;background:var(--s2);border-radius:4px;position:relative;"><div style="position:absolute;bottom:0;width:100%;background:var(--y);border-radius:4px;height:80%"></div></div><div style="font-size:10px;color:var(--y)">Mar</div></div>
+        </div>
+      </div>
+      <div style="height:28px;"></div>
+    </div>
+  </div>
+
+  <!-- REWARDS -->
+  <div class="screen" id="screen-rewards">
+    <div class="scroll">
+      <div class="page-header" data-bg="REWARDS"><div><div class="page-title">Rewards</div><div class="page-sub">Keep the streak alive</div></div></div>
+      <div class="level-card">
+        <div class="lc-top"><div><div style="font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.1em;">Current level</div></div><div class="lc-badge">🏆 Gold</div></div>
+        <div class="lc-title">3,210 XP</div>
+        <div class="lc-sub">790 XP until Platinum level</div>
+        <div class="xp-bar-bg"><div class="xp-bar-fill" style="width:79%"></div></div>
+        <div class="xp-labels"><span class="xp-lbl">Gold · 2,500</span><span class="xp-lbl">Platinum · 4,000</span></div>
+      </div>
+      <div class="sec-hdr"><span class="sec-title">Your streak</span><span class="sec-link" onclick="goToChat('How do I keep my streak going?')">ask Val →</span></div>
+      <div class="streak-calendar">
+        <div class="cal-title">March 2026 · 21 day streak 🔥</div>
+        <div class="cal-grid" id="calGrid"></div>
+      </div>
+      <div class="sec-hdr"><span class="sec-title">Badges</span></div>
+      <div class="badges-grid">
+        <div class="badge-card earned"><div class="badge-icon">🔥</div><div class="badge-name">On fire</div><div class="badge-desc">21 day streak</div></div>
+        <div class="badge-card earned"><div class="badge-icon">🎯</div><div class="badge-name">Goal setter</div><div class="badge-desc">3 active goals</div></div>
+        <div class="badge-card earned"><div class="badge-icon">💰</div><div class="badge-name">Saver</div><div class="badge-desc">£500+ saved</div></div>
+        <div class="badge-card"><div class="badge-icon">🏆</div><div class="badge-name">Platinum</div><div class="badge-desc">Reach 4,000 XP</div></div>
+        <div class="badge-card"><div class="badge-icon">🎪</div><div class="badge-name">Goal crusher</div><div class="badge-desc">Hit a goal</div></div>
+        <div class="badge-card"><div class="badge-icon">🚀</div><div class="badge-name">Rocket</div><div class="badge-desc">30 day streak</div></div>
+      </div>
+      <div style="height:28px;"></div>
+    </div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div class="screen" id="screen-settings">
+    <div class="scroll">
+      <div class="page-header" data-bg="SET"><div><div class="page-title">Settings</div><div class="page-sub">Vaultup v1.0</div></div></div>
+      <div class="settings-list">
+        <div class="setting-section-lbl">Profile</div>
+        <div class="setting-row" onclick="goToChat('Update my name')">
+          <div class="setting-left"><div class="setting-icon">👤</div><div><div class="setting-title">Name</div><div class="setting-sub">Piyush</div></div></div>
+          <div class="setting-arrow">›</div>
+        </div>
+        <div class="setting-row" onclick="goToChat('My monthly income has changed, help me update my budget')">
+          <div class="setting-left"><div class="setting-icon">💷</div><div><div class="setting-title">Monthly income</div><div class="setting-sub">£1,800 / month</div></div></div>
+          <div class="setting-arrow">›</div>
+        </div>
+        <div class="setting-row" onclick="goToChat('Help me update my saving target for this month')">
+          <div class="setting-left"><div class="setting-icon">🎯</div><div><div class="setting-title">Monthly savings target</div><div class="setting-sub">£650 / month</div></div></div>
+          <div class="setting-arrow">›</div>
+        </div>
+        <div class="setting-section-lbl">Your coach</div>
+        <div class="setting-row" onclick="goToChat('I want to update my goals')">
+          <div class="setting-left"><div class="setting-icon">🏆</div><div><div class="setting-title">Manage goals</div><div class="setting-sub">3 active goals</div></div></div>
+          <div class="setting-arrow">›</div>
+        </div>
+        <div class="setting-row" onclick="goToChat('What kind of spending categories should I track?')">
+          <div class="setting-left"><div class="setting-icon">📊</div><div><div class="setting-title">Spending categories</div><div class="setting-sub">Food, travel, subs + more</div></div></div>
+          <div class="setting-arrow">›</div>
+        </div>
+        <div class="setting-section-lbl">App</div>
+        <div class="setting-row" onclick="navigate('bank')">
+          <div class="setting-left"><div class="setting-icon">🏦</div><div><div class="setting-title">Link bank account</div><div class="setting-sub">Open Banking — coming soon</div></div></div>
+          <div class="setting-arrow">›</div>
+        </div>
+        <div class="setting-row" onclick="resetApiKey()">
+          <div class="setting-left"><div class="setting-icon">🔑</div><div><div class="setting-title">API key</div><div class="setting-sub">Tap to update</div></div></div>
+          <div class="setting-arrow">›</div>
+        </div>
+        <div class="setting-row danger" onclick="resetApiKey()">
+          <div class="setting-left"><div class="setting-icon">🚪</div><div><div class="setting-title">Sign out</div></div></div>
+          <div class="setting-arrow">›</div>
+        </div>
+        <div style="height:28px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GROUPS -->
+  <div class="screen" id="screen-groups">
+    <div class="page-header" data-bg="SQUADS" style="flex-shrink:0;">
+      <div><div class="page-title">Groups</div><div class="page-sub">Save together, go further</div></div>
+      <button onclick="openModal('createGroup')" style="background:var(--y);border:none;border-radius:10px;color:var(--black);font-size:13px;font-weight:700;padding:8px 14px;cursor:pointer;font-family:'DM Sans',sans-serif;">+ New</button>
+    </div>
+    <div class="scroll">
+      <div style="height:16px;"></div>
+
+      <!-- Active group -->
+      <div class="group-card">
+        <div class="gc-top">
+          <div class="gc-icon">✈️</div>
+          <div>
+            <div class="gc-name">Paris Trip</div>
+            <div class="gc-meta">5 members · deadline May 14, 2026</div>
+          </div>
+        </div>
+        <div class="gc-goal-lbl">Group goal</div>
+        <div class="gc-goal-name">Paris weekend getaway ✈️</div>
+        <div class="gc-bar-bg"><div class="gc-bar-fill" style="width:38%"></div></div>
+        <div class="gc-members">
+          <div class="gc-avatars">
+            <div class="gc-av" style="background:#7F77DD;color:#fff;">P</div>
+            <div class="gc-av" style="background:#1D9E75;color:#fff;">Sh</div>
+            <div class="gc-av" style="background:#D85A30;color:#fff;">Pr</div>
+            <div class="gc-av" style="background:#534AB7;color:#fff;">A</div>
+            <div class="gc-av" style="background:#0F6E56;color:#fff;">Sw</div>
+          </div>
+          <div class="gc-progress-txt">£760 of <b>£2,000</b> · 38%</div>
+        </div>
+        <div class="member-rows">
+          <div class="member-row">
+            <div class="mem-av" style="background:#7F77DD;color:#fff;">P</div>
+            <div class="mem-info">
+              <div class="mem-name">Piyush (you) 👑</div>
+              <div class="mem-bar-bg"><div class="mem-bar-fill" style="width:55%;background:var(--y)"></div></div>
+            </div>
+            <div class="mem-amt">£275</div>
+          </div>
+          <div class="member-row">
+            <div class="mem-av" style="background:#1D9E75;color:#fff;">Sh</div>
+            <div class="mem-info">
+              <div class="mem-name">Shubham</div>
+              <div class="mem-bar-bg"><div class="mem-bar-fill" style="width:44%;background:#1D9E75"></div></div>
+            </div>
+            <div class="mem-amt">£220</div>
+          </div>
+          <div class="member-row">
+            <div class="mem-av" style="background:#D85A30;color:#fff;">P</div>
+            <div class="mem-info">
+              <div class="mem-name">Praneet</div>
+              <div class="mem-bar-bg"><div class="mem-bar-fill" style="width:30%;background:#D85A30"></div></div>
+            </div>
+            <div class="mem-amt">£150</div>
+          </div>
+          <div class="member-row">
+            <div class="mem-av" style="background:#534AB7;color:#fff;">A</div>
+            <div class="mem-info">
+              <div class="mem-name">Atharva</div>
+              <div class="mem-bar-bg"><div class="mem-bar-fill" style="width:23%;background:#534AB7"></div></div>
+            </div>
+            <div class="mem-amt">£115</div>
+          </div>
+          <div class="member-row">
+            <div class="mem-av" style="background:#0F6E56;color:#fff;">Sw</div>
+            <div class="mem-info">
+              <div class="mem-name">Shashwat</div>
+              <div class="mem-bar-bg"><div class="mem-bar-fill" style="width:0%;background:#0F6E56"></div></div>
+            </div>
+            <div class="mem-amt">£0 🐢</div>
+          </div>
+        </div>
+        <div style="margin-top:14px;display:flex;gap:8px;">
+          <button onclick="goToChat('My group Paris Trip needs £2,000. We have £760 saved across 4 people and 52 days left. How do we make it?')" style="flex:1;padding:10px;background:var(--ydim);border:0.5px solid var(--yd);border-radius:10px;color:var(--y);font-size:12px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;">Ask Val 💬</button>
+          <button onclick="openModal('invite')" style="flex:1;padding:10px;background:var(--s2);border:0.5px solid var(--border);border-radius:10px;color:var(--muted);font-size:12px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;">Invite friends 🔗</button>
+        </div>
+      </div>
+
+      <div class="sec-hdr"><span class="sec-title">Add members</span></div>
+      <div style="margin:0 22px;">
+        <div style="background:var(--s1);border:0.5px solid var(--border);border-radius:14px;padding:12px 16px;display:flex;align-items:center;gap:10px;">
+          <div style="font-size:16px;">🔍</div>
+          <input id="searchInput" placeholder="Search by username..." style="flex:1;background:transparent;border:none;color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;" oninput="searchUser(this.value)"/>
+        </div>
+        <div id="searchResults" style="margin-top:8px;display:flex;flex-direction:column;gap:6px;"></div>
+      </div>
+
+      <div class="sec-hdr"><span class="sec-title">No more groups yet</span></div>
+      <div style="margin:0 22px;background:var(--s1);border:0.5px dashed var(--border);border-radius:14px;padding:20px;text-align:center;">
+        <div style="font-size:28px;margin-bottom:8px;">👥</div>
+        <div style="font-size:14px;color:var(--muted);line-height:1.6;">Start a new group with friends and set a shared savings goal together.</div>
+        <button onclick="openModal('createGroup')" style="margin-top:14px;padding:10px 20px;background:var(--y);border:none;border-radius:10px;color:var(--black);font-size:13px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;">Create a group</button>
+      </div>
+      <div style="height:28px;"></div>
+    </div>
+  </div>
+
+  <!-- BANK -->
+  <div class="screen" id="screen-bank">
+    <div class="page-header" data-bg="BANK" style="flex-shrink:0;">
+      <div><div class="page-title">Bank</div><div class="page-sub">Link your accounts</div></div>
+    </div>
+    <div class="scroll">
+      <div style="height:16px;"></div>
+      <div style="margin:0 22px;background:var(--ydim);border:0.5px solid var(--yd);border-radius:14px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start;animation:slideUp .4s ease;">
+        <div style="font-size:20px;">🔒</div>
+        <div><div style="font-size:13px;color:var(--y);font-weight:500;margin-bottom:3px;">Open Banking — coming soon</div><div style="font-size:12px;color:var(--yd);line-height:1.6;">We're building secure bank linking via Open Banking (FCA regulated). Your data will never be stored or shared.</div></div>
+      </div>
+
+      <div class="sec-hdr"><span class="sec-title">Supported banks</span></div>
+      <div style="margin:0 22px;display:flex;flex-direction:column;gap:8px;">
+        <div class="bank-card">
+          <div class="bank-badge">✓ Coming soon</div>
+          <div class="bank-top"><div class="bank-icon">🏦</div><div><div class="bank-name">Monzo</div><div class="bank-sub">Personal & joint accounts</div></div></div>
+          <div class="bank-connect-btn" onclick="showBankToast()">Connect Monzo →</div>
+        </div>
+        <div class="bank-card">
+          <div class="bank-badge">✓ Coming soon</div>
+          <div class="bank-top"><div class="bank-icon">💳</div><div><div class="bank-name">Starling Bank</div><div class="bank-sub">Personal accounts</div></div></div>
+          <div class="bank-connect-btn" onclick="showBankToast()">Connect Starling →</div>
+        </div>
+        <div class="bank-card">
+          <div class="bank-badge">✓ Coming soon</div>
+          <div class="bank-top"><div class="bank-icon">🏛️</div><div><div class="bank-name">Barclays</div><div class="bank-sub">Current & savings accounts</div></div></div>
+          <div class="bank-connect-btn" onclick="showBankToast()">Connect Barclays →</div>
+        </div>
+        <div class="bank-card">
+          <div class="bank-badge">✓ Coming soon</div>
+          <div class="bank-top"><div class="bank-icon">🟣</div><div><div class="bank-name">Lloyds Bank</div><div class="bank-sub">Current & savings accounts</div></div></div>
+          <div class="bank-connect-btn" onclick="showBankToast()">Connect Lloyds →</div>
+        </div>
+      </div>
+
+      <div class="sec-hdr"><span class="sec-title">Manual entry (available now)</span></div>
+      <div style="margin:0 22px;background:var(--s1);border:0.5px solid var(--border);border-radius:14px;padding:16px;animation:slideUp .4s ease .2s both;">
+        <div style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px;">While bank linking is in development, you can tell Val your spending and she'll track it for you.</div>
+        <button onclick="goToChat('I want to log some spending — help me update my expenses')" style="width:100%;padding:11px;background:var(--ydim);border:0.5px solid var(--yd);border-radius:10px;color:var(--y);font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;">Log spending with Val 💬</button>
+      </div>
+      <div style="height:28px;"></div>
+    </div>
+  </div>
+
+  <!-- MODALS -->
+  <div class="modal-overlay" id="modal-createGroup" onclick="closeModal('createGroup')">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="modal-handle"></div>
+      <div class="modal-title">Create a group</div>
+      <div class="modal-sub">Set a shared savings goal with friends</div>
+      <div class="modal-label">Group name</div>
+      <input class="modal-input" placeholder="e.g. Paris Squad, Ibiza 2026..." id="groupName"/>
+      <div class="modal-label">Goal name</div>
+      <input class="modal-input" placeholder="e.g. Paris weekend trip" id="goalName"/>
+      <div class="modal-label">Total amount needed</div>
+      <input class="modal-input" placeholder="e.g. £2,000" id="goalAmount" type="text"/>
+      <div class="modal-label">Deadline</div>
+      <input class="modal-input" type="date" id="goalDate"/>
+      <button class="modal-btn" onclick="createGroup()">Create group →</button>
+      <button class="modal-btn secondary" onclick="closeModal('createGroup')">Cancel</button>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-invite" onclick="closeModal('invite')">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="modal-handle"></div>
+      <div class="modal-title">Invite friends</div>
+      <div class="modal-sub">Share a link or search by username</div>
+      <div class="modal-label">Invite link</div>
+      <div class="invite-link-box">
+        <span class="invite-link-txt">vaultup.app/join/paris-squad-x7k2</span>
+        <span class="invite-link-copy" onclick="copyInviteLink()">Copy 📋</span>
+      </div>
+      <div class="modal-divider"><span>or</span></div>
+      <div class="modal-label">Search by username</div>
+      <input class="modal-input" placeholder="@username" id="inviteSearch" oninput="searchUser(this.value,'inviteResults')"/>
+      <div id="inviteResults" style="display:flex;flex-direction:column;gap:6px;margin-bottom:14px;"></div>
+      <button class="modal-btn secondary" onclick="closeModal('invite')">Done</button>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast" style="position:absolute;bottom:100px;left:50%;transform:translateX(-50%);background:var(--s1);border:0.5px solid var(--border);color:var(--text);padding:10px 20px;border-radius:99px;font-size:13px;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;max-width:320px;text-align:center;"></div>
+
+  <!-- BOTTOM NAV -->
+  <div class="bottom-nav">
+    <div class="nav-item active" id="nav-home" onclick="navigate('home')"><div class="nav-icon">🏠</div><div class="nav-lbl">Home</div><div class="nav-dot"></div></div>
+    <div class="nav-item" id="nav-chat" onclick="navigate('chat')"><div class="nav-icon">💬</div><div class="nav-lbl">Val</div></div>
+    <div class="nav-item" id="nav-groups" onclick="navigate('groups')"><div class="nav-icon">👥</div><div class="nav-lbl">Groups</div></div>
+    <div class="nav-item" id="nav-stats" onclick="navigate('stats')"><div class="nav-icon">📈</div><div class="nav-lbl">Stats</div></div>
+    <div class="nav-item" id="nav-rewards" onclick="navigate('rewards')"><div class="nav-icon">⚡</div><div class="nav-lbl">Rewards</div></div>
+  </div>
+</div>
+
+<script>
+const SYSTEM=`You are Val, the AI money coach inside Vaultup — a finance app for young adults (18-30) in the UK. Talk like a sharp, friendly mate who knows money — direct, casual, zero jargon, zero waffle.
+
+Piyush's data:
+- Saved £840 this month (target £650, so £190 ahead)
+- 21-day streak, Level Gold, 3,210 XP (790 away from Platinum)
+- Goals: PS6 71% done (£89 left), Festival 44% (£168 left), Emergency fund 28% (£540 left)
+- Spending: Food & drink £210 (+£40 over, mainly Deliveroo), Subscriptions £35 (5 active: Spotify, Netflix + 3 others), Transport £62 (-£8 saved vs last month)
+- Biggest leak: Deliveroo ~£60/month
+- Monthly take-home: ~£1,800
+
+Personality:
+- Short responses (2-4 sentences) unless asked for detail
+- Use Piyush's actual numbers always — never be vague
+- Celebrate wins with energy, call out bad habits without preaching
+- One clear actionable tip unless asked for more
+- Never say "As an AI" — just be their coach
+- Sign off as Val occasionally
+- Occasional emoji, don't overdo it`;
+
+let history=[],loading=false,API_KEY='';
+
+function initApiKey(){
+  try{
+    const s=localStorage.getItem('vaultup_api_key');
+    if(s&&s.startsWith('sk-ant-')){API_KEY=s;document.getElementById('apiOverlay').style.display='none';}
+    else{document.getElementById('apiOverlay').style.display='flex';}
+  }catch(e){document.getElementById('apiOverlay').style.display='flex';}
+}
+function saveApiKey(){
+  const val=document.getElementById('apiKeyInput').value.trim();
+  const err=document.getElementById('apiError');
+  if(!val.startsWith('sk-ant-')){err.style.display='block';return;}
+  err.style.display='none';API_KEY=val;
+  try{localStorage.setItem('vaultup_api_key',val);}catch(e){}
+  document.getElementById('apiOverlay').style.display='none';
+}
+function resetApiKey(){
+  try{localStorage.removeItem('vaultup_api_key');}catch(e){}
+  API_KEY='';document.getElementById('apiKeyInput').value='';
+  document.getElementById('apiOverlay').style.display='flex';
+}
+document.getElementById('apiKeyInput').addEventListener('keydown',e=>{if(e.key==='Enter')saveApiKey();});
+
+function navigate(s){
+  document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
+  document.getElementById('screen-'+s).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>{n.classList.remove('active');const d=n.querySelector('.nav-dot');if(d)d.remove();});
+  const nav=document.getElementById('nav-'+s);
+  if(nav){nav.classList.add('active');const d=document.createElement('div');d.className='nav-dot';nav.appendChild(d);}
+}
+function goToChat(msg){navigate('chat');setTimeout(()=>sendQuick(msg),150);}
+function switchMonth(el){document.querySelectorAll('.mtab').forEach(t=>t.classList.remove('on'));el.classList.add('on');}
+function nowTime(){return new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});}
+function clearWelcome(){const w=document.getElementById('welcome-msg');if(w)w.remove();document.getElementById('quickReplies').style.display='none';}
+
+function addMsg(role,text){
+  clearWelcome();
+  const msgs=document.getElementById('messages');
+  const wrap=document.createElement('div');wrap.className='mwrap '+role;
+  const safe=text.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<b>$1</b>');
+  if(role==='ai'){wrap.innerHTML=`<div class="mav"><div class="mav-in"></div></div><div class="mbody"><div class="bubble">${safe}</div><div class="mtime">${nowTime()}</div></div>`;}
+  else{wrap.innerHTML=`<div class="mbody"><div class="bubble">${text.replace(/</g,'&lt;')}</div><div class="mtime">${nowTime()}</div></div>`;}
+  msgs.appendChild(wrap);msgs.scrollTop=msgs.scrollHeight;
+}
+function showTyping(){
+  clearWelcome();
+  const msgs=document.getElementById('messages');
+  const wrap=document.createElement('div');wrap.className='mwrap ai';wrap.id='typing';
+  wrap.innerHTML=`<div class="mav"><div class="mav-in"></div></div><div class="mbody"><div class="typing-b"><span></span><span></span><span></span></div></div>`;
+  msgs.appendChild(wrap);msgs.scrollTop=msgs.scrollHeight;
+}
+function removeTyping(){const t=document.getElementById('typing');if(t)t.remove();}
+function sendQuick(t){document.getElementById('chatInput').value=t;sendMessage();}
+
+async function sendMessage(){
+  const input=document.getElementById('chatInput');
+  const text=input.value.trim();
+  if(!text||loading)return;
+  if(!API_KEY){resetApiKey();return;}
+  input.value='';input.style.height='auto';
+  loading=true;document.getElementById('sendBtn').disabled=true;
+  addMsg('user',text);history.push({role:'user',content:text});showTyping();
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':API_KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:SYSTEM,messages:history})
+    });
+    const data=await res.json();removeTyping();
+    if(data.error){
+      if(data.error.type==='authentication_error'){addMsg('ai',"That key isn't working — tap 'change key' to update it.");resetApiKey();}
+      else{addMsg('ai','Something went wrong: '+data.error.message);}
+    } else {
+      const reply=data.content?.[0]?.text||'Something went wrong, try again?';
+      history.push({role:'assistant',content:reply});addMsg('ai',reply);
+    }
+  }catch(e){removeTyping();addMsg('ai',"Connection issue — make sure you're connected to the internet.");}
+  loading=false;document.getElementById('sendBtn').disabled=false;input.focus();
+}
+
+const inp=document.getElementById('chatInput');
+inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}});
+inp.addEventListener('input',()=>{inp.style.height='auto';inp.style.height=Math.min(inp.scrollHeight,110)+'px';});
+
+// Build streak calendar
+function buildCalendar(){
+  const grid=document.getElementById('calGrid');
+  const today=14;
+  for(let i=1;i<=31;i++){
+    const d=document.createElement('div');
+    d.className='cal-day';
+    if(i===today){d.className='cal-day today';d.textContent=i;}
+    else if(i<today&&i>=(today-20)){d.className='cal-day done';d.textContent=i;}
+    else{d.textContent=i<=31?i:'';}
+    grid.appendChild(d);
+  }
+}
+
+buildCalendar();
+initApiKey();
+const MOCK_USERS=[
+  {initial:'A',name:'Alex T.',username:'@alext',color:'#7F77DD'},
+  {initial:'B',name:'Ben K.',username:'@benk',color:'#1D9E75'},
+  {initial:'C',name:'Chloe R.',username:'@chloe_r',color:'#D85A30'},
+  {initial:'D',name:'Dan W.',username:'@danw',color:'#534AB7'},
+  {initial:'E',name:'Emma S.',username:'@emmas',color:'#BA7517'},
+];
+
+function openModal(id){document.getElementById('modal-'+id).classList.add('open');}
+function closeModal(id){document.getElementById('modal-'+id).classList.remove('open');}
+
+function createGroup(){
+  const name=document.getElementById('groupName').value.trim();
+  const goal=document.getElementById('goalName').value.trim();
+  if(!name||!goal){showToast('Fill in group name and goal first!');return;}
+  closeModal('createGroup');
+  showToast('Group "'+name+'" created! 🎉 Now invite your friends.');
+}
+
+function searchUser(val,targetId='searchResults'){
+  const container=document.getElementById(targetId);
+  if(!val.trim()){container.innerHTML='';return;}
+  const results=MOCK_USERS.filter(u=>u.name.toLowerCase().includes(val.toLowerCase())||u.username.toLowerCase().includes(val.toLowerCase()));
+  container.innerHTML=results.map(u=>`
+    <div style="background:var(--s1);border:0.5px solid var(--border);border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:10px;">
+      <div style="width:34px;height:34px;border-radius:50%;background:${u.color};display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;">${u.initial}</div>
+      <div style="flex:1;"><div style="font-size:14px;font-weight:500;color:var(--text);">${u.name}</div><div style="font-size:12px;color:var(--dim);">${u.username}</div></div>
+      <button onclick="addMember('${u.name}')" style="padding:6px 12px;background:var(--ydim);border:0.5px solid var(--yd);border-radius:8px;color:var(--y);font-size:12px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;">Add</button>
+    </div>
+  `).join('');
+  if(!results.length)container.innerHTML=`<div style="font-size:13px;color:var(--dim);padding:10px 4px;">No users found for "${val}"</div>`;
+}
+
+function addMember(name){showToast(name+' added to the group! 👋');}
+
+function copyInviteLink(){
+  navigator.clipboard.writeText('https://vaultup.app/join/paris-squad-x7k2').catch(()=>{});
+  showToast('Invite link copied! Share it with your friends 🔗');
+}
+
+function showBankToast(){showToast('Bank linking coming soon! 🏦 Use Val to log spending for now.');}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.style.opacity='1';
+  setTimeout(()=>t.style.opacity='0',3000);
+}
+
+
+</script>
+</body>
+</html>
