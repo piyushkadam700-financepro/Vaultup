@@ -13,7 +13,7 @@
   --red:#E24B4A;--green:#4ade80;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-html,body{height:100%;background:var(--black);font-family:'DM Sans',sans-serif;color:var(--text);overflow:hidden;}
+html{height:-webkit-fill-available;}body{height:100%;min-height:-webkit-fill-available;background:var(--black);font-family:'DM Sans',sans-serif;color:var(--text);overflow:hidden;}
 .app{display:flex;flex-direction:column;height:100vh;height:100dvh;max-width:420px;margin:0 auto;background:var(--black);position:relative;overflow:hidden;}
 .screen{display:none;flex-direction:column;flex:1;overflow:hidden;}
 .screen.active{display:flex;}
@@ -27,9 +27,9 @@ html,body{height:100%;background:var(--black);font-family:'DM Sans',sans-serif;c
 .ob-step{display:none;flex-direction:column;flex:1;padding:0;}
 .ob-step.active{display:flex;}
 .ob-hero{padding:60px 28px 32px;flex:1;display:flex;flex-direction:column;justify-content:flex-end;}
-.ob-logo{font-family:'Bebas Neue',sans-serif;font-size:52px;letter-spacing:.06em;color:var(--y);line-height:1;margin-bottom:12px;}
+.ob-screen{display:none;flex-direction:column;height:100%;min-height:-webkit-fill-available;overflow:hidden;background:var(--black);}
 .ob-tagline{font-size:18px;color:var(--muted);line-height:1.5;font-weight:300;margin-bottom:8px;}
-.ob-tagline b{color:var(--text);font-weight:500;}
+.ob-step{display:none;flex-direction:column;flex:1;padding:0;min-height:0;}
 .ob-social{display:flex;align-items:center;gap:8px;margin-top:24px;}
 .ob-social-dot{width:8px;height:8px;border-radius:50%;background:var(--green);}
 .ob-social-txt{font-size:13px;color:var(--muted);}
@@ -40,8 +40,8 @@ html,body{height:100%;background:var(--black);font-family:'DM Sans',sans-serif;c
 .ob-cta:active{transform:scale(0.98);}
 .ob-cta.secondary{background:transparent;border:0.5px solid var(--border);color:var(--muted);font-size:14px;padding:12px;}
 .ob-cta.secondary:hover{border-color:var(--yd);color:var(--y);background:var(--ydim);}
-.ob-form{padding:52px 28px 120px;flex:1;overflow-y:auto;}
-.ob-form::-webkit-scrollbar{display:none;}
+.ob-form{padding:52px 28px 160px;flex:1;overflow-y:auto;}
+.ob-bottom{padding:24px 28px calc(50px + env(safe-area-inset-bottom));border-top:0.5px solid var(--border);flex-shrink:0;background:var(--black);}
 .ob-back{display:flex;align-items:center;gap:8px;color:var(--dim);font-size:13px;cursor:pointer;margin-bottom:28px;width:fit-content;}
 .ob-back:hover{color:var(--y);}
 .ob-step-label{font-size:11px;color:var(--y);letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;}
