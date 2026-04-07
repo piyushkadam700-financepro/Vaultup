@@ -1026,9 +1026,10 @@ function saveNewGoal(){
 
 function openSpendingModal(){
   if(!USER)return;
-  document.getElementById('sp-food').value=USER.spending?.food||'';
+ document.getElementById('sp-food').value=USER.spending?.food||'';
   document.getElementById('sp-subs').value=USER.spending?.subs||'';
   document.getElementById('sp-travel').value=USER.spending?.travel||'';
+  document.getElementById('sp-other').value=USER.spending?.other||'';
   document.getElementById('sp-saved').value=USER.savedThisMonth||'';
   openModal('spending');
 }
