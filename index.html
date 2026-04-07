@@ -779,12 +779,10 @@ function toggleGoal(btn,label){
 function toggleLeak(btn,label){document.querySelectorAll('#leak-chips .goal-chip').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');selectedLeak=label;}
 
 function goStep(n){
-  const cur=document.querySelector('.ob-step.active');
-  if(cur)cur.classList.remove('active');
+  document.querySelectorAll('.ob-step').forEach(s=>s.classList.remove('active'));
   document.getElementById('ob-step-'+n).classList.add('active');
   currentStep=n;
 }
-
 function buildSplitStep(){
   const target=parseInt(document.getElementById('ob-target').value)||0;
   document.getElementById('split-target-display').textContent='£'+target;
