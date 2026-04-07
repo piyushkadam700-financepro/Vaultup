@@ -779,6 +779,100 @@ function toggleGoal(btn,label){
 }
 function toggleLeak(btn,label){document.querySelectorAll('#leak-chips .goal-chip').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');selectedLeak=label;}
 
+function goStep(n){
+  const cur=document.querySelector('.ob-step.active');
+  if(cur)cur.classList.remove('active');
+  document.getElementById('ob-step-'+n).classList.add('active');
+  currentStep=n;
+}
+
+function buildSplitStep(){
+  const target=parseInt(document.getElementById('ob-target').value)||0;
+  document.getElementById('split-target-display').textContent='£'+target;
+  const list=document.getElementById('goal-split-list');
+  list.innerHTML=selectedGoals.map((g,i)=>{
+    const emoji=g.split(' ')[0];
+    const name=g.split(' ').slice(1).join(' ')||g;
+    const isPrimary=i===0;
+    return `<div style="background:var(--s1);border:0.5px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:12px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+        <div style="font-size:20px;width:38px;height:38px;background:var(--s2);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${emoji}</div>
+        <div style="flex:1;">
+          <div style="font-size:14px;font-weight:500;color:var(--text);">${name}</div>
+          ${isPrimary?'<div style="font-size:10px;color:var(--y);letter-spacing:.08em;text-transform:uppercase;margin-top:2px;">⭐ Primary goal</div>':'<div style="font-size:10px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase;margin-top:2px;">Secondary goal</div>'}
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;">
+        <div style="position:relative;flex:1;">
+          <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;pointer-events:none;">£</span>
+          <input type="number" id="monthly-${i}" placeholder="0" min="0"
+            style="width:100%;background:var(--s2);border:0.5px solid var(--border);border-radius:10px;color:var(--text);font-size:15px;padding:11px 12px 11px 28px;font-family:'DM Sans',sans-serif;outline:none;"
+            oninput="updateSplitTotals()" onfocus="this.style.borderColor='var(--yd)'" onblur="this.style.borderColor='var(--border)'"/>
+        </div>
+        <span style="font-size:12px;color:var(--dim);white-space:nowrap;">/month</span>
+      </div>
+      <div style="margin-top:10px;">
+        <div style="font-size:11px;color:var(--dim);margin-bottom:6px;text-transform:uppercase;letter-spacing:.08em;">Total goal target (£)</div>
+        <div style="position:relative;">
+          <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;pointer-events:none;">£</span>
+          <input type="number" id="total-${i}" placeholder="e.g. 1200" min="0"
+            style="width:100%;background:var(--s2);border:0.5px solid var(--border);border-radius:10px;color:var(--text);font-size:15px;padding:11px 12px 11px 28px;font-family:'DM Sans',sans-serif;outline:none;"
+            onfocus="this.style.borderColor='var(--yd)'" onblur="this.style.borderColor='var(--border)'"/>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  updateSplitTotals();
+}
+
+function updateSplitTotals(){
+  const target=parseInt(document.getElementById('ob-target').value)||0;
+  let allocated=0;
+  selectedGoals.forEach((_,i)=>{
+    const v=parseInt(document.getElementById('monthly-'+i)?.value)||0;
+    allocated+=v;
+  });
+  const remaining=target-allocated;
+  const pct=Math.min(100,Math.round((allocated/target)*100));
+  document.getElementById('split-allocated').textContent='£'+allocated;
+  document.getElementById('split-remaining').textContent=remaining>=0?'£'+remaining:'−£'+Math.abs(remaining);
+  document.getElementById('split-remaining').style.color=remaining<0?'var(--red)':remaining===0?'var(--green)':'var(--text)';
+  document.getElementById('split-bar').style.width=pct+'%';
+  document.getElementById('split-bar').style.background=pct>100?'var(--red)':'var(--y)';
+  const status=document.getElementById('split-status');
+  if(allocated===0)status.textContent='Enter monthly amounts above';
+  else if(allocated===target)status.innerHTML='<span style="color:var(--green)">✓ Perfect — fully allocated!</span>';
+  else if(allocated>target)status.innerHTML='<span style="color:var(--red)">Over by £'+Math.abs(remaining)+' — reduce some amounts</span>';
+  else status.textContent='£'+remaining+' still to allocate';
+}
+
+function splitEqually(){
+  const target=parseInt(document.getElementById('ob-target').value)||0;
+  const n=selectedGoals.length;
+  const each=Math.floor(target/n);
+  const remainder=target-(each*n);
+  selectedGoals.forEach((_,i)=>{
+    const el=document.getElementById('monthly-'+i);
+    if(el)el.value=i===0?each+remainder:each;
+  });
+  updateSplitTotals();
+}
+
+function validateStep3b(){
+  const target=parseInt(document.getElementById('ob-target').value)||0;
+  let allocated=0;
+  let valid=true;
+  selectedGoals.forEach((_,i)=>{
+    const monthly=parseInt(document.getElementById('monthly-'+i)?.value)||0;
+    const total=parseInt(document.getElementById('total-'+i)?.value)||0;
+    allocated+=monthly;
+    if(monthly<=0||total<=0)valid=false;
+  });
+  if(!valid){showToast('Fill in monthly amount and total target for each goal');return;}
+  if(allocated!==target){showToast('Monthly amounts must add up to exactly £'+target);return;}
+  goStep(4);
+}
+
 function finishOnboarding(){
   const name=document.getElementById('ob-name').value.trim();
   const income=parseInt(document.getElementById('ob-income').value);
