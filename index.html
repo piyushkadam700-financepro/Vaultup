@@ -343,6 +343,33 @@ textarea:focus{border-color:var(--yd);}
     </div>
     <div class="ob-bottom"><button class="ob-cta" onclick="validateStep3()">Continue →</button></div>
   </div>
+ <div class="ob-step" id="ob-step-3b">
+    <div class="ob-progress"><div class="ob-prog-dot done"></div><div class="ob-prog-dot done"></div><div class="ob-prog-dot done"></div><div class="ob-prog-dot"></div></div>
+    <div class="ob-form">
+      <div class="ob-back" onclick="goStep(3)">← Back</div>
+      <div class="ob-step-label">Step 3b of 4</div>
+      <div class="ob-step-title">How much per<br>goal each month?</div>
+      <div class="ob-step-sub" id="split-sub">You're saving <b id="split-target-display">£0</b>/month. Split it across your goals.</div>
+      <button onclick="splitEqually()" style="width:100%;padding:10px;background:var(--s2);border:0.5px solid var(--border);border-radius:12px;color:var(--y);font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;margin-bottom:20px;">⚡ Split equally</button>
+      <div id="goal-split-list"></div>
+      <div style="background:var(--s2);border:0.5px solid var(--border);border-radius:12px;padding:14px 16px;margin-top:4px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:13px;color:var(--muted);">Allocated</span>
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:22px;" id="split-allocated">£0</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px;">
+          <span style="font-size:13px;color:var(--muted);">Remaining</span>
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:22px;" id="split-remaining">£0</span>
+        </div>
+        <div style="height:4px;background:var(--s3);border-radius:99px;overflow:hidden;margin-top:10px;">
+          <div id="split-bar" style="height:4px;background:var(--y);border-radius:99px;width:0%;transition:width .3s;"></div>
+        </div>
+        <div id="split-status" style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center;"></div>
+      </div>
+    </div>
+    <div class="ob-bottom"><button class="ob-cta" onclick="validateStep3b()">Continue →</button></div>
+  </div>
+
   <div class="ob-step" id="ob-step-4">
     <div class="ob-progress"><div class="ob-prog-dot done"></div><div class="ob-prog-dot done"></div><div class="ob-prog-dot done"></div><div class="ob-prog-dot done"></div></div>
     <div class="ob-form">
