@@ -980,7 +980,7 @@ function finishOnboarding(){
     goals:selectedGoals.map((g,i)=>({
       emoji:g.split(' ')[0],
       name:g.split(' ').slice(1).join(' ')||g,
-      target:parseInt(document.getElementById('total-'+i)?.value)||0,
+      target:parseInt(document.getElementById('total-'+i)?.value)||parseInt(document.getElementById('monthly-'+i)?.value)*12||0,
       monthlyAmount:parseInt(document.getElementById('monthly-'+i)?.value)||0,
       saved:0,date:'',isPrimary:i===0
     })),
