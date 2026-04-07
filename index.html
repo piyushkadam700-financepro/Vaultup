@@ -1027,6 +1027,17 @@ if(inp){
   inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}});
   inp.addEventListener('input',()=>{inp.style.height='auto';inp.style.height=Math.min(inp.scrollHeight,110)+'px';});
 }
+// ── Fix: scroll Continue button into view when keyboard opens on iOS ──
+document.querySelectorAll('.ob-form input, .ob-form textarea').forEach(el => {
+  el.addEventListener('focus', () => {
+    setTimeout(() => {
+      const bottom = document.querySelector('.ob-step.active .ob-bottom');
+      if (bottom) {
+        bottom.scrollIntoView({ behavior: 'smooth', block: 'end' });
+      }
+    }, 400);
+  });
+});
 
 boot();
 </script>
