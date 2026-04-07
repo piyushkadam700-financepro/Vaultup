@@ -796,7 +796,7 @@ function validateStep3b(){
     const monthly=mEl?parseInt(mEl.value)||0:0;
     const total=tEl?parseInt(tEl.value)||0:0;
     allocated+=monthly;
-    if(monthly<=0||total<=0)allFilled=false;
+    if(monthly<=0)allFilled=false;
   }
   if(!allFilled){
     showToast('Fill in monthly amount and total target for each goal');
