@@ -1322,7 +1322,7 @@ function saveEdit(){
   if(editingField==='name')USER.name=val;
   if(editingField==='income')USER.income=parseInt(val);
   if(editingField==='target')USER.savingsTarget=parseInt(val);
-  saveUser();renderAll();closeModal('edit');showToast('Saved ✓');
+ saveUser();closeModal('edit');showToast('Saved ✓');
 }
 
 function signOut(){
