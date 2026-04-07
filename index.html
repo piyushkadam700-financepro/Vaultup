@@ -867,9 +867,10 @@ function validateStep3b(){
     allocated+=monthly;
     if(monthly<=0||total<=0)valid=false;
   });
-  if(!valid){showToast('Fill in monthly amount and total target for each goal');return;}
-  if(allocated!==target){showToast('Monthly amounts must add up to exactly £'+target);return;}
+ if(!valid){showToast('Fill in monthly amount and total target for each goal');return;}
+  if(allocated!==target){showToast('Monthly amounts must add up to exactly £'+target+' — currently £'+allocated);return;}
   goStep(4);
+}
 }
 
 function finishOnboarding(){
