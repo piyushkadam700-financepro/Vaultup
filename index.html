@@ -1415,7 +1415,7 @@ function switchMonthCurrent(el){
 }
 
 // ── UTILS ──
-function saveUser(){if(USER?.isDemo)return;localStorage.setItem(STORAGE_KEY,JSON.stringify(USER));}
+function saveUser(){if(USER?.isDemo){localStorage.setItem('vaultup_demo',JSON.stringify(USER));return;}localStorage.setItem(STORAGE_KEY,JSON.stringify(USER));}
 function openModal(id){document.getElementById('modal-'+id).classList.add('open');}
 function closeModal(id){document.getElementById('modal-'+id).classList.remove('open');}
 
