@@ -835,7 +835,24 @@ function renderAll(){
   const shortMonth=new Date().toLocaleString('default',{month:'short'});
   const curTab=document.getElementById('current-month-tab');
   if(curTab)curTab.textContent=shortMonth;
-  const sp=USER.spending||{},totalSpend=(sp.food||0)+(sp.subs||0)+(sp.travel||0);
+const sp=USER.spending||{},totalSpend=(sp.food||0)+(sp.subs||0)+(sp.travel||0)+(sp.other||0);
+  const spEl=document.getElementById('stats-spending-breakdown');
+  if(spEl){
+    if(totalSpend===0){
+      spEl.innerHTML=`<div style="margin:0 22px;padding:16px;background:var(--s1);border:0.5px solid var(--border);border-radius:14px;text-align:center;font-size:13px;color:var(--muted);">No spending tracked yet — update via Settings 📊</div>`;
+    } else {
+      const items=[
+        {icon:'🍔',name:'Food & drink',amt:sp.food||0,color:'var(--red)'},
+        {icon:'📱',name:'Subscriptions',amt:sp.subs||0,color:'var(--yd)'},
+        {icon:'🚇',name:'Travel',amt:sp.travel||0,color:'var(--y)'},
+        {icon:'💸',name:'Other',amt:sp.other||0,color:'var(--muted)'},
+      ].filter(i=>i.amt>0);
+      spEl.innerHTML=items.map(i=>{
+        const pct=Math.round((i.amt/totalSpend)*100);
+        return `<div class="sb-row"><div class="sb-icon">${i.icon}</div><div class="sb-info"><div class="sb-name">${i.name}</div><div class="sb-bar-bg"><div class="sb-bar-fill" style="width:${pct}%;background:${i.color}"></div></div></div><div class="sb-right"><div class="sb-amt">£${i.amt}</div><div class="sb-change">${pct}%</div></div></div>`;
+      }).join('');
+    }
+  }
   const setSpend=document.getElementById('set-spending');
   if(setSpend)setSpend.textContent=totalSpend>0?'£'+totalSpend+' tracked this month':'Tap to update this month';
 }
