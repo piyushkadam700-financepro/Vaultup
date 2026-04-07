@@ -726,11 +726,12 @@ function boot(){
     USER=JSON.parse(saved);
     launchApp();
   } else {
+    const demo=localStorage.getItem('vaultup_demo');
+    if(demo){localStorage.removeItem('vaultup_demo');}
     document.getElementById('ob-screen').classList.add('active');
     goStep(0);
   }
 }
-
 async function updateSocialCount(){
   try{
     const res=await fetch('/api/count');
