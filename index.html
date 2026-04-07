@@ -1275,6 +1275,8 @@ function copyInviteLink(){
   const txt=document.getElementById('invite-link-txt').textContent;
   navigator.clipboard.writeText(txt).then(()=>showToast('Link copied! 🔗')).catch(()=>showToast('Copy: '+txt));
 }
+function deleteGroup(i){if(!confirm('Delete this group?'))return;USER.groups.splice(i,1);saveUser();renderGroups();showToast('Group deleted');}
+
 function switchMonth(el,month,spent){
   document.querySelectorAll('.mtab').forEach(t=>t.classList.remove('on'));el.classList.add('on');
   document.getElementById('stats-saved').textContent='£'+Math.round(spent*0.55);
