@@ -865,8 +865,12 @@ function validateStep3b(){
     allocated+=monthly;
     if(monthly<=0||total<=0)valid=false;
   });
- if(!valid){showToast('Fill in monthly amount and total target for each goal');return;}
- if(allocated!==target){showToast('Monthly amounts must add up to exactly £'+target+' — currently £'+allocated);return;}
+if(!valid){showToast('Fill in monthly amount and total target for each goal');return;}
+  if(allocated!==target){
+    const diff=target-allocated;
+    showToast(diff>0?'Still £'+diff+' to allocate — use ⚡ Split equally':'Over budget by £'+Math.abs(diff));
+    return;
+  }
   goStep(4);
 }
 
