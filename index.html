@@ -754,7 +754,6 @@ function checkDailyStreak(){
 }
 
 let currentStep=0;
-function goStep(n){document.getElementById('ob-step-'+currentStep).classList.remove('active');currentStep=n;document.getElementById('ob-step-'+n).classList.add('active');}
 function goLogin(){showToast('Log in coming soon — sign up to get started!');}
 
 function validateStep1(){const name=document.getElementById('ob-name').value.trim();if(!name){showObError('ob-name','Enter your name to continue');return;}goStep(2);}
