@@ -1276,7 +1276,7 @@ function copyInviteLink(){
   navigator.clipboard.writeText(txt).then(()=>showToast('Link copied! 🔗')).catch(()=>showToast('Copy: '+txt));
 }
 
-function deleteGroup(i){if(!confirm('Delete this group?'))return;USER.groups.splice(i,1);saveUser();renderGroups();showToast('Group deleted');}
+functifunction showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.opacity='1';setTimeout(()=>t.style.opacity='0',5000);}
 
 function switchMonth(el,month,spent){
   document.querySelectorAll('.mtab').forEach(t=>t.classList.remove('on'));el.classList.add('on');
