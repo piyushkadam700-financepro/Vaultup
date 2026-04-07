@@ -22,26 +22,26 @@ html{height:-webkit-fill-available;}body{height:100%;min-height:-webkit-fill-ava
 @keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
-
+.ob-screen{display:none;flex-direction:column;height:100%;min-height:-webkit-fill-available;overflow:hidden;background:var(--black);}
 .ob-screen.active{display:flex;}
-
+.ob-step{display:none;flex-direction:column;flex:1;padding:0;min-height:0;}
 .ob-step.active{display:flex;}
 .ob-hero{padding:60px 28px 32px;flex:1;display:flex;flex-direction:column;justify-content:flex-end;}
-.ob-screen{display:none;flex-direction:column;height:100%;min-height:-webkit-fill-available;overflow:hidden;background:var(--black);}
+.ob-logo{font-family:'Bebas Neue',sans-serif;font-size:52px;letter-spacing:.06em;color:var(--y);line-height:1;margin-bottom:12px;}
 .ob-tagline{font-size:18px;color:var(--muted);line-height:1.5;font-weight:300;margin-bottom:8px;}
-.ob-step{display:none;flex-direction:column;flex:1;padding:0;min-height:0;}
+.ob-tagline b{color:var(--text);font-weight:500;}
 .ob-social{display:flex;align-items:center;gap:8px;margin-top:24px;}
 .ob-social-dot{width:8px;height:8px;border-radius:50%;background:var(--green);}
 .ob-social-txt{font-size:13px;color:var(--muted);}
 .ob-social-txt b{color:var(--green);}
-
+.ob-bottom{padding:20px 28px calc(env(safe-area-inset-bottom) + 20px);border-top:0.5px solid var(--border);flex-shrink:0;background:var(--black);position:sticky;bottom:0;z-index:10;}
 .ob-cta{width:100%;padding:15px;background:var(--y);border:none;border-radius:14px;color:var(--black);font-size:16px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;margin-bottom:12px;transition:all .15s;}
 .ob-cta:hover{background:var(--ybright);}
 .ob-cta:active{transform:scale(0.98);}
 .ob-cta.secondary{background:transparent;border:0.5px solid var(--border);color:var(--muted);font-size:14px;padding:12px;}
 .ob-cta.secondary:hover{border-color:var(--yd);color:var(--y);background:var(--ydim);}
 .ob-form{padding:52px 28px 200px;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;}
-.ob-bottom{padding:20px 28px calc(env(safe-area-inset-bottom) + 20px);border-top:0.5px solid var(--border);flex-shrink:0;background:var(--black);position:sticky;bottom:0;z-index:10;}
+.ob-form::-webkit-scrollbar{display:none;}
 .ob-back{display:flex;align-items:center;gap:8px;color:var(--dim);font-size:13px;cursor:pointer;margin-bottom:28px;width:fit-content;}
 .ob-back:hover{color:var(--y);}
 .ob-step-label{font-size:11px;color:var(--y);letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;}
@@ -236,21 +236,6 @@ textarea:focus{border-color:var(--yd);}
 .mem-bar-bg{height:3px;background:var(--s3);border-radius:99px;overflow:hidden;margin-top:4px;}
 .mem-bar-fill{height:3px;border-radius:99px;}
 .mem-amt{font-size:12px;color:var(--muted);flex-shrink:0;}
-.home-group-card{margin:0 22px;background:var(--s1);border:0.5px solid var(--y);border-radius:16px;padding:14px 16px;cursor:pointer;transition:background .2s;}
-.home-group-card:hover{background:var(--s2);}
-.hgc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
-.hgc-left{display:flex;align-items:center;gap:8px;}
-.hgc-icon{font-size:18px;}
-.hgc-name{font-size:14px;font-weight:500;color:var(--text);}
-.hgc-badge{background:var(--ydim);border:0.5px solid var(--yd);color:var(--y);font-size:10px;padding:3px 8px;border-radius:99px;}
-.hgc-bar-bg{height:4px;background:var(--s3);border-radius:99px;overflow:hidden;margin-bottom:8px;}
-.hgc-bar-fill{height:4px;background:var(--y);border-radius:99px;}
-.hgc-bottom{display:flex;align-items:center;justify-content:space-between;}
-.hgc-avatars{display:flex;}
-.hgc-av{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--s1);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;margin-left:-5px;}
-.hgc-av:first-child{margin-left:0;}
-.hgc-info{font-size:12px;color:var(--muted);}
-.hgc-info b{color:var(--y);}
 .bank-card{margin:0 22px;background:var(--s1);border:0.5px solid var(--border);border-radius:16px;padding:16px;}
 .bank-top{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
 .bank-icon{width:40px;height:40px;border-radius:12px;background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:20px;}
@@ -381,6 +366,8 @@ textarea:focus{border-color:var(--yd);}
 </div>
 
 <div class="app" id="main-app" style="display:none;">
+
+  <!-- HOME -->
   <div class="screen active" id="screen-home">
     <div class="scroll">
       <div class="page-header" data-bg="VAULTUP">
@@ -403,7 +390,7 @@ textarea:focus{border-color:var(--yd);}
         <div class="nudge-txt" id="nudge-txt">Hey! I'm Val — tap here to say hi and I'll give you your first money tip 👋</div>
         <div class="nudge-foot"><div class="nudge-av"><div class="ndot"></div></div><div class="nudge-name">Val · just now</div><div class="nudge-act">chat →</div></div>
       </div>
-      <div class="sec-hdr"><span class="sec-title">Your goals</span><span class="sec-link" onclick="goToChat('Give me a full update on all my goals')">see all →</span></div>
+      <div class="sec-hdr"><span class="sec-title">Your goals</span><span class="sec-link" onclick="navigate('goals')">manage →</span></div>
       <div class="goals-list" id="home-goals"></div>
       <button class="add-btn" onclick="openModal('addGoal')">+ add a new goal</button>
       <div class="sec-hdr"><span class="sec-title">This month's spending</span><span class="sec-link" onclick="navigate('stats')">full stats →</span></div>
@@ -416,6 +403,7 @@ textarea:focus{border-color:var(--yd);}
     </div>
   </div>
 
+  <!-- CHAT -->
   <div class="screen" id="screen-chat">
     <div class="chat-hdr">
       <div class="coach-info">
@@ -447,6 +435,20 @@ textarea:focus{border-color:var(--yd);}
     </div>
   </div>
 
+  <!-- GOALS MANAGEMENT -->
+  <div class="screen" id="screen-goals">
+    <div class="page-header" data-bg="GOALS">
+      <div><div class="page-title">Your Goals</div><div class="page-sub" id="goals-screen-count">0 active goals</div></div>
+      <button onclick="openModal('addGoal')" style="background:var(--y);border:none;border-radius:10px;color:var(--black);font-size:13px;font-weight:700;padding:8px 14px;cursor:pointer;font-family:'DM Sans',sans-serif;">+ Add</button>
+    </div>
+    <div class="scroll">
+      <div style="height:16px;"></div>
+      <div id="goals-management-list" style="margin:0 22px;display:flex;flex-direction:column;gap:12px;"></div>
+      <div style="height:28px;"></div>
+    </div>
+  </div>
+
+  <!-- STATS -->
   <div class="screen" id="screen-stats">
     <div class="scroll">
       <div class="page-header" data-bg="STATS"><div><div class="page-title">Stats</div><div class="page-sub" id="stats-month">April 2026</div></div></div>
@@ -459,7 +461,7 @@ textarea:focus{border-color:var(--yd);}
           <div class="sh-item"><div class="sh-item-lbl">level</div><div class="sh-item-val" id="stats-level">Bronze</div></div>
         </div>
       </div>
-      <div class="sec-hdr"><span class="sec-title">Your goals</span><span class="sec-link" onclick="goToChat('Analyse all my goals and tell me how I can hit them faster')">ask Val →</span></div>
+      <div class="sec-hdr"><span class="sec-title">Your goals</span><span class="sec-link" onclick="navigate('goals')">manage →</span></div>
       <div id="stats-goals" class="spend-breakdown"></div>
       <div class="sec-hdr"><span class="sec-title">Monthly history</span></div>
       <div class="month-tabs" id="month-tabs-container">
@@ -473,6 +475,7 @@ textarea:focus{border-color:var(--yd);}
     </div>
   </div>
 
+  <!-- REWARDS -->
   <div class="screen" id="screen-rewards">
     <div class="scroll">
       <div class="page-header" data-bg="REWARDS"><div><div class="page-title">Rewards</div><div class="page-sub">Keep the streak alive</div></div></div>
@@ -497,6 +500,7 @@ textarea:focus{border-color:var(--yd);}
     </div>
   </div>
 
+  <!-- SETTINGS -->
   <div class="screen" id="screen-settings">
     <div class="scroll">
       <div class="page-header" data-bg="SET"><div><div class="page-title">Settings</div><div class="page-sub">Vaultup v2.0</div></div></div>
@@ -506,7 +510,7 @@ textarea:focus{border-color:var(--yd);}
         <div class="setting-row" onclick="editSetting('income')"><div class="setting-left"><div class="setting-icon">💷</div><div><div class="setting-title">Monthly income</div><div class="setting-sub" id="set-income">-</div></div></div><div class="setting-arrow">›</div></div>
         <div class="setting-row" onclick="editSetting('target')"><div class="setting-left"><div class="setting-icon">🎯</div><div><div class="setting-title">Monthly savings target</div><div class="setting-sub" id="set-target">-</div></div></div><div class="setting-arrow">›</div></div>
         <div class="setting-section-lbl">Your coach</div>
-        <div class="setting-row" onclick="goToChat('I want to update my goals')"><div class="setting-left"><div class="setting-icon">🏆</div><div><div class="setting-title">Manage goals</div><div class="setting-sub" id="set-goals">-</div></div></div><div class="setting-arrow">›</div></div>
+        <div class="setting-row" onclick="navigate('goals')"><div class="setting-left"><div class="setting-icon">🏆</div><div><div class="setting-title">Manage goals</div><div class="setting-sub" id="set-goals">-</div></div></div><div class="setting-arrow">›</div></div>
         <div class="setting-row" onclick="openSpendingModal()"><div class="setting-left"><div class="setting-icon">📊</div><div><div class="setting-title">Update spending</div><div class="setting-sub" id="set-spending">Tap to update this month</div></div></div><div class="setting-arrow">›</div></div>
         <div class="setting-section-lbl">App</div>
         <div class="setting-row" onclick="navigate('bank')"><div class="setting-left"><div class="setting-icon">🏦</div><div><div class="setting-title">Link bank account</div><div class="setting-sub">Open Banking — coming soon</div></div></div><div class="setting-arrow">›</div></div>
@@ -517,6 +521,7 @@ textarea:focus{border-color:var(--yd);}
     </div>
   </div>
 
+  <!-- GROUPS -->
   <div class="screen" id="screen-groups">
     <div class="page-header" data-bg="SQUADS" style="flex-shrink:0;">
       <div><div class="page-title">Groups</div><div class="page-sub">Save together, go further</div></div>
@@ -524,43 +529,18 @@ textarea:focus{border-color:var(--yd);}
     </div>
     <div class="scroll">
       <div style="height:16px;"></div>
-      <div class="group-card">
-        <div class="gc-top"><div class="gc-icon">✈️</div><div><div class="gc-name">Paris Trip</div><div class="gc-meta">5 members · deadline May 14, 2026</div></div></div>
-        <div class="gc-goal-lbl">Group goal</div>
-        <div class="gc-goal-name">Paris weekend getaway ✈️</div>
-        <div class="gc-bar-bg"><div class="gc-bar-fill" style="width:38%"></div></div>
-        <div class="gc-members">
-          <div class="gc-avatars">
-            <div class="gc-av" style="background:#7F77DD;color:#fff;">P</div>
-            <div class="gc-av" style="background:#1D9E75;color:#fff;">Sh</div>
-            <div class="gc-av" style="background:#D85A30;color:#fff;">Pr</div>
-            <div class="gc-av" style="background:#534AB7;color:#fff;">A</div>
-            <div class="gc-av" style="background:#0F6E56;color:#fff;">Sw</div>
-          </div>
-          <div class="gc-progress-txt">£760 of <b>£2,000</b> · 38%</div>
-        </div>
-        <div class="member-rows">
-          <div class="member-row"><div class="mem-av" style="background:#7F77DD;color:#fff;" id="group-your-av">P</div><div class="mem-info"><div class="mem-name" id="group-your-name">You 👑</div><div class="mem-bar-bg"><div class="mem-bar-fill" style="width:55%;background:var(--y)"></div></div></div><div class="mem-amt">£275</div></div>
-          <div class="member-row"><div class="mem-av" style="background:#1D9E75;color:#fff;">Sh</div><div class="mem-info"><div class="mem-name">Shubham</div><div class="mem-bar-bg"><div class="mem-bar-fill" style="width:44%;background:#1D9E75"></div></div></div><div class="mem-amt">£220</div></div>
-          <div class="member-row"><div class="mem-av" style="background:#D85A30;color:#fff;">Pr</div><div class="mem-info"><div class="mem-name">Praneet</div><div class="mem-bar-bg"><div class="mem-bar-fill" style="width:30%;background:#D85A30"></div></div></div><div class="mem-amt">£150</div></div>
-          <div class="member-row"><div class="mem-av" style="background:#534AB7;color:#fff;">A</div><div class="mem-info"><div class="mem-name">Atharva</div><div class="mem-bar-bg"><div class="mem-bar-fill" style="width:23%;background:#534AB7"></div></div></div><div class="mem-amt">£115</div></div>
-          <div class="member-row"><div class="mem-av" style="background:#0F6E56;color:#fff;">Sw</div><div class="mem-info"><div class="mem-name">Shashwat</div><div class="mem-bar-bg"><div class="mem-bar-fill" style="width:0%;background:#0F6E56"></div></div></div><div class="mem-amt">£0 🐢</div></div>
-        </div>
-        <div style="margin-top:14px;display:flex;gap:8px;">
-          <button onclick="goToChat('My group Paris Trip needs £2,000. We have £760 across 5 people with 52 days left. Give us a plan.')" style="flex:1;padding:10px;background:var(--ydim);border:0.5px solid var(--yd);border-radius:10px;color:var(--y);font-size:12px;font-weight:500;cursor:pointer;font-family:sans-serif;">Ask Val 💬</button>
-          <button onclick="openModal('invite')" style="flex:1;padding:10px;background:var(--s2);border:0.5px solid var(--border);border-radius:10px;color:var(--muted);font-size:12px;font-weight:500;cursor:pointer;font-family:sans-serif;">Invite friends 🔗</button>
-        </div>
-      </div>
       <div id="extra-groups-container"></div>
-      <div id="empty-groups-placeholder" style="margin:0 22px;background:var(--s1);border:0.5px dashed var(--border);border-radius:14px;padding:20px;text-align:center;">
-        <div style="font-size:28px;margin-bottom:8px;">👥</div>
-        <div style="font-size:14px;color:var(--muted);line-height:1.6;">Start a new group with friends and set a shared savings goal.</div>
-        <button onclick="openModal('createGroup')" style="margin-top:14px;padding:10px 20px;background:var(--y);border:none;border-radius:10px;color:var(--black);font-size:13px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;">Create a group</button>
+      <div id="empty-groups-placeholder" style="margin:0 22px;background:var(--s1);border:0.5px dashed var(--border);border-radius:14px;padding:32px 20px;text-align:center;">
+        <div style="font-size:40px;margin-bottom:12px;">👥</div>
+        <div style="font-size:15px;font-weight:500;color:var(--text);margin-bottom:8px;">No groups yet</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:20px;">Start saving with friends toward a shared goal — holiday, festival, whatever.</div>
+        <button onclick="openModal('createGroup')" style="padding:12px 24px;background:var(--y);border:none;border-radius:12px;color:var(--black);font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;">Create your first group →</button>
       </div>
       <div style="height:28px;"></div>
     </div>
   </div>
 
+  <!-- BANK -->
   <div class="screen" id="screen-bank">
     <div class="page-header" data-bg="BANK" style="flex-shrink:0;"><div><div class="page-title">Bank</div><div class="page-sub">Link your accounts</div></div></div>
     <div class="scroll">
@@ -585,16 +565,17 @@ textarea:focus{border-color:var(--yd);}
     </div>
   </div>
 
+  <!-- MODALS -->
   <div class="modal-overlay" id="modal-createGroup" onclick="closeModal('createGroup')">
     <div class="modal" onclick="event.stopPropagation()">
       <div class="modal-handle"></div>
       <div class="modal-title">Create a group</div>
       <div class="modal-sub">Set a shared savings goal with friends</div>
       <div class="modal-label">Group name</div>
-      <input class="modal-input" placeholder="e.g. Paris Squad, Ibiza 2026..." id="groupName"/>
+      <input class="modal-input" placeholder="e.g. Ibiza 2026, Festival crew..." id="groupName"/>
       <div class="modal-label">Goal name</div>
-      <input class="modal-input" placeholder="e.g. Paris weekend trip" id="goalName"/>
-      <div class="modal-label">Total amount needed</div>
+      <input class="modal-input" placeholder="e.g. Ibiza trip flights + hotel" id="goalName"/>
+      <div class="modal-label">Total amount needed (£)</div>
       <input class="modal-input" placeholder="e.g. 2000" id="goalAmount" type="number"/>
       <div class="modal-label">Deadline</div>
       <input class="modal-input" type="date" id="goalDate"/>
@@ -607,11 +588,11 @@ textarea:focus{border-color:var(--yd);}
     <div class="modal" onclick="event.stopPropagation()">
       <div class="modal-handle"></div>
       <div class="modal-title">Invite friends</div>
-      <div class="modal-sub">Share your link</div>
+      <div class="modal-sub">Share your group link</div>
       <div class="modal-label">Invite link</div>
       <div class="invite-link-box">
-        <span class="invite-link-txt">vaultup.app/join/paris-squad-x7k2</span>
-        <span class="invite-link-copy" onclick="navigator.clipboard.writeText('https://vaultup.app/join/paris-squad-x7k2');showToast('Link copied! 🔗')">Copy 📋</span>
+        <span class="invite-link-txt" id="invite-link-txt">vaultup.vercel.app</span>
+        <span class="invite-link-copy" onclick="copyInviteLink()">Copy 📋</span>
       </div>
       <button class="modal-btn secondary" onclick="closeModal('invite')">Done</button>
     </div>
@@ -628,6 +609,23 @@ textarea:focus{border-color:var(--yd);}
     </div>
   </div>
 
+  <div class="modal-overlay" id="modal-editGoal" onclick="closeModal('editGoal')">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="modal-handle"></div>
+      <div class="modal-title">Edit goal</div>
+      <div class="modal-label">Goal name</div>
+      <input class="modal-input" id="editGoalName" placeholder="e.g. Holiday"/>
+      <div class="modal-label">Target amount (£)</div>
+      <input class="modal-input" id="editGoalTarget" type="number" placeholder="e.g. 500"/>
+      <div class="modal-label">Amount saved so far (£)</div>
+      <input class="modal-input" id="editGoalSaved" type="number" placeholder="0"/>
+      <div class="modal-label">Target date (optional)</div>
+      <input class="modal-input" id="editGoalDate" type="date"/>
+      <button class="modal-btn" onclick="saveEditGoal()">Save changes →</button>
+      <button class="modal-btn secondary" onclick="closeModal('editGoal')">Cancel</button>
+    </div>
+  </div>
+
   <div class="modal-overlay" id="modal-addGoal" onclick="closeModal('addGoal')">
     <div class="modal" onclick="event.stopPropagation()">
       <div class="modal-handle"></div>
@@ -635,8 +633,10 @@ textarea:focus{border-color:var(--yd);}
       <div class="modal-sub">What are you saving for?</div>
       <div class="modal-label">Goal name</div>
       <input class="modal-input" id="newGoalName" placeholder="e.g. Holiday, PS6, Emergency fund"/>
-      <div class="modal-label">Target amount</div>
+      <div class="modal-label">Target amount (£)</div>
       <div style="position:relative;margin-bottom:14px;"><span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;">£</span><input class="modal-input" id="newGoalAmount" type="number" placeholder="e.g. 500" style="padding-left:32px;margin-bottom:0;"/></div>
+      <div class="modal-label">Target date (optional)</div>
+      <input class="modal-input" id="newGoalDate" type="date"/>
       <div class="modal-label">Pick an emoji</div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;" id="emoji-picker">
         <button onclick="selectEmoji(this,'🏖️')" style="padding:8px 12px;border-radius:10px;border:0.5px solid var(--border);background:transparent;font-size:18px;cursor:pointer;">🏖️</button>
@@ -648,6 +648,7 @@ textarea:focus{border-color:var(--yd);}
         <button onclick="selectEmoji(this,'💍')" style="padding:8px 12px;border-radius:10px;border:0.5px solid var(--border);background:transparent;font-size:18px;cursor:pointer;">💍</button>
         <button onclick="selectEmoji(this,'🎪')" style="padding:8px 12px;border-radius:10px;border:0.5px solid var(--border);background:transparent;font-size:18px;cursor:pointer;">🎪</button>
         <button onclick="selectEmoji(this,'💰')" style="padding:8px 12px;border-radius:10px;border:0.5px solid var(--border);background:transparent;font-size:18px;cursor:pointer;">💰</button>
+        <button onclick="selectEmoji(this,'🎯')" style="padding:8px 12px;border-radius:10px;border:0.5px solid var(--border);background:transparent;font-size:18px;cursor:pointer;">🎯</button>
       </div>
       <button class="modal-btn" onclick="saveNewGoal()">Add goal →</button>
       <button class="modal-btn secondary" onclick="closeModal('addGoal')">Cancel</button>
@@ -684,12 +685,13 @@ textarea:focus{border-color:var(--yd);}
 </div>
 
 <script>
-let USER=null,chatHistory=[],chatLoading=false,selectedGoals=[],selectedLeak=null,editingField=null,selectedGoalEmoji='🎯',lastSendTime=0;
+let USER=null,chatHistory=[],chatLoading=false,selectedGoals=[],selectedLeak=null,editingField=null,selectedGoalEmoji='🎯',lastSendTime=0,editingGoalIndex=-1;
 const STORAGE_KEY='vaultup_user_v2';
 
 function boot(){
   const saved=localStorage.getItem(STORAGE_KEY);
   updateSocialCount();
+  checkDailyStreak();
   if(saved){USER=JSON.parse(saved);launchApp();}
   else{document.getElementById('ob-screen').classList.add('active');}
 }
@@ -703,6 +705,21 @@ async function updateSocialCount(){
       document.getElementById('socialWrap').style.display='flex';
     }
   }catch(e){}
+}
+
+function checkDailyStreak(){
+  const saved=localStorage.getItem(STORAGE_KEY);
+  if(!saved)return;
+  const u=JSON.parse(saved);
+  if(!u.lastActiveDate){u.lastActiveDate=new Date().toDateString();localStorage.setItem(STORAGE_KEY,JSON.stringify(u));return;}
+  const today=new Date().toDateString();
+  const last=new Date(u.lastActiveDate);
+  const diff=Math.floor((new Date()-last)/(1000*60*60*24));
+  if(u.lastActiveDate===today)return;
+  if(diff===1){u.streak=(u.streak||1)+1;}
+  else if(diff>1){u.streak=1;}
+  u.lastActiveDate=today;
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(u));
 }
 
 let currentStep=0;
@@ -735,7 +752,17 @@ function finishOnboarding(){
   const name=document.getElementById('ob-name').value.trim();
   const income=parseInt(document.getElementById('ob-income').value);
   const target=parseInt(document.getElementById('ob-target').value);
-  USER={name,income,savingsTarget:target,goals:selectedGoals.map(g=>({emoji:g.split(' ')[0],name:g.split(' ').slice(1).join(' '),target:Math.round(income*0.4),saved:0})),biggestLeak:selectedLeak||'general spending',savedThisMonth:0,streak:1,xp:50,joinedAt:new Date().toISOString(),spending:{food:0,subs:0,travel:0}};
+  USER={
+    name,income,savingsTarget:target,
+    userId:crypto.randomUUID(),
+    goals:selectedGoals.map(g=>({emoji:g.split(' ')[0],name:g.split(' ').slice(1).join(' '),target:Math.round(income*0.4),saved:0,date:''})),
+    biggestLeak:selectedLeak||'general spending',
+    savedThisMonth:0,streak:1,xp:50,
+    joinedAt:new Date().toISOString(),
+    lastActiveDate:new Date().toDateString(),
+    spending:{food:0,subs:0,travel:0},
+    groups:[]
+  };
   localStorage.setItem(STORAGE_KEY,JSON.stringify(USER));
   fetch('/api/count',{method:'POST'}).catch(()=>{});
   launchApp();
@@ -744,7 +771,7 @@ function finishOnboarding(){
 function launchApp(){
   document.getElementById('ob-screen').style.display='none';
   document.getElementById('main-app').style.display='flex';
-  renderAll();buildCalendar();renderBadges();renderGroups();
+  renderAll();buildCalendar();renderBadges();renderGroups();renderGoalsScreen();
 }
 
 function renderAll(){
@@ -773,9 +800,9 @@ function renderAll(){
   }
   const goalsEl=document.getElementById('home-goals');
   goalsEl.innerHTML='';
-  (USER.goals||[]).forEach(g=>{
+  (USER.goals||[]).slice(0,3).forEach(g=>{
     const pct=Math.min(100,Math.round((g.saved/g.target)*100)),left=g.target-g.saved;
-    goalsEl.innerHTML+=`<div class="goal-card" onclick="goToChat('Give me an update on my ${g.name} goal and a tip to reach it faster')"><div class="goal-em">${g.emoji}</div><div class="goal-info"><div class="goal-name">${g.name}</div><div class="goal-bar-bg"><div class="goal-bar-fill" style="width:${pct}%;background:var(--y)"></div></div><div class="goal-meta"><span class="goal-pct">${pct}% done</span><span class="goal-left">£${left} to go</span></div></div><div class="goal-rv">${pct}%</div></div>`;
+    goalsEl.innerHTML+=`<div class="goal-card" onclick="navigate('goals')"><div class="goal-em">${g.emoji}</div><div class="goal-info"><div class="goal-name">${g.name}</div><div class="goal-bar-bg"><div class="goal-bar-fill" style="width:${pct}%;background:var(--y)"></div></div><div class="goal-meta"><span class="goal-pct">${pct}% done</span><span class="goal-left">£${left} to go</span></div></div><div class="goal-rv">${pct}%</div></div>`;
   });
   document.getElementById('chat-welcome-name').textContent='Hey '+name+' 👋';
   document.getElementById('stats-month').textContent=month;
@@ -801,8 +828,6 @@ function renderAll(){
   document.getElementById('set-income').textContent='£'+USER.income+' / month';
   document.getElementById('set-target').textContent='£'+USER.savingsTarget+' / month';
   document.getElementById('set-goals').textContent=(USER.goals||[]).length+' active goals';
-  document.getElementById('group-your-av').textContent=initial;
-  document.getElementById('group-your-name').textContent=name+' 👑';
   const shortMonth=new Date().toLocaleString('default',{month:'short'});
   const curTab=document.getElementById('current-month-tab');
   if(curTab)curTab.textContent=shortMonth;
@@ -844,10 +869,79 @@ function renderBadges(){
   document.getElementById('badges-grid').innerHTML=badges.map(b=>`<div class="badge-card ${b.earned?'earned':''}"><div class="badge-icon">${b.icon}</div><div class="badge-name">${b.name}</div><div class="badge-desc">${b.desc}</div></div>`).join('');
 }
 
+function renderGoalsScreen(){
+  if(!USER)return;
+  const goals=USER.goals||[];
+  const countEl=document.getElementById('goals-screen-count');
+  if(countEl)countEl.textContent=goals.length+' active goal'+(goals.length!==1?'s':'');
+  const list=document.getElementById('goals-management-list');
+  if(!list)return;
+  if(goals.length===0){
+    list.innerHTML=`<div style="text-align:center;padding:40px 20px;"><div style="font-size:48px;margin-bottom:16px;">🎯</div><div style="font-size:15px;color:var(--muted);line-height:1.7;">No goals yet.<br>Add your first one above.</div></div>`;
+    return;
+  }
+  list.innerHTML=goals.map((g,i)=>{
+    const pct=Math.min(100,Math.round((g.saved/g.target)*100));
+    const left=g.target-g.saved;
+    const dateStr=g.date?`<div style="font-size:11px;color:var(--dim);margin-top:3px;">📅 ${g.date}</div>`:'';
+    return `<div style="background:var(--s1);border:0.5px solid var(--border);border-radius:16px;padding:16px;">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+        <div style="font-size:24px;width:46px;height:46px;background:var(--s2);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${g.emoji}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:15px;font-weight:500;color:var(--text);">${g.name}</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px;">£${g.saved.toLocaleString()} of £${g.target.toLocaleString()} saved</div>
+          ${dateStr}
+        </div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--y);letter-spacing:.02em;">${pct}%</div>
+      </div>
+      <div style="height:6px;background:var(--s3);border-radius:99px;overflow:hidden;margin-bottom:10px;">
+        <div style="height:6px;background:var(--y);border-radius:99px;width:${pct}%;transition:width .5s ease;"></div>
+      </div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:14px;">£${left.toLocaleString()} still to go${g.date?' · Target: '+g.date:''}</div>
+      <div style="display:flex;gap:8px;">
+        <button onclick="goToChat('Give me a detailed plan to hit my ${g.name} goal of £${g.target}. I have £${g.saved} saved so far.')" style="flex:1;padding:9px;background:var(--ydim);border:0.5px solid var(--yd);border-radius:10px;color:var(--y);font-size:12px;font-weight:500;cursor:pointer;font-family:sans-serif;">Ask Val 💬</button>
+        <button onclick="openEditGoal(${i})" style="flex:1;padding:9px;background:var(--s2);border:0.5px solid var(--border);border-radius:10px;color:var(--text);font-size:12px;font-weight:500;cursor:pointer;font-family:sans-serif;">Edit ✏️</button>
+        <button onclick="deleteGoal(${i})" style="padding:9px 14px;background:var(--s2);border:0.5px solid var(--border);border-radius:10px;color:var(--red);font-size:12px;cursor:pointer;font-family:sans-serif;">🗑️</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openEditGoal(i){
+  editingGoalIndex=i;
+  const g=USER.goals[i];
+  document.getElementById('editGoalName').value=g.name;
+  document.getElementById('editGoalTarget').value=g.target;
+  document.getElementById('editGoalSaved').value=g.saved;
+  document.getElementById('editGoalDate').value=g.date||'';
+  openModal('editGoal');
+}
+
+function saveEditGoal(){
+  const i=editingGoalIndex;
+  if(i<0||!USER.goals[i])return;
+  const name=document.getElementById('editGoalName').value.trim();
+  const target=parseInt(document.getElementById('editGoalTarget').value);
+  const saved=parseInt(document.getElementById('editGoalSaved').value)||0;
+  const date=document.getElementById('editGoalDate').value;
+  if(!name){showToast('Enter a goal name');return;}
+  if(!target||target<=0){showToast('Enter a target amount');return;}
+  USER.goals[i]={...USER.goals[i],name,target,saved,date};
+  saveUser();renderAll();renderGoalsScreen();closeModal('editGoal');
+  showToast('Goal updated ✓');
+}
+
+function deleteGoal(i){
+  if(!confirm('Delete this goal? This cannot be undone.'))return;
+  USER.goals.splice(i,1);
+  saveUser();renderAll();renderGoalsScreen();
+  showToast('Goal deleted');
+}
+
 function buildSystemPrompt(){
   if(!USER)return'';
-  const goalsList=(USER.goals||[]).map(g=>`  - ${g.name}: £${g.saved} saved of £${g.target} target (${Math.round(g.saved/g.target*100)}% done)`).join('\n');
-  return `You are Val, the AI money coach inside Vaultup — a personal finance app for young adults (18-30) in the UK. Be a sharp, friendly mate who knows money — direct, casual, zero jargon, zero waffle.\n\n${USER.name}'s financial profile:\n- Monthly take-home: £${USER.income}\n- Monthly savings target: £${USER.savingsTarget}\n- Saved this month: £${USER.savedThisMonth||0}\n- Biggest spending leak: ${USER.biggestLeak||'unknown'}\n- Current streak: ${USER.streak} days\n- Level: ${getLevel(USER.xp||50).name} (${USER.xp||50} XP)\n- Spending this month — Food: £${USER.spending?.food||0}, Subs: £${USER.spending?.subs||0}, Travel: £${USER.spending?.travel||0}\n\nGoals:\n${goalsList||'  - No goals set yet — encourage them to add one'}\n\nPersonality rules:\n- Use ${USER.name}'s name occasionally but not every message\n- Reference their ACTUAL numbers — never be vague\n- Short responses (2-4 sentences) unless asked for more detail\n- Celebrate wins with energy, call out leaks without preaching\n- One clear actionable tip per response unless more is requested\n- Never say "As an AI" — you are their coach\n- Occasional emoji, don't overdo it\n- Sign off as "— Val" occasionally on longer responses`;
+  const goalsList=(USER.goals||[]).map(g=>`  - ${g.name}: £${g.saved} saved of £${g.target} target (${Math.round(g.saved/g.target*100)}% done)${g.date?' · target date: '+g.date:''}`).join('\n');
+  return `You are Val, the AI money coach inside Vaultup — a personal finance app for young adults (16-28) in the UK. Be a sharp, friendly mate who knows money — direct, casual, zero jargon, zero waffle.\n\n${USER.name}'s financial profile:\n- Monthly take-home: £${USER.income}\n- Monthly savings target: £${USER.savingsTarget}\n- Saved this month: £${USER.savedThisMonth||0}\n- Biggest spending leak: ${USER.biggestLeak||'unknown'}\n- Current streak: ${USER.streak} days\n- Level: ${getLevel(USER.xp||50).name} (${USER.xp||50} XP)\n- Spending this month — Food: £${USER.spending?.food||0}, Subs: £${USER.spending?.subs||0}, Travel: £${USER.spending?.travel||0}\n\nGoals:\n${goalsList||'  - No goals set yet — encourage them to add one'}\n\nPersonality rules:\n- Use ${USER.name}'s name occasionally but not every message\n- Reference their ACTUAL numbers — never be vague\n- Short responses (2-4 sentences) unless asked for more detail\n- Celebrate wins with energy, call out leaks without preaching\n- One clear actionable tip per response unless more is requested\n- Never say "As an AI" — you are their coach\n- Occasional emoji, don't overdo it\n- Sign off as "— Val" occasionally on longer responses\n- If asked about ISAs: under 18 = Junior ISA (£9,000/yr), 18+ = Cash ISA or Stocks & Shares ISA (£20,000/yr)\n- If asked about student loans: Plan 2 repayment starts above £27,295/yr at 9% of earnings above threshold`;
 }
 
 function navigate(s){
@@ -856,6 +950,7 @@ function navigate(s){
   document.querySelectorAll('.nav-item').forEach(n=>{n.classList.remove('active');const d=n.querySelector('.nav-dot');if(d)d.remove();});
   const nav=document.getElementById('nav-'+s);
   if(nav){nav.classList.add('active');const d=document.createElement('div');d.className='nav-dot';nav.appendChild(d);}
+  if(s==='goals')renderGoalsScreen();
 }
 function goToChat(msg){navigate('chat');setTimeout(()=>sendQuick(msg),150);}
 function nowTime(){return new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});}
@@ -909,17 +1004,20 @@ function checkForSpendingUpdate(text){
 }
 
 function awardXP(amount){if(!USER)return;USER.xp=(USER.xp||50)+amount;saveUser();renderAll();}
-
 function selectEmoji(btn,emoji){document.querySelectorAll('#emoji-picker button').forEach(b=>b.style.background='transparent');btn.style.background='var(--ydim)';selectedGoalEmoji=emoji;}
 
 function saveNewGoal(){
-  const name=document.getElementById('newGoalName').value.trim(),amount=parseInt(document.getElementById('newGoalAmount').value);
+  const name=document.getElementById('newGoalName').value.trim();
+  const amount=parseInt(document.getElementById('newGoalAmount').value);
+  const date=document.getElementById('newGoalDate').value;
   if(!name){showToast('Enter a goal name');return;}
   if(!amount||amount<=0){showToast('Enter a target amount');return;}
   if(!USER.goals)USER.goals=[];
-  USER.goals.push({emoji:selectedGoalEmoji,name,target:amount,saved:0});
-  saveUser();renderAll();closeModal('addGoal');
-  document.getElementById('newGoalName').value='';document.getElementById('newGoalAmount').value='';
+  USER.goals.push({emoji:selectedGoalEmoji,name,target:amount,saved:0,date});
+  saveUser();renderAll();renderGoalsScreen();closeModal('addGoal');
+  document.getElementById('newGoalName').value='';
+  document.getElementById('newGoalAmount').value='';
+  document.getElementById('newGoalDate').value='';
   document.querySelectorAll('#emoji-picker button').forEach(b=>b.style.background='transparent');
   selectedGoalEmoji='🎯';awardXP(50);showToast('Goal added! Val will help you hit it 🎯');
 }
@@ -984,7 +1082,8 @@ function createGroup(){
   const amount=document.getElementById('goalAmount').value||'1000',date=document.getElementById('goalDate').value;
   if(!name||!goal){showToast('Fill in group name and goal first!');return;}
   if(!USER.groups)USER.groups=[];
-  USER.groups.push({name,goal,amount:parseInt(amount),date,members:1,saved:0});
+  const code=Math.random().toString(36).substring(2,8).toUpperCase();
+  USER.groups.push({name,goal,amount:parseInt(amount),date,members:[{name:USER.name,saved:0}],saved:0,code});
   saveUser();renderGroups();closeModal('createGroup');
   document.getElementById('groupName').value='';document.getElementById('goalName').value='';document.getElementById('goalAmount').value='';document.getElementById('goalDate').value='';
   showToast('Group "'+name+'" created! 🎉');
@@ -998,8 +1097,38 @@ function renderGroups(){
   document.getElementById('empty-groups-placeholder').style.display='none';
   document.getElementById('extra-groups-container').innerHTML=USER.groups.map((g,i)=>{
     const pct=Math.min(100,Math.round((g.saved/g.amount)*100));
-    return `<div class="group-card" style="margin-bottom:10px;"><div class="gc-top"><div class="gc-icon">👥</div><div><div class="gc-name">${g.name}</div><div class="gc-meta">1 member${g.date?' · deadline '+g.date:''}</div></div></div><div class="gc-goal-lbl">Group goal</div><div class="gc-goal-name">${g.goal}</div><div class="gc-bar-bg"><div class="gc-bar-fill" style="width:${pct}%"></div></div><div class="gc-members"><div class="gc-avatars"><div class="gc-av" style="background:var(--y);color:var(--black);">${USER.name[0]}</div></div><div class="gc-progress-txt">£${g.saved} of <b>£${g.amount}</b> · ${pct}%</div></div><div style="margin-top:14px;display:flex;gap:8px;"><button onclick="goToChat('My group ${g.name} needs £${g.amount} for ${g.goal}. I have saved £${g.saved} so far. Give me a savings plan.')" style="flex:1;padding:10px;background:var(--ydim);border:0.5px solid var(--yd);border-radius:10px;color:var(--y);font-size:12px;font-weight:500;cursor:pointer;font-family:sans-serif;">Ask Val 💬</button><button onclick="deleteGroup(${i})" style="padding:10px 14px;background:var(--s2);border:0.5px solid var(--border);border-radius:10px;color:var(--red);font-size:12px;cursor:pointer;font-family:sans-serif;">Delete</button></div></div>`;
+    const memberCount=g.members?g.members.length:1;
+    return `<div class="group-card" style="margin-bottom:10px;">
+      <div class="gc-top">
+        <div class="gc-icon">👥</div>
+        <div><div class="gc-name">${g.name}</div><div class="gc-meta">${memberCount} member${memberCount!==1?'s':''}${g.date?' · deadline '+g.date:''}</div></div>
+      </div>
+      <div class="gc-goal-lbl">Group goal</div>
+      <div class="gc-goal-name">${g.goal}</div>
+      <div class="gc-bar-bg"><div class="gc-bar-fill" style="width:${pct}%"></div></div>
+      <div class="gc-members">
+        <div class="gc-avatars"><div class="gc-av" style="background:var(--y);color:var(--black);">${USER.name[0]}</div></div>
+        <div class="gc-progress-txt">£${g.saved} of <b>£${g.amount}</b> · ${pct}%</div>
+      </div>
+      <div style="margin-top:14px;display:flex;gap:8px;">
+        <button onclick="goToChat('My group ${g.name} needs £${g.amount} for ${g.goal}. We have £${g.saved} saved. Give us a plan.')" style="flex:1;padding:10px;background:var(--ydim);border:0.5px solid var(--yd);border-radius:10px;color:var(--y);font-size:12px;font-weight:500;cursor:pointer;font-family:sans-serif;">Ask Val 💬</button>
+        <button onclick="shareGroup(${i})" style="flex:1;padding:10px;background:var(--s2);border:0.5px solid var(--border);border-radius:10px;color:var(--muted);font-size:12px;font-weight:500;cursor:pointer;font-family:sans-serif;">Invite 🔗</button>
+        <button onclick="deleteGroup(${i})" style="padding:10px 14px;background:var(--s2);border:0.5px solid var(--border);border-radius:10px;color:var(--red);font-size:12px;cursor:pointer;font-family:sans-serif;">🗑️</button>
+      </div>
+    </div>`;
   }).join('');
+}
+
+function shareGroup(i){
+  const g=USER.groups[i];
+  const link=`https://vaultup.vercel.app?join=${g.code}`;
+  document.getElementById('invite-link-txt').textContent=link;
+  openModal('invite');
+}
+
+function copyInviteLink(){
+  const txt=document.getElementById('invite-link-txt').textContent;
+  navigator.clipboard.writeText(txt).then(()=>showToast('Link copied! 🔗')).catch(()=>showToast('Copy: '+txt));
 }
 
 function deleteGroup(i){if(!confirm('Delete this group?'))return;USER.groups.splice(i,1);saveUser();renderGroups();showToast('Group deleted');}
@@ -1027,15 +1156,13 @@ if(inp){
   inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}});
   inp.addEventListener('input',()=>{inp.style.height='auto';inp.style.height=Math.min(inp.scrollHeight,110)+'px';});
 }
-// ── Fix: scroll Continue button into view when keyboard opens on iOS ──
-document.querySelectorAll('.ob-form input, .ob-form textarea').forEach(el => {
-  el.addEventListener('focus', () => {
-    setTimeout(() => {
-      const bottom = document.querySelector('.ob-step.active .ob-bottom');
-      if (bottom) {
-        bottom.scrollIntoView({ behavior: 'smooth', block: 'end' });
-      }
-    }, 400);
+
+document.querySelectorAll('.ob-form input,.ob-form textarea').forEach(el=>{
+  el.addEventListener('focus',()=>{
+    setTimeout(()=>{
+      const bottom=document.querySelector('.ob-step.active .ob-bottom');
+      if(bottom)bottom.scrollIntoView({behavior:'smooth',block:'end'});
+    },400);
   });
 });
 
