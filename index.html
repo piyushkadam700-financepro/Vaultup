@@ -1013,9 +1013,13 @@ function renderAll(){
   document.getElementById('home-name').textContent=name+' 👋';
   document.getElementById('home-avatar').textContent=initial;
   document.getElementById('home-month').textContent=month;
-  document.getElementById('home-saved').textContent='£'+(USER.savedThisMonth||0).toLocaleString();
-  const diff=(USER.savedThisMonth||0)-USER.savingsTarget;
-  document.getElementById('home-sub').innerHTML=diff>=0?`You're <b>£${diff} ahead</b> of your target 🔥`:`£${Math.abs(diff)} away from your <b>£${USER.savingsTarget}</b> target`;
+  const totalGoalTarget=(USER.goals||[]).reduce((s,g)=>s+g.target,0);
+const totalGoalSaved=(USER.goals||[]).reduce((s,g)=>s+g.saved,0);
+const displaySaved=totalGoalTarget>0?totalGoalSaved:(USER.savedThisMonth||0);
+const displayTarget=totalGoalTarget>0?totalGoalTarget:USER.savingsTarget;
+document.getElementById('home-saved').textContent='£'+displaySaved.toLocaleString();
+const diff=displaySaved-displayTarget;
+document.getElementById('home-sub').innerHTML=diff>=0?`You're <b>£${Math.abs(diff)} ahead</b> of your goals 🔥`:`<b>£${Math.abs(diff)}</b> away from your total goal of £${displayTarget.toLocaleString()}`;
   document.getElementById('home-streak').textContent=USER.streak+(USER.streak===1?' day':' days');
   document.getElementById('home-xp').textContent=(USER.xp||50).toLocaleString();
   const level=getLevel(USER.xp||50);
