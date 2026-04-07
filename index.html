@@ -1413,7 +1413,39 @@ function renderGroups(){
     </div>`;
   }).join('');
 }
+let editingGroupIndex=-1;
+function openEditGroup(i){
+  editingGroupIndex=i;
+  const g=USER.groups[i];
+  document.getElementById('editGroupName').value=g.name;
+  document.getElementById('editGroupGoal').value=g.goal;
+  document.getElementById('editGroupAmount').value=g.amount;
+  document.getElementById('editGroupDate').value=g.date||'';
+  const myMember=g.members?g.members.find(m=>m.name===USER.name):null;
+  document.getElementById('editGroupSaved').value=myMember?myMember.saved:0;
+  openModal('editGroup');
+}
 
+function saveEditGroup(){
+  const i=editingGroupIndex;
+  if(i<0||!USER.groups[i])return;
+  const name=document.getElementById('editGroupName').value.trim();
+  const goal=document.getElementById('editGroupGoal').value.trim();
+  const amount=parseInt(document.getElementById('editGroupAmount').value)||0;
+  const date=document.getElementById('editGroupDate').value;
+  const myContrib=parseInt(document.getElementById('editGroupSaved').value)||0;
+  if(!name||!goal){showToast('Fill in group name and goal');return;}
+  USER.groups[i].name=name;
+  USER.groups[i].goal=goal;
+  USER.groups[i].amount=amount;
+  USER.groups[i].date=date;
+  if(!USER.groups[i].members)USER.groups[i].members=[{name:USER.name,saved:0}];
+  const memberIdx=USER.groups[i].members.findIndex(m=>m.name===USER.name);
+  if(memberIdx>=0){USER.groups[i].members[memberIdx].saved=myContrib;}
+  else{USER.groups[i].members.push({name:USER.name,saved:myContrib});}
+  USER.groups[i].saved=USER.groups[i].members.reduce((s,m)=>s+m.saved,0);
+  saveUser();closeModal('editGroup');showToast('Group updated ✓');
+}
 function shareGroup(i){
   const g=USER.groups[i];
   document.getElementById('invite-link-txt').textContent=`https://vaultup.vercel.app?join=${g.code}`;
