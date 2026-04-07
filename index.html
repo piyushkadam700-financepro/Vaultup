@@ -767,6 +767,63 @@ function goStep(n){
 
 function goLogin(){showToast('Log in coming soon — sign up to get started!');}
 
+function loadDemo(){
+  USER={
+    name:'Alex',income:1800,savingsTarget:400,
+    userId:'demo-user',
+    isDemo:true,
+    goals:[
+      {emoji:'🏖️',name:'Holiday',target:1200,monthlyAmount:160,saved:410,date:'2026-08-01',isPrimary:true},
+      {emoji:'🛡️',name:'Emergency fund',target:2000,monthlyAmount:140,saved:240,date:'',isPrimary:false},
+      {emoji:'🏠',name:'House deposit',target:15000,monthlyAmount:100,saved:850,date:'2029-01-01',isPrimary:false},
+    ],
+    biggestLeak:'Deliveroo / UberEats',
+    savedThisMonth:320,streak:9,xp:380,
+    joinedAt:new Date(Date.now()-30*24*60*60*1000).toISOString(),
+    lastActiveDate:new Date().toDateString(),
+    spending:{food:210,subs:47,travel:68,other:35},
+    groups:[{name:'Ibiza Squad',goal:'Ibiza 2026 flights + hotel',amount:2400,date:'2026-06-01',members:[{name:'Alex',saved:320},{name:'Jamie',saved:280},{name:'Priya',saved:200}],saved:800,code:'IBZ26A'}]
+  };
+  document.getElementById('ob-screen').style.display='none';
+  document.getElementById('main-app').style.display='flex';
+  renderAll();buildCalendar();renderBadges();renderGroups();renderGoalsScreen();
+  setTimeout(()=>{
+    const msgs=document.getElementById('messages');
+    const w=document.getElementById('welcome-msg');if(w)w.remove();
+    const qr=document.getElementById('quickReplies');if(qr)qr.style.display='none';
+    const demoMsgs=[
+      {role:'user',text:'How am I doing this month?'},
+      {role:'ai',text:"You're smashing it Alex 🔥 £320 saved so far this month — that's 80% of your £400 target with a week still to go. Your Holiday fund is at 34% and looking on track for August. One thing to watch: Deliveroo is your biggest leak, you've spent £210 on food this month. Cut that by £50 and you'd hit your target every single month."},
+      {role:'user',text:'How long until I hit my holiday goal?'},
+      {role:'ai',text:"At £160/month you'll hit your £1,200 Holiday target in about 5 months — right on time for August 2026 ✈️ You've got £790 left to save. Keep the streak going and I'll flag if you're falling behind."},
+    ];
+    demoMsgs.forEach(m=>{
+      const wrap=document.createElement('div');
+      wrap.className='mwrap '+m.role;
+      const safe=m.text.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<b>$1</b>');
+      if(m.role==='ai'){wrap.innerHTML=`<div class="mav"><div class="mav-in"></div></div><div class="mbody"><div class="bubble">${safe}</div><div class="mtime">yesterday</div></div>`;}
+      else{wrap.innerHTML=`<div class="mbody"><div class="bubble">${m.text}</div><div class="mtime">yesterday</div></div>`;}
+      msgs.appendChild(wrap);
+    });
+    msgs.scrollTop=msgs.scrollHeight;
+  },300);
+  setTimeout(()=>{
+    const banner=document.createElement('div');
+    banner.style.cssText='position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:420px;background:var(--ydim);border-bottom:0.5px solid var(--yd);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;z-index:999;';
+    banner.innerHTML='<span style="font-size:12px;color:var(--y)">👀 Demo mode — <a onclick="exitDemo()" style="color:var(--y);text-decoration:underline;cursor:pointer">sign up free</a> to save your data</span><span onclick="this.parentElement.remove()" style="color:var(--dim);cursor:pointer;font-size:18px">×</span>';
+    document.body.appendChild(banner);
+  },500);
+}
+
+function exitDemo(){
+  USER=null;
+  document.getElementById('main-app').style.display='none';
+  document.getElementById('ob-screen').style.display='';
+  document.getElementById('ob-screen').classList.add('active');
+  document.querySelectorAll('div[style*="position:fixed"]').forEach(el=>el.remove());
+  goStep(0);
+}
+
 // ── ONBOARDING VALIDATION ──
 function validateStep1(){
   const name=document.getElementById('ob-name').value.trim();
