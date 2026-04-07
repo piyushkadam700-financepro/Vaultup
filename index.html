@@ -759,7 +759,7 @@ function finishOnboarding(){
   USER={
     name,income,savingsTarget:target,
     userId:crypto.randomUUID(),
-    goals:selectedGoals.map(g=>({emoji:g.split(' ')[0],name:g.split(' ').slice(1).join(' '),target:Math.round(income*0.4),saved:0,date:''})),
+    goals:selectedGoals.map((g,i)=>({emoji:g.split(' ')[0],name:g.split(' ').slice(1).join(' '),target:0,monthlyAmount:0,saved:0,date:'',isPrimary:i===0})),
     biggestLeak:selectedLeak||'general spending',
     savedThisMonth:0,streak:1,xp:50,
     joinedAt:new Date().toISOString(),
