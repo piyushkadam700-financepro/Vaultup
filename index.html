@@ -700,7 +700,24 @@ textarea:focus{border-color:var(--yd);}
       <button class="modal-btn secondary" onclick="closeModal('spending')">Cancel</button>
     </div>
   </div>
-
+<div class="modal-overlay" id="modal-editGroup" onclick="closeModal('editGroup')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Edit group</div>
+    <div class="modal-label">Group name</div>
+    <input class="modal-input" id="editGroupName"/>
+    <div class="modal-label">Goal</div>
+    <input class="modal-input" id="editGroupGoal"/>
+    <div class="modal-label">Total amount needed (£)</div>
+    <input class="modal-input" id="editGroupAmount" type="number"/>
+    <div class="modal-label">Deadline</div>
+    <input class="modal-input" id="editGroupDate" type="date"/>
+    <div class="modal-label">My contribution so far (£)</div>
+    <input class="modal-input" id="editGroupSaved" type="number" placeholder="0"/>
+    <button class="modal-btn" onclick="saveEditGroup()">Save changes →</button>
+    <button class="modal-btn secondary" onclick="closeModal('editGroup')">Cancel</button>
+  </div>
+</div>
   <div id="toast"></div>
 
   <div class="bottom-nav">
