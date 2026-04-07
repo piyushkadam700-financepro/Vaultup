@@ -1484,6 +1484,7 @@ function switchMonthCurrent(el){
 function saveUser(){
   if(USER?.isDemo){
     localStorage.setItem('vaultup_demo',JSON.stringify(USER));
+    setTimeout(()=>showToast('Changes saved ✓'),80);
   } else {
     localStorage.setItem(STORAGE_KEY,JSON.stringify(USER));
   }
