@@ -741,9 +741,9 @@ function validateStep2(){
 }
 function validateStep3(){
   const custom=document.getElementById('ob-custom-goal').value.trim();
-  if(custom)selectedGoals.push(custom);
+  if(custom&&!selectedGoals.includes(custom))selectedGoals.push(custom);
   if(selectedGoals.length===0){showToast('Pick at least one goal to continue');return;}
-  goStep(4);
+  buildSplitStep();goStep('3b');
 }
 function showObError(fieldId,msg){const el=document.getElementById(fieldId);el.style.borderColor='var(--red)';showToast(msg);setTimeout(()=>el.style.borderColor='',2000);}
 function toggleGoal(btn,label){
