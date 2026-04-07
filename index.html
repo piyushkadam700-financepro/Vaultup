@@ -879,7 +879,7 @@ function finishOnboarding(){
   USER={
     name,income,savingsTarget:target,
     userId:crypto.randomUUID(),
-    goals:selectedGoals.map((g,i)=>({emoji:g.split(' ')[0],name:g.split(' ').slice(1).join(' '),target:0,monthlyAmount:0,saved:0,date:'',isPrimary:i===0})),
+   goals:selectedGoals.map((g,i)=>({emoji:g.split(' ')[0],name:g.split(' ').slice(1).join(' ')||g,target:parseInt(document.getElementById('total-'+i)?.value)||0,monthlyAmount:parseInt(document.getElementById('monthly-'+i)?.value)||0,saved:0,date:'',isPrimary:i===0})),
     biggestLeak:selectedLeak||'general spending',
     savedThisMonth:0,streak:1,xp:50,
     joinedAt:new Date().toISOString(),
