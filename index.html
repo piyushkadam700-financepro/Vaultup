@@ -1418,10 +1418,10 @@ function switchMonthCurrent(el){
 function saveUser(){
   if(USER?.isDemo){
     localStorage.setItem('vaultup_demo',JSON.stringify(USER));
-    renderAll();renderGoalsScreen();renderGroups();renderBadges();
-    return;
+  } else {
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(USER));
   }
-  localStorage.setItem(STORAGE_KEY,JSON.stringify(USER));
+  renderAll();renderGoalsScreen();renderGroups();renderBadges();
 }
 function openModal(id){document.getElementById('modal-'+id).classList.add('open');}
 function closeModal(id){document.getElementById('modal-'+id).classList.remove('open');}
