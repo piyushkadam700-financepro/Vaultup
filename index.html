@@ -724,7 +724,7 @@ function boot(){
   updateSocialCount();
   checkDailyStreak();
   if(saved){USER=JSON.parse(saved);launchApp();}
-  else{document.getElementById('ob-screen').classList.add('active');}
+ else{document.getElementById('ob-screen').classList.add('active');goStep(0);}
 }
 
 async function updateSocialCount(){
