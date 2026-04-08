@@ -1547,14 +1547,14 @@ function switchMonthCurrent(el){
 }
 
 // ── UTILS ──
-function saveUser(){
+function saveUser(customToast){
   if(USER?.isDemo){
     localStorage.setItem('vaultup_demo',JSON.stringify(USER));
-    setTimeout(()=>showToast('Changes saved ✓'),80);
   } else {
     localStorage.setItem(STORAGE_KEY,JSON.stringify(USER));
   }
   renderAll();renderGoalsScreen();renderGroups();renderBadges();
+  if(customToast){setTimeout(()=>showToast(customToast),80);}
 }
 function openModal(id){document.getElementById('modal-'+id).classList.add('open');}
 function closeModal(id){document.getElementById('modal-'+id).classList.remove('open');}
