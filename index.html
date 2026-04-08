@@ -1249,6 +1249,7 @@ function openEditGoal(i){
   document.getElementById('editGoalName').value=g.name;
   document.getElementById('editGoalTarget').value=g.target;
   document.getElementById('editGoalSaved').value=g.saved;
+  document.getElementById('editGoalMonthly').value=g.monthlyAmount||'';
   document.getElementById('editGoalDate').value=g.date||'';
   openModal('editGoal');
 }
