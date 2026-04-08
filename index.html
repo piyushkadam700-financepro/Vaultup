@@ -478,27 +478,54 @@ textarea:focus{border-color:var(--yd);}
   <div class="screen" id="screen-stats">
     <div class="scroll">
       <div class="page-header" data-bg="STATS"><div><div class="page-title">Your Numbers</div><div class="page-sub">What Val sees right now</div></div></div>
-      <div class="stats-hero">
-        <div class="sh-lbl">Total saved this month</div>
-        <div class="sh-amt" id="stats-saved">£0</div>
-        <div class="sh-row">
-          <div class="sh-item"><div class="sh-item-lbl">target</div><div class="sh-item-val" id="stats-target">£0</div></div>
-          <div class="sh-item"><div class="sh-item-lbl">streak</div><div class="sh-item-val dn" id="stats-streak">1 day</div></div>
-          <div class="sh-item"><div class="sh-item-lbl">level</div><div class="sh-item-val" id="stats-level">Bronze</div></div>
+      <!-- NET POSITION CARD -->
+      <div style="margin:20px 22px 0;background:var(--s1);border:0.5px solid var(--border);border-radius:20px;padding:20px;">
+        <div style="font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px">Val's view of your finances</div>
+        <div style="display:flex;gap:10px;margin-bottom:14px">
+          <div style="flex:1;background:var(--s2);border-radius:12px;padding:12px 14px">
+            <div style="font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Monthly income</div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--green)" id="sn-income">£0</div>
+          </div>
+          <div style="flex:1;background:var(--s2);border-radius:12px;padding:12px 14px">
+            <div style="font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Savings target</div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--y)" id="sn-target">£0</div>
+          </div>
+        </div>
+        <div style="background:var(--s2);border-radius:12px;padding:14px 16px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <span style="font-size:12px;color:var(--muted)">Total spending tracked</span>
+            <span style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--red)" id="sn-spend">£0</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <span style="font-size:12px;color:var(--muted)">Total saved toward goals</span>
+            <span style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--y)" id="sn-saved">£0</span>
+          </div>
+          <div style="height:0.5px;background:var(--border);margin:10px 0"></div>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:12px;color:var(--text);font-weight:500">Unaccounted</span>
+            <span style="font-family:'Bebas Neue',sans-serif;font-size:22px" id="sn-unaccounted">£0</span>
+          </div>
+          <div style="font-size:11px;color:var(--dim);margin-top:4px" id="sn-unaccounted-label">income minus spending minus saved</div>
         </div>
       </div>
-      <div class="sec-hdr"><span class="sec-title">Your goals</span><span class="sec-link" onclick="navigate('goals')">manage →</span></div>
-      <div id="stats-goals" class="spend-breakdown"></div>
-      <div class="sec-hdr"><span class="sec-title">This month's spending</span></div>
+
+      <!-- GOAL TIMELINES -->
+      <div class="sec-hdr"><span class="sec-title">Goal timelines — at current pace</span></div>
+      <div id="sn-goal-timelines" style="margin:0 22px;display:flex;flex-direction:column;gap:10px"></div>
+
+      <!-- SPENDING BREAKDOWN -->
+      <div class="sec-hdr"><span class="sec-title">This month's spending</span><span class="sec-link" onclick="openSpendingModal()">update →</span></div>
       <div id="stats-spending-breakdown" class="spend-breakdown"></div>
-      <div class="sec-hdr"><span class="sec-title">Monthly history</span></div>
-      <div class="month-tabs">
-        <button class="mtab" onclick="switchMonth(this,180)">Nov</button>
-        <button class="mtab" onclick="switchMonth(this,220)">Dec</button>
-        <button class="mtab" onclick="switchMonth(this,160)">Jan</button>
-        <button class="mtab" onclick="switchMonth(this,200)">Feb</button>
-        <button class="mtab on" id="current-month-tab" onclick="switchMonthCurrent(this)">Apr</button>
+
+      <!-- VAL SYNC BADGE -->
+      <div style="margin:20px 22px 0;background:var(--ydim);border:0.5px solid var(--yd);border-radius:14px;padding:14px 16px;display:flex;gap:12px;align-items:center">
+        <div style="font-size:22px">🤖</div>
+        <div>
+          <div style="font-size:13px;color:var(--y);font-weight:500;margin-bottom:3px">Val is fully in sync</div>
+          <div style="font-size:12px;color:var(--yd);line-height:1.6">Everything on this page is exactly what Val knows about you. Ask her anything and she'll reference these numbers.</div>
+        </div>
       </div>
+
       <div style="height:28px"></div>
     </div>
   </div>
