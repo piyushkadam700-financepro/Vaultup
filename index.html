@@ -1408,7 +1408,7 @@ function saveEdit(){
   if(editingField==='name')USER.name=val;
   if(editingField==='income')USER.income=parseInt(val);
   if(editingField==='target')USER.savingsTarget=parseInt(val);
- saveUser();closeModal('edit');showToast('Saved ✓');
+ saveUser('Saved ✓');closeModal('edit');
 }
 
 function signOut(){
