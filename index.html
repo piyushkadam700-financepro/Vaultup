@@ -1509,8 +1509,7 @@ function saveEditGroup(){
   if(memberIdx>=0){USER.groups[i].members[memberIdx].saved=myContrib;}
   else{USER.groups[i].members.push({name:USER.name,saved:myContrib});}
   USER.groups[i].saved=USER.groups[i].members.reduce((s,m)=>s+m.saved,0);
-  saveUser();closeModal('editGroup');showToast('Group updated ✓');
-}
+  saveUser('Group updated ✓');closeModal('editGroup');
 function shareGroup(i){
   const g=USER.groups[i];
   document.getElementById('invite-link-txt').textContent=`https://vaultup.vercel.app?join=${g.code}`;
