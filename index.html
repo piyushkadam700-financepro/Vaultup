@@ -1260,8 +1260,10 @@ function saveEditGoal(){
   if(!name){showToast('Enter a goal name');return;}
   if(target<=0){showToast('Enter a target amount');return;}
   USER.goals[i]={...USER.goals[i],name,target,saved,date};
- saveUser();closeModal('editGoal');
-  showToast('Goal updated ✓');
+  saveUser();
+  closeModal('editGoal');
+  navigate('goals');
+  setTimeout(()=>showToast('Goal updated ✓'),80);
 }
 
 function deleteGoal(i){
