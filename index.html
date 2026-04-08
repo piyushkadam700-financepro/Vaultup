@@ -1083,17 +1083,53 @@ document.getElementById('home-sub').innerHTML=diff>=0?`You're <b>£${Math.abs(di
     goalsEl.innerHTML+=`<div class="goal-card" onclick="navigate('goals')"><div class="goal-em">${g.emoji}</div><div class="goal-info"><div class="goal-name">${g.name}</div><div class="goal-bar-bg"><div class="goal-bar-fill" style="width:${pct}%;background:var(--y)"></div></div><div class="goal-meta"><span class="goal-pct">${pct}% done</span><span class="goal-left">£${left} to go</span></div></div><div class="goal-rv">${pct}%</div></div>`;
   });
   document.getElementById('chat-welcome-name').textContent='Hey '+name+' 👋';
-  document.getElementById('stats-month').textContent=month;
-  document.getElementById('stats-saved').textContent='£'+(USER.savedThisMonth||0);
-  document.getElementById('stats-target').textContent='£'+USER.savingsTarget;
-  document.getElementById('stats-streak').textContent=USER.streak+' days';
-  document.getElementById('stats-level').textContent=level.name;
-  const statsGoals=document.getElementById('stats-goals');
-  statsGoals.innerHTML='';
-  (USER.goals||[]).forEach(g=>{
-    const pct=g.target>0?Math.min(100,Math.round((g.saved/g.target)*100)):0;
-    statsGoals.innerHTML+=`<div class="sb-row"><div class="sb-icon">${g.emoji}</div><div class="sb-info"><div class="sb-name">${g.name}</div><div class="sb-bar-bg"><div class="sb-bar-fill" style="width:${pct}%;background:var(--y)"></div></div></div><div class="sb-right"><div class="sb-amt">${pct}%</div><div class="sb-change dn">£${g.saved} saved</div></div></div>`;
-  });
+  // YOUR NUMBERS PAGE
+  const snIncome=document.getElementById('sn-income');
+  const snTarget=document.getElementById('sn-target');
+  const snSpend=document.getElementById('sn-spend');
+  const snSaved=document.getElementById('sn-saved');
+  const snUnaccounted=document.getElementById('sn-unaccounted');
+  const snLabel=document.getElementById('sn-unaccounted-label');
+  if(snIncome){
+    const totalSpendAll=(sp.food||0)+(sp.subs||0)+(sp.travel||0)+(sp.other||0);
+    const totalSavedAll=(USER.goals||[]).reduce((s,g)=>s+g.saved,0);
+    const unaccounted=USER.income-totalSpendAll-totalSavedAll;
+    snIncome.textContent='£'+(USER.income||0).toLocaleString();
+    snTarget.textContent='£'+(USER.savingsTarget||0).toLocaleString();
+    snSpend.textContent='£'+totalSpendAll.toLocaleString();
+    snSaved.textContent='£'+totalSavedAll.toLocaleString();
+    snUnaccounted.textContent=(unaccounted>=0?'£':'−£')+Math.abs(unaccounted).toLocaleString();
+    snUnaccounted.style.color=unaccounted>=0?'var(--green)':'var(--red)';
+    snLabel.textContent=unaccounted>=0?'potential extra savings not yet allocated':'you may be spending more than tracked';
+  }
+  // GOAL TIMELINES
+  const timelines=document.getElementById('sn-goal-timelines');
+  if(timelines){
+    if((USER.goals||[]).length===0){
+      timelines.innerHTML=`<div style="padding:16px;background:var(--s1);border:0.5px solid var(--border);border-radius:14px;text-align:center;font-size:13px;color:var(--muted)">No goals yet — add one from the home screen</div>`;
+    } else {
+      timelines.innerHTML=(USER.goals||[]).map(g=>{
+        const pct=g.target>0?Math.min(100,Math.round((g.saved/g.target)*100)):0;
+        const remaining=g.target-g.saved;
+        const monthsLeft=g.monthlyAmount>0?Math.ceil(remaining/g.monthlyAmount):null;
+        const eta=monthsLeft?monthsLeft<=1?'This month':monthsLeft+' months away':'Set a monthly amount';
+        const etaColor=monthsLeft&&monthsLeft<=3?'var(--green)':monthsLeft&&monthsLeft<=6?'var(--y)':'var(--muted)';
+        return `<div style="background:var(--s1);border:0.5px solid var(--border);border-radius:14px;padding:14px 16px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+            <div style="font-size:20px;width:36px;height:36px;background:var(--s2);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">${g.emoji}</div>
+            <div style="flex:1">
+              <div style="font-size:14px;font-weight:500;color:var(--text)">${g.name}</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:2px">£${g.saved.toLocaleString()} of £${g.target.toLocaleString()} · ${pct}%</div>
+            </div>
+            <div style="font-size:12px;font-weight:500;color:${etaColor};text-align:right">${eta}</div>
+          </div>
+          <div style="height:4px;background:var(--s3);border-radius:99px;overflow:hidden">
+            <div style="height:4px;background:var(--y);border-radius:99px;width:${pct}%"></div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+  }
   const sp=USER.spending||{};
   const totalSpend=(sp.food||0)+(sp.subs||0)+(sp.travel||0)+(sp.other||0);
   const spEl=document.getElementById('stats-spending-breakdown');
