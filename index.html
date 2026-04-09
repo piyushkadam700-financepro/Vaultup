@@ -1364,8 +1364,7 @@ function saveNewGoal(){
   if(!name){showToast('Enter a goal name');return;}
   if(amount<=0){showToast('Enter a target amount');return;}
   if(!USER.goals)USER.goals=[];
-  const monthly=parseInt(document.getElementById('newGoalMonthly').value)||0;
-  USER.goals.push({emoji:selectedGoalEmoji,name,target,saved:0,date,monthlyAmount:monthly});
+  USER.goals.push({emoji:selectedGoalEmoji,name,target,saved:0,date});
   saveUser();renderAll();renderGoalsScreen();closeModal('addGoal');
   document.getElementById('newGoalName').value='';
   document.getElementById('newGoalAmount').value='';
