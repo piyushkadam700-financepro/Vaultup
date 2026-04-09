@@ -1379,7 +1379,8 @@ function saveSpending(){
   USER.spending.subs=parseInt(document.getElementById('sp-subs').value)||0;
   USER.spending.travel=parseInt(document.getElementById('sp-travel').value)||0;
   USER.spending.other=parseInt(document.getElementById('sp-other').value)||0;
-  saveUser('Spending updated ✓');closeModal('spending');
+  closeModal('spending');
+  saveUser('Spending updated ✓');
 }
 
 // ── SETTINGS ──
