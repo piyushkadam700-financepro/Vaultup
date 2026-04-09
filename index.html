@@ -1254,9 +1254,10 @@ function saveEditGoal(){
   const target=parseInt(document.getElementById('editGoalTarget').value)||0;
   const saved=parseInt(document.getElementById('editGoalSaved').value)||0;
   const date=document.getElementById('editGoalDate').value;
+  const monthly=parseInt(document.getElementById('editGoalMonthly').value)||0;
   if(!name){showToast('Enter a goal name');return;}
   if(target<=0){showToast('Enter a target amount');return;}
- USER.goals[i]={...USER.goals[i],name,target,saved,date};
+  USER.goals[i]={...USER.goals[i],name,target,saved,date,monthlyAmount:monthly};
   saveUser('Goal updated ✓');
   closeModal('editGoal');
   navigate('goals');
