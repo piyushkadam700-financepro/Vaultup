@@ -1102,17 +1102,7 @@ document.getElementById('home-sub').innerHTML=diff>=0?`You're <b>£${Math.abs(di
     snLabel.textContent=unaccounted>=0?'potential extra savings not yet allocated':'you may be spending more than tracked';
   }
   // GOAL TIMELINES
-  const monthlyMsg=document.getElementById('sn-monthly-msg');
-  if(monthlyMsg){
-    const totalMonthlyTarget=USER.savingsTarget||0;
-    const totalSavedSoFar=(USER.goals||[]).reduce((s,g)=>s+g.saved,0);
-    const gap=totalMonthlyTarget-totalSavedSoFar;
-    if(totalSavedSoFar>=totalMonthlyTarget){
-      monthlyMsg.innerHTML=`<span style="color:var(--green)">✓ You've hit your £${totalMonthlyTarget} monthly target!</span>`;
-    } else {
-      monthlyMsg.innerHTML=`<span style="color:var(--y)">£${gap} away from your £${totalMonthlyTarget}/month savings target</span>`;
-    }
-  }
+  const timelines=document.getElementById('sn-goal-timelines');
   if(timelines){
     if((USER.goals||[]).length===0){
       timelines.innerHTML=`<div style="padding:16px;background:var(--s1);border:0.5px solid var(--border);border-radius:14px;text-align:center;font-size:13px;color:var(--muted)">No goals yet — add one from the home screen</div>`;
