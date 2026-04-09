@@ -1133,7 +1133,7 @@ document.getElementById('home-sub').innerHTML=diff>=0?`You're <b>£${Math.abs(di
   const spEl=document.getElementById('stats-spending-breakdown');
   if(spEl){
     if(totalSpend===0){
-      spEl.innerHTML=`<div style="margin:0 22px;padding:16px;background:var(--s1);border:0.5px solid var(--border);border-radius:14px;text-align:center;font-size:13px;color:var(--muted)">No spending tracked yet — update via Settings 📊</div>`;
+      spEl.innerHTML=`<div style="padding:16px;background:var(--s1);border:0.5px solid var(--border);border-radius:14px;text-align:center;font-size:13px;color:var(--muted)">No spending tracked yet — update via Settings 📊</div>`;
     } else {
       const items=[
         {icon:'🍔',name:'Food & drink',amt:sp.food||0,color:'var(--red)'},
