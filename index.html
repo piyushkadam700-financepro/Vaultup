@@ -1597,7 +1597,7 @@ function signOut(){
 }
 
 // ── GROUPS ──
-function createGroup(){
+async function createGroup(){
   const name=document.getElementById('groupName').value.trim();
   const goal=document.getElementById('goalName').value.trim();
   const amount=parseInt(document.getElementById('goalAmount').value)||1000;
@@ -1605,7 +1605,20 @@ function createGroup(){
   if(!name||!goal){showToast('Fill in group name and goal first!');return;}
   if(!USER.groups)USER.groups=[];
   const code=Math.random().toString(36).substring(2,8).toUpperCase();
-  USER.groups.push({name,goal,amount,date,members:[{name:USER.name,saved:0}],saved:0,code});
+  const newGroup={name,goal,amount,date,members:[{name:USER.name,saved:0,userId:USER.userId}],saved:0,code};
+  USER.groups.push(newGroup);
+  // Sync to Supabase
+  if(USER.supabaseUser&&USER.userId){
+    const{data:gData,error}=await _supabase.from('groups').insert({
+      name,goal,amount,date:date||null,code,admin_id:USER.userId,saved:0
+    }).select().single();
+    if(gData){
+      await _supabase.from('group_members').insert({
+        group_id:gData.id,user_id:USER.userId,saved:0
+      });
+      USER.groups[USER.groups.length-1].supabaseId=gData.id;
+    }
+  }
   saveUser();renderGroups();closeModal('createGroup');
   document.getElementById('groupName').value='';
   document.getElementById('goalName').value='';
