@@ -812,20 +812,19 @@ function goLogin(){showToast('Log in coming soon — sign up to get started!');}
 
 function loadDemo(){
   USER={
-    name:'Alex',income:2,100,savingsTarget:900,
+    name:'Alex',income:2100,savingsTarget:900,
     userId:'demo-user',
     isDemo:true,
-goals:[
-      {emoji:'🏖️',name:'Holiday',target:1200,monthlyAmount:160,saved:410,date:'2026-08-01',isPrimary:true},
-      {emoji:'🛡️',name:'Emergency fund',target:2000,monthlyAmount:140,saved:240,date:'',isPrimary:false},
-      {emoji:'🏠',name:'House deposit',target:15000,monthlyAmount:100,saved:850,date:'2029-01-01',isPrimary:false},
+    goals:[
+      {emoji:'🏖️',name:'Holiday',target:1200,monthlyAmount:200,saved:410,date:'2026-08-01',isPrimary:true},
+      {emoji:'💰',name:'Student loan',target:5000,monthlyAmount:700,saved:1400,date:'2027-01-01',isPrimary:false},
     ],
-    biggestLeak:'Deliveroo / UberEats',
-    savedThisMonth:320,streak:9,xp:380,
+    biggestLeak:'Online shopping',
+    savedThisMonth:0,streak:9,xp:380,
     joinedAt:new Date(Date.now()-30*24*60*60*1000).toISOString(),
     lastActiveDate:new Date().toDateString(),
-    spending:{food:210,subs:47,travel:68,other:35},
-    groups:[{name:'Ibiza Squad',goal:'Ibiza 2026 flights + hotel',amount:2400,date:'2026-06-01',members:[{name:'Alex',saved:320},{name:'Jamie',saved:280},{name:'Priya',saved:200}],saved:800,code:'IBZ26A'}]
+    spending:{food:180,subs:45,travel:95,other:100},
+    groups:[{name:'Ibiza Squad',goal:'Ibiza 2026 flights + hotel',amount:2400,date:'2026-06-01',members:[{name:'Alex',saved:320},{name:'Racheet',saved:280},{name:'Priya',saved:200}],saved:800,code:'IBZ26A'}]
   };
   document.getElementById('ob-screen').style.display='none';
   document.getElementById('main-app').style.display='flex';
