@@ -1644,7 +1644,80 @@ document.querySelectorAll('.ob-form input,.ob-form textarea').forEach(el=>{
     },400);
   });
 });
+// ── JOIN GROUP VIA INVITE LINK ──
+let pendingJoinCode=null;
 
+function checkInviteLink(){
+  const params=new URLSearchParams(window.location.search);
+  const code=params.get('join');
+  if(!code)return false;
+  pendingJoinCode=code.toUpperCase();
+  return true;
+}
+
+function showJoinScreen(group){
+  const js=document.getElementById('join-screen');
+  js.style.display='flex';
+  document.getElementById('join-group-name').textContent=group.name;
+  document.getElementById('join-group-goal').textContent=group.goal;
+  document.getElementById('join-target').textContent='£'+group.amount.toLocaleString();
+  document.getElementById('join-members').textContent=group.members?group.members.length+' members':'1 member';
+  document.getElementById('join-deadline').textContent=group.date||'No deadline';
+  const pct=Math.min(100,Math.round((group.saved/group.amount)*100));
+  document.getElementById('join-group-meta').textContent='£'+group.saved+' of £'+group.amount+' saved · '+pct+'% done';
+}
+
+function confirmJoinGroup(){
+  if(!pendingJoinCode)return;
+  if(!USER){
+    // Not logged in — send to onboarding, join after
+    localStorage.setItem('pendingJoin',pendingJoinCode);
+    document.getElementById('join-screen').style.display='none';
+    document.getElementById('ob-screen').style.display='';
+    document.getElementById('ob-screen').classList.add('active');
+    goStep(0);
+    showToast('Sign up first — you\'ll be added to the group automatically 👥');
+    return;
+  }
+  // Already logged in — find group in demo or own data
+  const allGroups=USER.groups||[];
+  const existing=allGroups.find(g=>g.code===pendingJoinCode);
+  if(existing){
+    // Already in this group
+    document.getElementById('join-screen').style.display='none';
+    launchApp();
+    showToast('You\'re already in this group!');
+    return;
+  }
+  // Add as member — for now create a local copy of the group
+  if(!USER.groups)USER.groups=[];
+  USER.groups.push({
+    name:document.getElementById('join-group-name').textContent,
+    goal:document.getElementById('join-group-goal').textContent,
+    amount:parseInt(document.getElementById('join-target').textContent.replace('£','').replace(',',''))||0,
+    date:document.getElementById('join-deadline').textContent==='No deadline'?'':document.getElementById('join-deadline').textContent,
+    members:[{name:USER.name,saved:0}],
+    saved:0,
+    code:pendingJoinCode
+  });
+  pendingJoinCode=null;
+  localStorage.removeItem('pendingJoin');
+  document.getElementById('join-screen').style.display='none';
+  saveUser('You\'ve joined the group! 🎉');
+  launchApp();
+  navigate('groups');
+}
+
+function declineJoin(){
+  pendingJoinCode=null;
+  document.getElementById('join-screen').style.display='none';
+  if(USER){launchApp();}
+  else{
+    document.getElementById('ob-screen').style.display='';
+    document.getElementById('ob-screen').classList.add('active');
+    goStep(0);
+  }
+}
 boot();
 </script>
 </body>
