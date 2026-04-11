@@ -1966,7 +1966,7 @@ function showJoinScreen(group){
   document.getElementById('join-group-meta').textContent='£'+group.saved+' of £'+group.amount+' saved · '+pct+'% done';
 }
 
-function confirmJoinGroup(){
+async function confirmJoinGroup(){
   if(!pendingJoinCode)return;
   if(!USER){
     // Not logged in — send to onboarding, join after
