@@ -1095,7 +1095,8 @@ document.getElementById('home-sub').innerHTML=diff>=0?`You're <b>£${Math.abs(di
     const totalSavedAll=(USER.goals||[]).reduce((s,g)=>s+g.saved,0);
     const unaccounted=USER.income-totalSpendAll-totalSavedAll;
     snIncome.textContent='£'+(USER.income||0).toLocaleString();
-    snTarget.textContent='£'+(USER.savingsTarget||0).toLocaleString();
+    const totalMonthly=(USER.goals||[]).reduce((s,g)=>s+(g.monthlyAmount||0),0);
+    snTarget.textContent='£'+(totalMonthly||USER.savingsTarget||0).toLocaleString();
     snSpend.textContent='£'+totalSpendAll.toLocaleString();
     snSaved.textContent='£'+totalSavedAll.toLocaleString();
     snUnaccounted.textContent=(unaccounted>=0?'£':'−£')+Math.abs(unaccounted).toLocaleString();
