@@ -1633,11 +1633,31 @@ function renderGroups(){
     document.getElementById('extra-groups-container').innerHTML='';return;
   }
   document.getElementById('empty-groups-placeholder').style.display='none';
+  const isAdmin=(g)=>g.adminId===USER.userId||g.members?.[0]?.userId===USER.userId||!g.adminId;
   document.getElementById('extra-groups-container').innerHTML=USER.groups.map((g,i)=>{
     const pct=Math.min(100,Math.round((g.saved/g.amount)*100));
     const mc=g.members?g.members.length:1;
-    const myMember=g.members?g.members.find(m=>m.name===USER.name):null;
+    const myMember=g.members?g.members.find(m=>m.userId===USER.userId||m.name===USER.name):null;
     const myContrib=myMember?myMember.saved:0;
+    const admin=isAdmin(g);
+    // Member list — admin sees amounts, members see names only
+    const membersList=admin
+      ? (g.members||[]).map(m=>`
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid var(--border)">
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="width:28px;height:28px;border-radius:50%;background:var(--y);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--black)">${m.name[0]}</div>
+              <span style="font-size:13px;color:var(--text)">${m.name}${(m.userId===USER.userId||m.name===USER.name)?'<span style="font-size:10px;color:var(--dim);margin-left:4px">(you)</span>':''}</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-family:\'Bebas Neue\',sans-serif;font-size:16px;color:var(--y)">£${m.saved||0}</span>
+              ${(m.userId!==USER.userId&&m.name!==USER.name)?`<button onclick="removeMember(${i},'${m.name}')" style="padding:3px 8px;background:transparent;border:0.5px solid var(--red);border-radius:6px;color:var(--red);font-size:10px;cursor:pointer;font-family:sans-serif">Remove</button>`:''}
+            </div>
+          </div>`).join('')
+      : (g.members||[]).map(m=>`
+          <div style="display:flex;align-items:center;gap:8px;padding:6px 0">
+            <div style="width:26px;height:26px;border-radius:50%;background:var(--y);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--black)">${m.name[0]}</div>
+            <span style="font-size:13px;color:var(--text)">${m.name}${(m.userId===USER.userId||m.name===USER.name)?'<span style="font-size:10px;color:var(--dim);margin-left:4px">(you)</span>':''}</span>
+          </div>`).join('');
     return `<div class="group-card" style="margin-bottom:10px">
       <div class="gc-top">
         <div class="gc-icon">👥</div>
@@ -1645,23 +1665,32 @@ function renderGroups(){
           <div class="gc-name">${g.name}</div>
           <div class="gc-meta">${mc} member${mc!==1?'s':''}${g.date?' · deadline '+g.date:''}</div>
         </div>
-        <div style="background:var(--ydim);border:0.5px solid var(--yd);color:var(--y);font-size:10px;padding:3px 8px;border-radius:99px;font-weight:500">👑 Admin</div>
+        <div style="background:${admin?'var(--ydim)':'var(--s2)'};border:0.5px solid ${admin?'var(--yd)':'var(--border)'};color:${admin?'var(--y)':'var(--muted)'};font-size:10px;padding:3px 8px;border-radius:99px;font-weight:500">${admin?'👑 Admin':'Member'}</div>
       </div>
       <div class="gc-goal-lbl">Group goal</div>
       <div class="gc-goal-name">${g.goal}</div>
       <div class="gc-bar-bg"><div class="gc-bar-fill" style="width:${pct}%"></div></div>
-      <div class="gc-members">
-        <div class="gc-avatars"><div class="gc-av" style="background:var(--y);color:var(--black)">${USER.name[0]}</div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
         <div class="gc-progress-txt">£${g.saved} of <b>£${g.amount}</b> · ${pct}%</div>
+        <div style="font-size:11px;color:var(--muted)">${g.amount-g.saved>0?'£'+(g.amount-g.saved)+' to go':'🎉 Goal reached!'}</div>
       </div>
-      <div style="margin-top:12px;background:var(--s2);border:0.5px solid var(--border);border-radius:12px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px">
-        <div style="font-size:12px;color:var(--muted)">My contribution: <b style="color:var(--y)">£${myContrib}</b></div>
-        <button onclick="openLogPayment(${i})" style="padding:6px 14px;background:var(--y);border:none;border-radius:8px;color:var(--black);font-size:12px;font-weight:700;cursor:pointer;font-family:sans-serif">Log payment +</button>
+      <!-- Members section -->
+      <div style="background:var(--s2);border:0.5px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:12px">
+        <div style="font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">${admin?'Member contributions':'Members'}</div>
+        ${membersList}
       </div>
-      <div style="margin-top:10px;display:flex;gap:8px">
+      <!-- My pot -->
+      <div style="background:var(--ydim);border:0.5px solid var(--yd);border-radius:12px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div>
+          <div style="font-size:10px;color:var(--yd);text-transform:uppercase;letter-spacing:.08em">My pot</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--y)">£${myContrib}</div>
+        </div>
+        <button onclick="openLogPayment(${i})" style="padding:8px 16px;background:var(--y);border:none;border-radius:10px;color:var(--black);font-size:13px;font-weight:700;cursor:pointer;font-family:sans-serif">+ Add to pot</button>
+      </div>
+      <div style="display:flex;gap:8px">
         <button onclick="goToChat('My group ${g.name} needs £${g.amount} for ${g.goal}. We have £${g.saved} saved. Give us a plan.')" style="flex:1;padding:10px;background:var(--ydim);border:0.5px solid var(--yd);border-radius:10px;color:var(--y);font-size:12px;font-weight:500;cursor:pointer;font-family:sans-serif">Ask Val 💬</button>
         <button onclick="shareGroup(${i})" style="padding:10px 14px;background:var(--s2);border:0.5px solid var(--border);border-radius:10px;color:var(--muted);font-size:12px;cursor:pointer;font-family:sans-serif">Invite 🔗</button>
-        <button onclick="deleteGroup(${i})" style="padding:10px 14px;background:var(--s2);border:0.5px solid var(--border);border-radius:10px;color:var(--red);font-size:12px;cursor:pointer;font-family:sans-serif">🗑️</button>
+        ${admin?`<button onclick="deleteGroup(${i})" style="padding:10px 14px;background:var(--s2);border:0.5px solid var(--border);border-radius:10px;color:var(--red);font-size:12px;cursor:pointer;font-family:sans-serif">🗑️</button>`:`<button onclick="leaveGroup(${i})" style="padding:10px 14px;background:var(--s2);border:0.5px solid var(--border);border-radius:10px;color:var(--red);font-size:12px;cursor:pointer;font-family:sans-serif">Leave</button>`}
       </div>
     </div>`;
   }).join('');
