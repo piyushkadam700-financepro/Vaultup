@@ -853,9 +853,8 @@ async function doLogin(){
 function showLoginScreen(show){
   document.getElementById('login-screen').style.display=show?'flex':'none';
   if(!show){
-    document.getElementById('ob-screen').style.display='';
-    document.getElementById('ob-screen').classList.add('active');
-    goStep(0);
+    document.getElementById('ob-screen').style.display='none';
+    document.getElementById('ob-screen').classList.remove('active');
   }
 }
 // ── STATE ──
