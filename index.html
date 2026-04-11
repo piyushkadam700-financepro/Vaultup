@@ -872,9 +872,15 @@ function boot(){
     if(hasInvite){
       // Find group details from demo data to show join screen
       const demoGroups=[{name:'Ibiza Squad',goal:'Ibiza 2026 flights + hotel',amount:2400,date:'2026-06-01',members:[{name:'Alex',saved:320},{name:'Jamie',saved:280},{name:'Priya',saved:200}],saved:800,code:'IBZ26A'}];
-      const group=demoGroups.find(g=>g.code===pendingJoinCode);
-      if(group){showJoinScreen(group);}
-      else{launchApp();}
+      const demoGroup=demoGroups.find(g=>g.code===pendingJoinCode);
+      if(demoGroup){showJoinScreen(demoGroup);}
+      else{
+        // Look up real group from Supabase
+        _supabase.from('groups').select('*').eq('code',pendingJoinCode).single().then(({data:g})=>{
+          if(g){showJoinScreen({name:g.name,goal:g.goal,amount:g.amount,date:g.date||'',saved:g.saved||0,members:[],code:g.code});}
+          else{launchApp();}
+        });
+      }
     } else {
       launchApp();
     }
