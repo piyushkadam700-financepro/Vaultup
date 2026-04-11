@@ -838,6 +838,7 @@ async function doLogin(){
       spending:{food:profile.spending_food,subs:profile.spending_subs,travel:profile.spending_travel,other:profile.spending_other},
       goals:(goals||[]).map(g=>({emoji:g.emoji,name:g.name,target:g.target,saved:g.saved,monthlyAmount:g.monthly_amount,date:g.date||'',isPrimary:g.is_primary})),
       groups:[],
+    email,password
       userId:data.user.id,
       supabaseUser:true
     };
