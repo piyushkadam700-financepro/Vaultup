@@ -1199,17 +1199,7 @@ function finishOnboarding(){
       localStorage.setItem(STORAGE_KEY,JSON.stringify(USER));
     }
   }).catch(()=>{});
-  const pendingCode=localStorage.getItem('pendingJoin');
-  if(pendingCode){
-    pendingJoinCode=pendingCode;
-    localStorage.removeItem('pendingJoin');
-    const demoGroups=[{name:'Ibiza Squad',goal:'Ibiza 2026 flights + hotel',amount:2400,date:'2026-06-01',members:[{name:'Alex',saved:320},{name:'Jamie',saved:280},{name:'Priya',saved:200}],saved:800,code:'IBZ26A'}];
-    const group=demoGroups.find(g=>g.code===pendingCode);
-    if(group){showJoinScreen(group);}
-    else{launchApp();}
-  } else {
-    launchApp();
-  }
+  
 }
 
 // ── APP ──
