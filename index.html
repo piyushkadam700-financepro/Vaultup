@@ -1213,7 +1213,8 @@ function launchApp(){
   document.getElementById('login-screen').style.display='none';
   document.getElementById('main-app').style.display='flex';
   navigate('home');
-  renderAll();buildCalendar();renderBadges();renderGroups();renderGoalsScreen();
+  renderAll();buildCalendar();renderBadges();renderGoalsScreen();
+  if(USER.supabaseUser){loadUserGroups();}else{renderGroups();}
 }
 
 function renderAll(){
