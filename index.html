@@ -888,13 +888,15 @@ function boot(){
     const demo=localStorage.getItem('vaultup_demo');
     if(demo){localStorage.removeItem('vaultup_demo');}
     if(hasInvite){
-      // Show join screen with placeholder — user needs to sign up first
       const demoGroups=[{name:'Ibiza Squad',goal:'Ibiza 2026 flights + hotel',amount:2400,date:'2026-06-01',members:[{name:'Alex',saved:320},{name:'Jamie',saved:280},{name:'Priya',saved:200}],saved:800,code:'IBZ26A'}];
-      const group=demoGroups.find(g=>g.code===pendingJoinCode);
-      if(group){showJoinScreen(group);}
+      const demoGroup=demoGroups.find(g=>g.code===pendingJoinCode);
+      if(demoGroup){showJoinScreen(demoGroup);}
       else{
-        document.getElementById('ob-screen').classList.add('active');
-        goStep(0);
+        // Look up real group from Supabase even for non-logged-in users
+        _supabase.from('groups').select('*').eq('code',pendingJoinCode).single().then(({data:g})=>{
+          if(g){showJoinScreen({name:g.name,goal:g.goal,amount:g.amount,date:g.date||'',saved:g.saved||0,members:[],code:g.code});}
+          else{document.getElementById('ob-screen').classList.add('active');goStep(0);}
+        });
       }
     } else {
       document.getElementById('ob-screen').classList.add('active');
