@@ -1141,6 +1141,10 @@ function finishOnboarding(){
   const name=document.getElementById('ob-name').value.trim();
   const income=parseInt(document.getElementById('ob-income').value)||0;
   const target=parseInt(document.getElementById('ob-target').value)||0;
+  const email=document.getElementById('ob-email').value.trim();
+  const password=document.getElementById('ob-password').value;
+  if(!email||!password){showToast('Enter your email and password to continue');return;}
+  if(password.length<6){showToast('Password must be at least 6 characters');return;}
   USER={
     name,income,savingsTarget:target,
     userId:crypto.randomUUID(),
