@@ -802,6 +802,58 @@ textarea:focus{border-color:var(--yd);}
 </div>
 
 <script>
+  // ── SUPABASE ──
+const SUPABASE_URL='https://trijbceqrbwgtmzwhenl.supabase.co';
+const SUPABASE_ANON_KEY=window.__SUPABASE_ANON_KEY||'';
+const _supabase=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+
+async function doLogin(){
+  const email=document.getElementById('login-email').value.trim();
+  const password=document.getElementById('login-password').value;
+  const errEl=document.getElementById('login-error');
+  errEl.style.display='none';
+  if(!email||!password){errEl.textContent='Enter email and password';errEl.style.display='block';return;}
+  const btn=document.querySelector('#login-screen button');
+  btn.textContent='Signing in...';btn.disabled=true;
+  const{data,error}=await _supabase.auth.signInWithPassword({email,password});
+  btn.textContent='Sign in →';btn.disabled=false;
+  if(error){errEl.textContent=error.message;errEl.style.display='block';return;}
+  // Load user profile from Supabase
+  const{data:profile}=await _supabase.from('users').select('*').eq('id',data.user.id).single();
+  const{data:goals}=await _supabase.from('goals').select('*').eq('user_id',data.user.id);
+  if(profile){
+    USER={
+      name:profile.name,
+      income:profile.income,
+      savingsTarget:profile.savings_target,
+      biggestLeak:profile.biggest_leak,
+      streak:profile.streak,
+      xp:profile.xp,
+      joinedAt:profile.joined_at,
+      lastActiveDate:profile.last_active_date,
+      spending:{food:profile.spending_food,subs:profile.spending_subs,travel:profile.spending_travel,other:profile.spending_other},
+      goals:(goals||[]).map(g=>({emoji:g.emoji,name:g.name,target:g.target,saved:g.saved,monthlyAmount:g.monthly_amount,date:g.date||'',isPrimary:g.is_primary})),
+      groups:[],
+      userId:data.user.id,
+      supabaseUser:true
+    };
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(USER));
+    showLoginScreen(false);
+    launchApp();
+  } else {
+    errEl.textContent='Account not found — please sign up first';
+    errEl.style.display='block';
+  }
+}
+
+function showLoginScreen(show){
+  document.getElementById('login-screen').style.display=show?'flex':'none';
+  if(!show){
+    document.getElementById('ob-screen').style.display='';
+    document.getElementById('ob-screen').classList.add('active');
+    goStep(0);
+  }
+}
 // ── STATE ──
 let USER=null,chatHistory=[],chatLoading=false,selectedGoals=[],selectedLeak=null,editingField=null,selectedGoalEmoji='🎯',lastSendTime=0,editingGoalIndex=-1;
 const STORAGE_KEY='vaultup_user_v2';
