@@ -1483,7 +1483,7 @@ function renderGroups(){
       </div>
       <div style="margin-top:12px;background:var(--s2);border:0.5px solid var(--border);border-radius:12px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px">
         <div style="font-size:12px;color:var(--muted)">My contribution: <b style="color:var(--y)">£${myContrib}</b></div>
-        <button onclick="openEditGroup(${i})" style="padding:6px 14px;background:var(--y);border:none;border-radius:8px;color:var(--black);font-size:12px;font-weight:700;cursor:pointer;font-family:sans-serif">Log payment +</button>
+        <button onclick="openLogPayment(${i})" style="padding:6px 14px;background:var(--y);border:none;border-radius:8px;color:var(--black);font-size:12px;font-weight:700;cursor:pointer;font-family:sans-serif">Log payment +</button>
       </div>
       <div style="margin-top:10px;display:flex;gap:8px">
         <button onclick="goToChat('My group ${g.name} needs £${g.amount} for ${g.goal}. We have £${g.saved} saved. Give us a plan.')" style="flex:1;padding:10px;background:var(--ydim);border:0.5px solid var(--yd);border-radius:10px;color:var(--y);font-size:12px;font-weight:500;cursor:pointer;font-family:sans-serif">Ask Val 💬</button>
