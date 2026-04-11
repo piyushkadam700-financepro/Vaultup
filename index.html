@@ -1209,7 +1209,10 @@ function finishOnboarding(){
 // ── APP ──
 function launchApp(){
   document.getElementById('ob-screen').style.display='none';
+  document.getElementById('ob-screen').classList.remove('active');
+  document.getElementById('login-screen').style.display='none';
   document.getElementById('main-app').style.display='flex';
+  navigate('home');
   renderAll();buildCalendar();renderBadges();renderGroups();renderGoalsScreen();
 }
 
