@@ -1274,7 +1274,12 @@ function deleteGoal(i){
 }
 function buildSystemPrompt(){
   if(!USER)return'';
-  const goalsList=(USER.goals||[]).map(g=>`  - ${g.name}: £${g.saved} saved of £${g.target} target (${g.target>0?Math.round(g.saved/g.target*100):0}% done)${g.date?' · target date: '+g.date:''}`).join('\n');
+ const goalsList=(USER.goals||[]).map(g=>{
+    const pct=g.target>0?Math.round(g.saved/g.target*100):0;
+    const remaining=g.target-g.saved;
+    const monthsLeft=g.monthlyAmount>0?Math.ceil(remaining/g.monthlyAmount):null;
+    return `  - ${g.name}: £${g.saved} saved of £${g.target} target (${pct}% done)${g.monthlyAmount?', saving £'+g.monthlyAmount+'/month':''  }${monthsLeft?', ETA '+monthsLeft+' months':''}${g.date?' · target date: '+g.date:''}`;
+  }).join('\n');
   return `You are Val, the AI money coach inside Vaultup — a personal finance app for young adults (16-28) in the UK. Be a sharp, friendly mate who knows money — direct, casual, zero jargon, zero waffle.\n\n${USER.name}'s financial profile:\n- Monthly take-home: £${USER.income}\n- Monthly savings target: £${USER.savingsTarget}\n- Total saved toward goals: £${(USER.goals||[]).reduce((s,g)=>s+g.saved,0)}
 - Monthly spending tracked: £${(USER.spending?.food||0)+(USER.spending?.subs||0)+(USER.spending?.travel||0)+(USER.spending?.other||0)}\n- Biggest spending leak: ${USER.biggestLeak||'unknown'}\n- Current streak: ${USER.streak} days\n- Level: ${getLevel(USER.xp||50).name} (${USER.xp||50} XP)\n- Spending: Food £${USER.spending?.food||0}, Subs £${USER.spending?.subs||0}, Travel £${USER.spending?.travel||0}, Other £${USER.spending?.other||0}\n\nGoals:\n${goalsList||'  - No goals set yet'}\n\nRules:\n- Use ${USER.name}'s name occasionally\n- Reference ACTUAL numbers, never be vague\n- Short responses (2-4 sentences) unless asked for more\n- Never say "As an AI"\n- If asked about ISAs: under 18 = Junior ISA £9k/yr, 18+ = Cash/S&S ISA £20k/yr\n- If asked about student loans: Plan 2 repayment above £27,295/yr at 9%`;
 }
