@@ -926,7 +926,10 @@ function goStep(n){
   if(el) el.classList.add('active');
 }
 
-function goLogin(){showToast('Log in coming soon — sign up to get started!');}
+function goLogin(){
+  document.getElementById('ob-screen').style.display='none';
+  document.getElementById('login-screen').style.display='flex';
+}
 
 function loadDemo(){
   USER={
