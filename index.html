@@ -1785,6 +1785,74 @@ function deleteGroup(i){
   if(!confirm('Delete this group?'))return;
   USER.groups.splice(i,1);saveUser();renderGroups();showToast('Group deleted');
 }
+  async function removeMember(groupIdx, memberName){
+  const g=USER.groups[groupIdx];
+  const member=g.members.find(m=>m.name===memberName);
+  if(!member)return;
+  const bal=member.saved||0;
+  if(!confirm(`Remove ${memberName} from ${g.name}? Their pot balance of £${bal} will be returned to them.`))return;
+  g.members=g.members.filter(m=>m.name!==memberName);
+  g.saved=g.members.reduce((s,m)=>s+m.saved,0);
+  // Sync to Supabase
+  if(USER.supabaseUser&&g.supabaseId&&member.userId){
+    await _supabase.from('group_members').delete()
+      .eq('group_id',g.supabaseId).eq('user_id',member.userId);
+    await _supabase.from('groups').update({saved:g.saved}).eq('id',g.supabaseId);
+  }
+  saveUser('${memberName} removed · £${bal} returned to their account');
+  renderGroups();
+  showToast(`${memberName} removed · £${bal} returned to their account`);
+}
+
+async function leaveGroup(groupIdx){
+  const g=USER.groups[groupIdx];
+  const myPot=g.members?g.members.find(m=>m.userId===USER.userId||m.name===USER.name):null;
+  const bal=myPot?myPot.saved:0;
+  if(!confirm(`Leave ${g.name}? Your pot balance of £${bal} will be returned to your personal account.`))return;
+  // Sync to Supabase
+  if(USER.supabaseUser&&g.supabaseId){
+    await _supabase.from('group_members').delete()
+      .eq('group_id',g.supabaseId).eq('user_id',USER.userId);
+    const remaining=g.members.filter(m=>m.userId!==USER.userId&&m.name!==USER.name);
+    const newTotal=remaining.reduce((s,m)=>s+m.saved,0);
+    await _supabase.from('groups').update({saved:newTotal}).eq('id',g.supabaseId);
+  }
+  USER.groups.splice(groupIdx,1);
+  saveUser();
+  renderGroups();
+  showToast(`You left ${g.name} · £${bal} returned to your account`);
+}
+
+async function loadUserGroups(){
+  if(!USER.supabaseUser||!USER.userId)return;
+  const{data:adminGroups}=await _supabase.from('groups').select('*').eq('admin_id',USER.userId);
+  const{data:memberGroups}=await _supabase.from('group_members').select('group_id').eq('user_id',USER.userId);
+  const memberGroupIds=(memberGroups||[]).map(m=>m.group_id);
+  let allGroups=[];
+  for(const g of adminGroups||[]){
+    const{data:members}=await _supabase.from('group_members').select('*,users(name)').eq('group_id',g.id);
+    allGroups.push({
+      name:g.name,goal:g.goal,amount:g.amount,date:g.date||'',
+      saved:g.saved||0,code:g.code,supabaseId:g.id,adminId:g.admin_id,
+      members:(members||[]).map(m=>({name:m.users?.name||'Member',saved:m.saved||0,userId:m.user_id}))
+    });
+  }
+  for(const gid of memberGroupIds){
+    if((adminGroups||[]).find(ag=>ag.id===gid))continue;
+    const{data:g}=await _supabase.from('groups').select('*').eq('id',gid).single();
+    if(g){
+      const{data:members}=await _supabase.from('group_members').select('*,users(name)').eq('group_id',g.id);
+      allGroups.push({
+        name:g.name,goal:g.goal,amount:g.amount,date:g.date||'',
+        saved:g.saved||0,code:g.code,supabaseId:g.id,adminId:g.admin_id,
+        members:(members||[]).map(m=>({name:m.users?.name||'Member',saved:m.saved||0,userId:m.user_id}))
+      });
+    }
+  }
+  USER.groups=allGroups;
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(USER));
+  renderGroups();
+}
 
 // ── STATS ──
 function switchMonth(el,spent){
