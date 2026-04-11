@@ -1156,6 +1156,36 @@ function finishOnboarding(){
   };
   localStorage.setItem(STORAGE_KEY,JSON.stringify(USER));
   fetch('/api/count',{method:'POST'}).catch(()=>{});
+  // Save to Supabase
+  _supabase.auth.signUp({email:USER.email||'',password:USER.password||''}).then(async({data:authData,error})=>{
+    if(authData?.user){
+      await _supabase.from('users').insert({
+        id:authData.user.id,
+        name:USER.name,
+        income:USER.income,
+        savings_target:USER.savingsTarget,
+        biggest_leak:USER.biggestLeak,
+        streak:USER.streak,
+        xp:USER.xp,
+        last_active_date:USER.lastActiveDate,
+        spending_food:USER.spending.food,
+        spending_subs:USER.spending.subs,
+        spending_travel:USER.spending.travel,
+        spending_other:USER.spending.other
+      });
+      for(const g of USER.goals){
+        await _supabase.from('goals').insert({
+          user_id:authData.user.id,
+          emoji:g.emoji,name:g.name,target:g.target,
+          saved:g.saved,monthly_amount:g.monthlyAmount,
+          date:g.date,is_primary:g.isPrimary
+        });
+      }
+      USER.userId=authData.user.id;
+      USER.supabaseUser=true;
+      localStorage.setItem(STORAGE_KEY,JSON.stringify(USER));
+    }
+  }).catch(()=>{});
   const pendingCode=localStorage.getItem('pendingJoin');
   if(pendingCode){
     pendingJoinCode=pendingCode;
