@@ -1621,7 +1621,6 @@ async function createGroup(){
   const code=Math.random().toString(36).substring(2,8).toUpperCase();
   const newGroup={name,goal,amount,date,members:[{name:USER.name,saved:0,userId:USER.userId}],saved:0,code};
   USER.groups.push(newGroup);
-  // Sync to Supabase
   if(USER.supabaseUser&&USER.userId){
     const{data:gData,error}=await _supabase.from('groups').insert({
       name,goal,amount,date:date||null,code,admin_id:USER.userId,saved:0
@@ -1631,9 +1630,13 @@ async function createGroup(){
         group_id:gData.id,user_id:USER.userId,saved:0
       });
       USER.groups[USER.groups.length-1].supabaseId=gData.id;
+      USER.groups[USER.groups.length-1].adminId=USER.userId;
+    } else {
+      showToast('Error saving group — check connection');
     }
   }
-  saveUser();renderGroups();closeModal('createGroup');
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(USER));
+  renderGroups();closeModal('createGroup');
   document.getElementById('groupName').value='';
   document.getElementById('goalName').value='';
   document.getElementById('goalAmount').value='';
