@@ -1710,16 +1710,33 @@ function openLogPayment(i){
   openModal('logPayment');
 }
 
-function saveLogPayment(){
+async function saveLogPayment(){
   const i=logPaymentGroupIndex;
   if(i<0||!USER.groups[i])return;
   const amount=parseInt(document.getElementById('logPayment-amount').value)||0;
   if(amount<=0){showToast('Enter an amount to add');return;}
-  if(!USER.groups[i].members)USER.groups[i].members=[{name:USER.name,saved:0}];
-  const memberIdx=USER.groups[i].members.findIndex(m=>m.name===USER.name);
+  if(!USER.groups[i].members)USER.groups[i].members=[{name:USER.name,saved:0,userId:USER.userId}];
+  const memberIdx=USER.groups[i].members.findIndex(m=>m.userId===USER.userId||m.name===USER.name);
   if(memberIdx>=0){USER.groups[i].members[memberIdx].saved+=amount;}
-  else{USER.groups[i].members.push({name:USER.name,saved:amount});}
+  else{USER.groups[i].members.push({name:USER.name,saved:amount,userId:USER.userId});}
   USER.groups[i].saved=USER.groups[i].members.reduce((s,m)=>s+m.saved,0);
+  // Sync to Supabase
+  if(USER.supabaseUser&&USER.userId&&USER.groups[i].supabaseId){
+    const myMember=USER.groups[i].members.find(m=>m.userId===USER.userId||m.name===USER.name);
+    const{data:existing}=await _supabase.from('group_members')
+      .select('*').eq('group_id',USER.groups[i].supabaseId).eq('user_id',USER.userId).single();
+    if(existing){
+      await _supabase.from('group_members').update({saved:myMember.saved})
+        .eq('group_id',USER.groups[i].supabaseId).eq('user_id',USER.userId);
+    } else {
+      await _supabase.from('group_members').insert({
+        group_id:USER.groups[i].supabaseId,user_id:USER.userId,saved:myMember.saved
+      });
+    }
+    // Update group total
+    await _supabase.from('groups').update({saved:USER.groups[i].saved})
+      .eq('id',USER.groups[i].supabaseId);
+  }
   closeModal('logPayment');
   navigate('groups');
   saveUser('£'+amount+' added to pot ✓');
