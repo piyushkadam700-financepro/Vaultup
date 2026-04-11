@@ -1259,10 +1259,11 @@ function saveEditGoal(){
   const date=document.getElementById('editGoalDate').value;
   if(!name){showToast('Enter a goal name');return;}
   if(target<=0){showToast('Enter a target amount');return;}
- USER.goals[i]={...USER.goals[i],name,target,saved,date};
-  saveUser('Goal updated ✓');
+ const monthly=parseInt(document.getElementById('editGoalMonthly').value)||0;
+  USER.goals[i]={...USER.goals[i],name,target,saved,date,monthlyAmount:monthly};
   closeModal('editGoal');
   navigate('goals');
+  saveUser('Goal updated ✓');
 }
 function deleteGoal(i){
   if(!confirm('Delete this goal?'))return;
