@@ -1197,8 +1197,23 @@ function finishOnboarding(){
       USER.userId=authData.user.id;
       USER.supabaseUser=true;
       localStorage.setItem(STORAGE_KEY,JSON.stringify(USER));
+      // Handle pending group join
+      const pendingCode=localStorage.getItem('pendingJoin');
+      if(pendingCode){
+        localStorage.removeItem('pendingJoin');
+        const{data:groupData}=await _supabase.from('groups').select('*').eq('code',pendingCode).single();
+        if(groupData){
+          await _supabase.from('group_members').upsert({
+            group_id:groupData.id,user_id:authData.user.id,saved:0
+          },{onConflict:'group_id,user_id'});
+        }
+        await loadUserGroups();
+        navigate('groups');
+        showToast('You\'ve joined the group! 🎉');
+      }
     }
   }).catch(()=>{});
+  launchApp();
   
 }
 
