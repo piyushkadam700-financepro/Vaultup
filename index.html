@@ -726,6 +726,17 @@ textarea:focus{border-color:var(--yd);}
       <button class="modal-btn secondary" onclick="closeModal('spending')">Cancel</button>
     </div>
   </div>
+  <div class="modal-overlay" id="modal-logPayment" onclick="closeModal('logPayment')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Log payment</div>
+    <div class="modal-sub" id="logPayment-sub">Add to your pot</div>
+    <div class="modal-label">Amount you're adding (£)</div>
+    <input class="modal-input" id="logPayment-amount" type="number" placeholder="e.g. 100"/>
+    <button class="modal-btn" onclick="saveLogPayment()">Add to pot →</button>
+    <button class="modal-btn secondary" onclick="closeModal('logPayment')">Cancel</button>
+  </div>
+</div>
 <div class="modal-overlay" id="modal-editGroup" onclick="closeModal('editGroup')">
   <div class="modal" onclick="event.stopPropagation()">
     <div class="modal-handle"></div>
