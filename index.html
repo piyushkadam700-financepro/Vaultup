@@ -1982,23 +1982,22 @@ function confirmJoinGroup(){
     showToast('You\'re already in this group!');
     return;
   }
-  // Add as member — for now create a local copy of the group
-  if(!USER.groups)USER.groups=[];
-  USER.groups.push({
-    name:document.getElementById('join-group-name').textContent,
-    goal:document.getElementById('join-group-goal').textContent,
-    amount:parseInt(document.getElementById('join-target').textContent.replace('£','').replace(',',''))||0,
-    date:document.getElementById('join-deadline').textContent==='No deadline'?'':document.getElementById('join-deadline').textContent,
-    members:[{name:USER.name,saved:0}],
-    saved:0,
-    code:pendingJoinCode
-  });
+  // Join real group via Supabase
+  if(USER.supabaseUser&&USER.userId){
+    const{data:groupData}=await _supabase.from('groups').select('*').eq('code',pendingJoinCode).single();
+    if(groupData){
+      await _supabase.from('group_members').upsert({
+        group_id:groupData.id,user_id:USER.userId,saved:0
+      },{onConflict:'group_id,user_id'});
+    }
+  }
   pendingJoinCode=null;
   localStorage.removeItem('pendingJoin');
   document.getElementById('join-screen').style.display='none';
-  saveUser('You\'ve joined the group! 🎉');
+  await loadUserGroups();
   launchApp();
   navigate('groups');
+  showToast('You\'ve joined the group! 🎉');
 }
 
 function declineJoin(){
