@@ -1360,6 +1360,49 @@ document.getElementById('home-sub').innerHTML=diff>=0?`You're <b>£${Math.abs(di
       }).join('');
     }
   }
+  // Group goal timelines
+  const groupTimelines=document.getElementById('sn-group-timelines');
+  if(groupTimelines){
+    if((USER.groups||[]).length===0){
+      groupTimelines.innerHTML=`<div style="padding:16px;background:var(--s1);border:0.5px solid var(--border);border-radius:14px;text-align:center;font-size:13px;color:var(--muted)">No groups yet — create one in the Groups tab</div>`;
+    } else {
+      groupTimelines.innerHTML=(USER.groups||[]).map(g=>{
+        const pct=g.amount>0?Math.min(100,Math.round((g.saved/g.amount)*100)):0;
+        const remaining=g.amount-g.saved;
+        const myMember=g.members?g.members.find(m=>m.userId===USER.userId||m.name===USER.name):null;
+        const myContrib=myMember?myMember.saved||0:0;
+        const mc=g.members?g.members.length:1;
+        // ETA calculation
+        let etaStr='No deadline set';
+        let etaColor='var(--muted)';
+        if(g.date){
+          const daysLeft=Math.ceil((new Date(g.date)-new Date())/(1000*60*60*24));
+          const monthsLeft=Math.ceil(daysLeft/30);
+          etaStr=daysLeft<=0?'Deadline passed':monthsLeft<=1?'This month':monthsLeft+' months away';
+          etaColor=daysLeft<=0?'var(--red)':monthsLeft<=2?'var(--red)':monthsLeft<=4?'var(--y)':'var(--green)';
+        } else if(g.saved>0&&g.amount>0){
+          // Estimate based on current total saved pace
+          const monthsLeft=Math.ceil(remaining/Math.max(g.saved,1)*1);
+          etaStr=monthsLeft+' months (est.)';
+          etaColor='var(--muted)';
+        }
+        return `<div style="background:var(--s1);border:0.5px solid var(--border);border-radius:14px;padding:14px 16px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+            <div style="font-size:20px;width:36px;height:36px;background:var(--s2);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">👥</div>
+            <div style="flex:1">
+              <div style="font-size:14px;font-weight:500;color:var(--text)">${g.name}</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:2px">£${g.saved.toLocaleString()} of £${g.amount.toLocaleString()} · ${pct}% · ${mc} member${mc!==1?'s':''}</div>
+              <div style="font-size:11px;color:var(--yd);margin-top:1px">My pot: £${myContrib.toLocaleString()}</div>
+            </div>
+            <div style="font-size:12px;font-weight:500;color:${etaColor};text-align:right">${etaStr}</div>
+          </div>
+          <div style="height:4px;background:var(--s3);border-radius:99px;overflow:hidden">
+            <div style="height:4px;background:var(--yd);border-radius:99px;width:${pct}%"></div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+  }
   const sp=USER.spending||{};
   const totalSpend=(sp.food||0)+(sp.subs||0)+(sp.travel||0)+(sp.other||0);
   const spEl=document.getElementById('stats-spending-breakdown');
