@@ -1938,6 +1938,13 @@ function deleteGroup(i){
       .select('saved').eq('group_id',g.supabaseId);
     const newTotal=(remaining||[]).reduce((s,m)=>s+(m.saved||0),0);
     await _supabase.from('groups').update({saved:newTotal}).eq('id',g.supabaseId);
+    // Notify the removed member
+    if(member.userId){
+      await _supabase.from('notifications').insert({
+        user_id:member.userId,
+        message:`You were removed from "${g.name}" by ${USER.name}. Your pot balance of £${bal} has been returned to your savings.`
+      });
+    }
     // Reload groups fresh from Supabase to confirm
     await loadUserGroups();
   } else {
