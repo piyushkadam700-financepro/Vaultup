@@ -1292,6 +1292,14 @@ document.getElementById('home-sub').innerHTML=diff>=0?`You're <b>£${Math.abs(di
     const left=g.target-g.saved;
     goalsEl.innerHTML+=`<div class="goal-card" onclick="navigate('goals')"><div class="goal-em">${g.emoji}</div><div class="goal-info"><div class="goal-name">${g.name}</div><div class="goal-bar-bg"><div class="goal-bar-fill" style="width:${pct}%;background:var(--y)"></div></div><div class="goal-meta"><span class="goal-pct">${pct}% done</span><span class="goal-left">£${left} to go</span></div></div><div class="goal-rv">${pct}%</div></div>`;
   });
+  // Add group goals to home goals list
+  (USER.groups||[]).forEach(g=>{
+    const pct=g.amount>0?Math.min(100,Math.round((g.saved/g.amount)*100)):0;
+    const left=g.amount-g.saved;
+    const myMember=g.members?g.members.find(m=>m.userId===USER.userId||m.name===USER.name):null;
+    const myContrib=myMember?myMember.saved||0:0;
+    goalsEl.innerHTML+=`<div class="goal-card" onclick="navigate('groups')"><div class="goal-em">👥</div><div class="goal-info"><div class="goal-name">${g.name} <span style="font-size:10px;color:var(--muted);font-weight:400">· group</span></div><div class="goal-bar-bg"><div class="goal-bar-fill" style="width:${pct}%;background:var(--yd)"></div></div><div class="goal-meta"><span class="goal-pct">${pct}% done · my pot £${myContrib}</span><span class="goal-left">£${left} to go</span></div></div><div class="goal-rv">${pct}%</div></div>`;
+  });
   document.getElementById('chat-welcome-name').textContent='Hey '+name+' 👋';
   // YOUR NUMBERS PAGE
   const snIncome=document.getElementById('sn-income');
