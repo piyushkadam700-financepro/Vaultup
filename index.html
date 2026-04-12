@@ -1284,6 +1284,8 @@ async function checkNotifications(){
   // Mark all as read
   await _supabase.from('notifications').update({read:true})
     .eq('user_id',USER.userId).eq('read',false);
+  // Force refresh groups — removed member won't see old group
+  await loadUserGroups();
 }
 function getMyGroupSavings(){
   return (USER.groups||[]).reduce((total,g)=>{
