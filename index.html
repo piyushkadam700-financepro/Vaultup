@@ -1574,7 +1574,7 @@ function buildSystemPrompt(){
     const pct=g.target>0?Math.round(g.saved/g.target*100):0;
     const remaining=g.target-g.saved;
     const monthsLeft=g.monthlyAmount>0?Math.ceil(remaining/g.monthlyAmount):null;
-    return `  - ${g.name}: £${g.saved} saved of £${g.target} target (${pct}% done)${g.monthlyAmount?', saving £'+g.monthlyAmount+'/month':''  }${monthsLeft?', ETA '+monthsLeft+' months':''}${g.date?' · target date: '+g.date:''}`;
+    return `  - ${g.name}: £${g.saved} saved of £${g.target} target (${pct}% done)${g.monthlyAmount?', saving £'+g.monthlyAmount+'/month':''}${g.savedThisMonth?', £'+g.savedThisMonth+' saved this month':''}${monthsLeft?', ETA '+monthsLeft+' months':''}${g.date?' · target date: '+g.date:''}`;
   }).join('\n');
   const totalMonthlyCommitted=(USER.goals||[]).reduce((s,g)=>s+(g.monthlyAmount||0),0);
   return `You are Val, the AI money coach inside Vaultup — a personal finance app for young adults (16-28) in the UK. Be a sharp, friendly mate who knows money — direct, casual, zero jargon, zero waffle.\n\n${USER.name}'s financial profile:\n- Monthly take-home: £${USER.income}\n- Monthly savings target: £${USER.savingsTarget}${totalMonthlyCommitted?` (£${totalMonthlyCommitted} committed across goals)`:''}\n- Total saved toward goals: £${(USER.goals||[]).reduce((s,g)=>s+g.saved,0)}
