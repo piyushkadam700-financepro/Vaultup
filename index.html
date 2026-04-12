@@ -1261,7 +1261,29 @@ function launchApp(){
   document.getElementById('main-app').style.display='flex';
   navigate('home');
   renderAll();buildCalendar();renderBadges();renderGoalsScreen();
-  if(USER.supabaseUser){loadUserGroups();}else{renderGroups();}
+  if(USER.supabaseUser){loadUserGroups();checkNotifications();}else{renderGroups();}
+}
+
+async function checkNotifications(){
+  if(!USER.supabaseUser||!USER.userId)return;
+  const{data:notifs}=await _supabase.from('notifications')
+    .select('*').eq('user_id',USER.userId).eq('read',false).order('created_at',{ascending:false});
+  if(!notifs||notifs.length===0)return;
+  // Show each notification as a nudge on home screen
+  notifs.forEach((n,idx)=>{
+    setTimeout(()=>{
+      document.getElementById('nudge-txt').innerHTML=n.message;
+      document.getElementById('home-nudge').onclick=()=>{
+        navigate('chat');
+        sendQuick('I was removed from a savings group. What should I do with the returned balance?');
+      };
+    },idx*500);
+  });
+  // Show toast for first one
+  showToast(notifs[0].message.slice(0,60)+'...');
+  // Mark all as read
+  await _supabase.from('notifications').update({read:true})
+    .eq('user_id',USER.userId).eq('read',false);
 }
 function getMyGroupSavings(){
   return (USER.groups||[]).reduce((total,g)=>{
