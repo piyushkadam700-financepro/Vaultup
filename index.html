@@ -1647,7 +1647,7 @@ async function createGroup(){
     }).select().single();
     if(gData){
       await _supabase.from('group_members').insert({
-        group_id:gData.id,user_id:USER.userId,saved:0
+        group_id:gData.id,user_id:USER.userId,saved:0,user_name:USER.name
       });
       USER.groups[USER.groups.length-1].supabaseId=gData.id;
       USER.groups[USER.groups.length-1].adminId=USER.userId;
