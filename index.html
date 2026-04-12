@@ -1928,7 +1928,7 @@ function deleteGroup(i){
       .eq('group_id',g.supabaseId).eq('user_id',member.userId);
     await _supabase.from('groups').update({saved:g.saved}).eq('id',g.supabaseId);
   }
-  saveUser('${memberName} removed · £${bal} returned to their account');
+  saveUser(`${memberName} removed from group ✓`);
   renderGroups();
   showToast(`${memberName} removed · £${bal} returned to their account`);
 }
