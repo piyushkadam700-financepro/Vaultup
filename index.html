@@ -842,8 +842,22 @@ async function doLogin(){
       supabaseUser:true
     };
     localStorage.setItem(STORAGE_KEY,JSON.stringify(USER));
-    showLoginScreen(false);
+   showLoginScreen(false);
     launchApp();
+    // Handle pending group join for existing users
+    const pendingCode=localStorage.getItem('pendingJoin');
+    if(pendingCode){
+      localStorage.removeItem('pendingJoin');
+      const{data:groupData}=await _supabase.from('groups').select('*').eq('code',pendingCode).single();
+      if(groupData){
+        await _supabase.from('group_members').upsert({
+          group_id:groupData.id,user_id:data.user.id,saved:0
+        },{onConflict:'group_id,user_id'});
+      }
+      await loadUserGroups();
+      navigate('groups');
+      showToast('You\'ve joined the group! 🎉');
+    }
   } else {
     errEl.textContent='Account not found — please sign up first';
     errEl.style.display='block';
