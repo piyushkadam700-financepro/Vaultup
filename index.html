@@ -1327,12 +1327,12 @@ document.getElementById('home-sub').innerHTML=diff>=0?`You're <b>£${Math.abs(di
     const sp2=USER.spending||{};
     const totalSpendAll=(sp2.food||0)+(sp2.subs||0)+(sp2.travel||0)+(sp2.other||0);
     const totalSavedAll=(USER.goals||[]).reduce((s,g)=>s+g.saved,0);
-    const unaccounted=USER.income-totalSpendAll-totalSavedAll;
     snIncome.textContent='£'+(USER.income||0).toLocaleString();
     const totalMonthly=(USER.goals||[]).reduce((s,g)=>s+(g.monthlyAmount||0),0);
     snTarget.textContent='£'+(totalMonthly||USER.savingsTarget||0).toLocaleString();
-   const myGroupSavingsStats=getMyGroupSavings();
-    const unaccountedFixed=USER.income-totalSpendAll-totalSavedAll-myGroupSavingsStats;
+    const myGroupSavingsStats=getMyGroupSavings();
+    const totalSavedThisMonthFixed=(USER.goals||[]).reduce((s,g)=>s+(g.savedThisMonth||0),0);
+    const unaccountedFixed=USER.income-totalSpendAll-totalSavedThisMonthFixed-myGroupSavingsStats;
     snSpend.textContent='£'+totalSpendAll.toLocaleString();
     const totalSavedThisMonthAll=(USER.goals||[]).reduce((s,g)=>s+(g.savedThisMonth||0),0);
     snSaved.textContent='£'+totalSavedThisMonthAll.toLocaleString();
