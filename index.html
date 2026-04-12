@@ -2023,8 +2023,8 @@ async function confirmJoinGroup(){
     const{data:groupData}=await _supabase.from('groups').select('*').eq('code',pendingJoinCode).single();
     if(groupData){
       await _supabase.from('group_members').upsert({
-        group_id:groupData.id,user_id:USER.userId,saved:0
-      },{onConflict:'group_id,user_id'});
+          group_id:groupData.id,user_id:USER.userId,saved:0,user_name:USER.name
+        },{onConflict:'group_id,user_id'});
     }
   }
   pendingJoinCode=null;
