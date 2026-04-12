@@ -1209,9 +1209,15 @@ function finishOnboarding(){
             group_id:groupData.id,user_id:authData.user.id,saved:0
           },{onConflict:'group_id,user_id'});
         }
-        await loadUserGroups();
-        navigate('groups');
-        showToast('You\'ve joined the group! 🎉');
+        // Wait a moment then reload groups with correct userId
+        USER.userId=authData.user.id;
+        USER.supabaseUser=true;
+        localStorage.setItem(STORAGE_KEY,JSON.stringify(USER));
+        setTimeout(async()=>{
+          await loadUserGroups();
+          navigate('groups');
+          showToast('You\'ve joined the group! 🎉');
+        },1000);
       }
     }
   }).catch(()=>{});
