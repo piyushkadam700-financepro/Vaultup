@@ -1526,7 +1526,8 @@ function openEditGoal(i){
   const g=USER.goals[i];
   document.getElementById('editGoalName').value=g.name;
   document.getElementById('editGoalTarget').value=g.target;
-  document.getElementById('editGoalSaved').value=g.saved;
+ document.getElementById('editGoalSaved').value=g.saved;
+  document.getElementById('editGoalSavedThisMonth').value=g.savedThisMonth||0;
   document.getElementById('editGoalMonthly').value=g.monthlyAmount||'';
   document.getElementById('editGoalDate').value=g.date||'';
   openModal('editGoal');
