@@ -2071,10 +2071,11 @@ function saveUser(customToast){
       // Sync goals — delete all and reinsert
       _supabase.from('goals').delete().eq('user_id',USER.userId).then(()=>{
         (USER.goals||[]).forEach(g=>{
-          _supabase.from('goals').insert({
+         _supabase.from('goals').insert({
             user_id:USER.userId,
             emoji:g.emoji,name:g.name,target:g.target,
-            saved:g.saved,monthly_amount:g.monthlyAmount,
+            saved:g.saved,saved_this_month:g.savedThisMonth||0,
+            monthly_amount:g.monthlyAmount,
             date:g.date||null,is_primary:g.isPrimary||false
           }).then(()=>{});
         });
