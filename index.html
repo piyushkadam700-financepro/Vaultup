@@ -1268,7 +1268,8 @@ function renderAll(){
   document.getElementById('home-month').textContent=month;
   const totalGoalTarget=(USER.goals||[]).reduce((s,g)=>s+g.target,0);
 const totalGoalSaved=(USER.goals||[]).reduce((s,g)=>s+g.saved,0);
-const displaySaved=totalGoalTarget>0?totalGoalSaved:(USER.savedThisMonth||0);
+const myGroupSavings=getMyGroupSavings();
+const displaySaved=totalGoalTarget>0?totalGoalSaved+myGroupSavings:(USER.savedThisMonth||0);
 const displayTarget=totalGoalTarget>0?totalGoalTarget:USER.savingsTarget;
 document.getElementById('home-saved').textContent='£'+displaySaved.toLocaleString();
 const diff=displaySaved-displayTarget;
