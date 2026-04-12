@@ -1334,7 +1334,8 @@ document.getElementById('home-sub').innerHTML=diff>=0?`You're <b>£${Math.abs(di
    const myGroupSavingsStats=getMyGroupSavings();
     const unaccountedFixed=USER.income-totalSpendAll-totalSavedAll-myGroupSavingsStats;
     snSpend.textContent='£'+totalSpendAll.toLocaleString();
-    snSaved.textContent='£'+totalSavedAll.toLocaleString();
+    const totalSavedThisMonthAll=(USER.goals||[]).reduce((s,g)=>s+(g.savedThisMonth||0),0);
+    snSaved.textContent='£'+totalSavedThisMonthAll.toLocaleString();
     const snGroup=document.getElementById('sn-group');
     if(snGroup)snGroup.textContent='£'+myGroupSavingsStats.toLocaleString();
     snUnaccounted.textContent=(unaccountedFixed>=0?'£':'−£')+Math.abs(unaccountedFixed).toLocaleString();
