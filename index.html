@@ -1249,7 +1249,13 @@ function launchApp(){
   renderAll();buildCalendar();renderBadges();renderGoalsScreen();
   if(USER.supabaseUser){loadUserGroups();}else{renderGroups();}
 }
-
+function getMyGroupSavings(){
+  return (USER.groups||[]).reduce((total,g)=>{
+    const me=g.members?g.members.find(m=>m.userId===USER.userId||m.name===USER.name):null;
+    return total+(me?me.saved||0:0);
+  },0);
+}
+  
 function renderAll(){
   if(!USER)return;
   const name=USER.name,initial=name[0].toUpperCase();
