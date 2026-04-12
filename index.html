@@ -1964,7 +1964,7 @@ function deleteGroup(i){
     if(member.userId){
       await _supabase.from('notifications').insert({
         user_id:member.userId,
-        message:`You were removed from "${g.name}" by ${USER.name}. Your pot balance of £${bal} has been returned to your savings.`
+        message:`You were removed from "${g.name}" · £${bal} returned to your savings 💰`
       });
     }
     // Reload groups fresh from Supabase to confirm
