@@ -1923,9 +1923,15 @@ function deleteGroup(i){
   g.members=g.members.filter(m=>m.name!==memberName);
   g.saved=g.members.reduce((s,m)=>s+m.saved,0);
   // Sync to Supabase
-  if(USER.supabaseUser&&g.supabaseId&&member.userId){
-    await _supabase.from('group_members').delete()
-      .eq('group_id',g.supabaseId).eq('user_id',member.userId);
+  if(USER.supabaseUser&&g.supabaseId){
+    if(member.userId){
+      await _supabase.from('group_members').delete()
+        .eq('group_id',g.supabaseId).eq('user_id',member.userId);
+    } else {
+      // Fallback: delete by matching user_name
+      await _supabase.from('group_members').delete()
+        .eq('group_id',g.supabaseId).eq('user_name',memberName);
+    }
     await _supabase.from('groups').update({saved:g.saved}).eq('id',g.supabaseId);
   }
   saveUser(`${memberName} removed from group ✓`);
