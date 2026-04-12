@@ -1542,7 +1542,20 @@ function saveEditGoal(){
   if(!name){showToast('Enter a goal name');return;}
   if(target<=0){showToast('Enter a target amount');return;}
  const monthly=parseInt(document.getElementById('editGoalMonthly').value)||0;
-  USER.goals[i]={...USER.goals[i],name,target,saved,date,monthlyAmount:monthly};
+  const savedThisMonth=parseInt(document.getElementById('editGoalSavedThisMonth').value)||0;
+  const oldSavedThisMonth=USER.goals[i].savedThisMonth||0;
+  const diff=savedThisMonth-oldSavedThisMonth;
+  const newSavedAllTime=Math.max(0,saved+diff);
+  USER.goals[i]={...USER.goals[i],name,target,saved:newSavedAllTime,savedThisMonth,date,monthlyAmount:monthly};
+  // Nudge if monthly target hit or exceeded
+  if(monthly>0&&savedThisMonth>=monthly){
+    const over=savedThisMonth-monthly;
+    const nudgeMsg=over>0
+      ?`You went £${over} over your ${name} target this month — smashing it! 🔥`
+      :`You've hit your ${name} target this month 🎉 £${savedThisMonth} saved!`;
+    document.getElementById('nudge-txt').innerHTML=nudgeMsg;
+    document.getElementById('home-nudge').onclick=()=>goToChat(`I hit my ${name} savings target this month. What should I do with the extra £${over||0}?`);
+  }
   closeModal('editGoal');
   navigate('goals');
   saveUser('Goal updated ✓');
