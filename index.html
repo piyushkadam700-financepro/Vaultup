@@ -1871,7 +1871,7 @@ async function loadUserGroups(){
     allGroups.push({
       name:g.name,goal:g.goal,amount:g.amount,date:g.date||'',
       saved:g.saved||0,code:g.code,supabaseId:g.id,adminId:g.admin_id,
-      members:(members||[]).map(m=>({name:m.users?.name||'Member',saved:m.saved||0,userId:m.user_id}))
+      members:(members||[]).map(m=>({name:m.user_name||m.users?.name||'Member',saved:m.saved||0,userId:m.user_id}))
     });
   }
   for(const gid of memberGroupIds){
@@ -1882,7 +1882,7 @@ async function loadUserGroups(){
       allGroups.push({
         name:g.name,goal:g.goal,amount:g.amount,date:g.date||'',
         saved:g.saved||0,code:g.code,supabaseId:g.id,adminId:g.admin_id,
-        members:(members||[]).map(m=>({name:m.users?.name||'Member',saved:m.saved||0,userId:m.user_id}))
+        members:(members||[]).map(m=>({name:m.user_name||m.users?.name||'Member',saved:m.saved||0,userId:m.user_id}))
       });
     }
   }
