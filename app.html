@@ -1327,10 +1327,12 @@ const diff=totalGoalTarget>0?-totalRemaining:displaySaved-displayTarget;
 document.getElementById('home-sub').innerHTML=diff>=0?`You're <b>£${Math.abs(diff).toLocaleString()} ahead</b> of your goals 🔥`:`<b>£${Math.abs(diff).toLocaleString()}</b> still to reach your total goal of £${displayTarget.toLocaleString()}`;
 document.getElementById('home-xp').textContent=(USER.xp||50).toLocaleString();
   const level=getLevel(USER.xp||50);
-  document.getElementById('home-level').textContent=level.name;
-  document.getElementById('spend-food').textContent='£'+(USER.spending?.food||0);
-  document.getElementById('spend-subs').textContent='£'+(USER.spending?.subs||0);
-  document.getElementById('spend-travel').textContent='£'+(USER.spending?.travel||0);
+document.getElementById('home-level').textContent=level.name;
+document.getElementById('spend-rent').textContent='£'+(USER.spending?.rent||0);
+document.getElementById('spend-food').textContent='£'+(USER.spending?.food||0);
+document.getElementById('spend-subs').textContent='£'+(USER.spending?.subs||0);
+document.getElementById('spend-travel').textContent='£'+(USER.spending?.travel||0);
+document.getElementById('spend-other').textContent='£'+(USER.spending?.other||0);
   if(USER.biggestLeak){
     document.getElementById('nudge-txt').innerHTML=`Your biggest leak is <b>${USER.biggestLeak}</b> — want me to build a plan to cut it and hit your goals faster?`;
     document.getElementById('home-nudge').onclick=()=>goToChat(`My biggest spending leak is ${USER.biggestLeak}. Help me cut it down.`);
