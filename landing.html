@@ -270,5 +270,11 @@ footer{padding:32px 24px;border-top:0.5px solid var(--border);display:flex;align
   <div class="footer-copy">© 2026 Vaultup. Built in Bristol 🇬🇧</div>
 </footer>
 
+  <script>
+  // If user has saved data, skip landing and go straight to app
+  if(localStorage.getItem('vaultup_user_v2')){
+    window.location.replace('/index.html');
+  }
+</script>
 </body>
 </html>
