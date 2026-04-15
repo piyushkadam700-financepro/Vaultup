@@ -1727,6 +1727,7 @@ function openSpendingModal(){
 function saveSpending(){
   if(!USER)return;
   if(!USER.spending)USER.spending={};
+  USER.spending.rent=parseInt(document.getElementById('sp-rent').value)||0;
   USER.spending.food=parseInt(document.getElementById('sp-food').value)||0;
   USER.spending.subs=parseInt(document.getElementById('sp-subs').value)||0;
   USER.spending.travel=parseInt(document.getElementById('sp-travel').value)||0;
