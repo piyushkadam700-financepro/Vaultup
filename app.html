@@ -1358,7 +1358,7 @@ document.getElementById('home-xp').textContent=(USER.xp||50).toLocaleString();
   const snLabel=document.getElementById('sn-unaccounted-label');
   if(snIncome){
     const sp2=USER.spending||{};
-    const totalSpendAll=(sp2.food||0)+(sp2.subs||0)+(sp2.travel||0)+(sp2.other||0);
+    const totalSpendAll=(sp2.rent||0)+(sp2.food||0)+(sp2.subs||0)+(sp2.travel||0)+(sp2.other||0);
     const totalSavedAll=(USER.goals||[]).reduce((s,g)=>s+g.saved,0);
     snIncome.textContent='£'+(USER.income||0).toLocaleString();
     const totalMonthly=(USER.goals||[]).reduce((s,g)=>s+(g.monthlyAmount||0),0);
