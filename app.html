@@ -1613,7 +1613,7 @@ function buildSystemPrompt(){
   const totalMonthlyCommitted=(USER.goals||[]).reduce((s,g)=>s+(g.monthlyAmount||0),0);
   const myGroupSavingsTotal=getMyGroupSavings();
   const totalSavedThisMonth=(USER.goals||[]).reduce((s,g)=>s+(g.savedThisMonth||0),0);
-  const totalSpendAll=(USER.spending?.food||0)+(USER.spending?.subs||0)+(USER.spending?.travel||0)+(USER.spending?.other||0);
+  const totalSpendAll=(USER.spending?.rent||0)+(USER.spending?.food||0)+(USER.spending?.subs||0)+(USER.spending?.travel||0)+(USER.spending?.other||0);
   const unaccounted=(USER.income||0)-totalSpendAll-totalSavedThisMonth-myGroupSavingsTotal;
   const groupsList=(USER.groups||[]).map(g=>{
     const pct=g.amount>0?Math.round(g.saved/g.amount*100):0;
