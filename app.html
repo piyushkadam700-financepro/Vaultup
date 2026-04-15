@@ -462,11 +462,13 @@ textarea:focus{border-color:var(--yd);}
       <div class="goals-list" id="home-goals"></div>
       <button class="add-btn" onclick="openModal('addGoal')">+ add a new goal</button>
       <div class="sec-hdr"><span class="sec-title">This month's spending</span><span class="sec-link" onclick="navigate('stats')">full stats →</span></div>
-      <div class="spend-row">
-        <div class="spend-card"><div class="spend-top"><div class="spend-lbl">Food</div><div class="spend-icon">🍔</div></div><div class="spend-amt" id="spend-food">£0</div><div class="spend-sub">track with Val</div><div class="bar-bg"><div class="bar-fill" style="width:0%;background:var(--red)"></div></div></div>
-        <div class="spend-card"><div class="spend-top"><div class="spend-lbl">Subs</div><div class="spend-icon">📱</div></div><div class="spend-amt" id="spend-subs">£0</div><div class="spend-sub">track with Val</div><div class="bar-bg"><div class="bar-fill" style="width:0%;background:var(--yd)"></div></div></div>
-        <div class="spend-card"><div class="spend-top"><div class="spend-lbl">Travel</div><div class="spend-icon">🚇</div></div><div class="spend-amt" id="spend-travel">£0</div><div class="spend-sub">track with Val</div><div class="bar-bg"><div class="bar-fill" style="width:0%;background:var(--y)"></div></div></div>
-      </div>
+      <div class="spend-row" style="overflow-x:auto;padding-bottom:4px;">
+  <div class="spend-card" style="min-width:90px;"><div class="spend-top"><div class="spend-lbl">Rent</div><div class="spend-icon">🏠</div></div><div class="spend-amt" id="spend-rent">£0</div><div class="spend-sub">track with Val</div><div class="bar-bg"><div class="bar-fill" style="width:0%;background:var(--green)"></div></div></div>
+  <div class="spend-card" style="min-width:90px;"><div class="spend-top"><div class="spend-lbl">Food</div><div class="spend-icon">🍔</div></div><div class="spend-amt" id="spend-food">£0</div><div class="spend-sub">track with Val</div><div class="bar-bg"><div class="bar-fill" style="width:0%;background:var(--red)"></div></div></div>
+  <div class="spend-card" style="min-width:90px;"><div class="spend-top"><div class="spend-lbl">Subs</div><div class="spend-icon">📱</div></div><div class="spend-amt" id="spend-subs">£0</div><div class="spend-sub">track with Val</div><div class="bar-bg"><div class="bar-fill" style="width:0%;background:var(--yd)"></div></div></div>
+  <div class="spend-card" style="min-width:90px;"><div class="spend-top"><div class="spend-lbl">Travel</div><div class="spend-icon">🚇</div></div><div class="spend-amt" id="spend-travel">£0</div><div class="spend-sub">track with Val</div><div class="bar-bg"><div class="bar-fill" style="width:0%;background:var(--y)"></div></div></div>
+  <div class="spend-card" style="min-width:90px;"><div class="spend-top"><div class="spend-lbl">Other</div><div class="spend-icon">💸</div></div><div class="spend-amt" id="spend-other">£0</div><div class="spend-sub">track with Val</div><div class="bar-bg"><div class="bar-fill" style="width:0%;background:var(--muted)"></div></div></div>
+</div>
       <div style="height:28px"></div>
     </div>
   </div>
