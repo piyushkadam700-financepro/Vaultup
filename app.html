@@ -1447,7 +1447,7 @@ document.getElementById('home-xp').textContent=(USER.xp||50).toLocaleString();
     }
   }
   const sp=USER.spending||{};
-  const totalSpend=(sp.food||0)+(sp.subs||0)+(sp.travel||0)+(sp.other||0);
+  const totalSpend=(sp.rent||0)+(sp.food||0)+(sp.subs||0)+(sp.travel||0)+(sp.other||0);
   const spEl=document.getElementById('stats-spending-breakdown');
   if(spEl){
     if(totalSpend===0){
