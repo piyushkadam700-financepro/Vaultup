@@ -1717,6 +1717,7 @@ function saveNewGoal(){
 // ── SPENDING ──
 function openSpendingModal(){
   if(!USER)return;
+  document.getElementById('sp-rent').value=USER.spending?.rent||'';
   document.getElementById('sp-food').value=USER.spending?.food||'';
   document.getElementById('sp-subs').value=USER.spending?.subs||'';
   document.getElementById('sp-travel').value=USER.spending?.travel||'';
