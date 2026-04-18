@@ -1222,10 +1222,11 @@ function finishOnboarding(){
         streak:USER.streak,
         xp:USER.xp,
         last_active_date:USER.lastActiveDate,
-        spending_food:USER.spending.food,
-        spending_subs:USER.spending.subs,
-        spending_travel:USER.spending.travel,
-        spending_other:USER.spending.other
+        spending_rent:USER.spending.rent||0,
+spending_food:USER.spending.food,
+spending_subs:USER.spending.subs,
+spending_travel:USER.spending.travel,
+spending_other:USER.spending.other
       });
       for(const g of USER.goals){
         await _supabase.from('goals').insert({
