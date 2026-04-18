@@ -1341,7 +1341,7 @@ document.getElementById('spend-other').textContent='£'+(USER.spending?.other||0
   const unaccountedCheck=(USER.income||0)-totalSpendCheck-totalSavedCheck-groupSavingsCheck;
   if(unaccountedCheck<0){
     const over=Math.abs(unaccountedCheck);
-    document.getElementById('nudge-txt').innerHTML=`You've spent <b>£${over.toLocaleString()} more than your income</b> this month — want Val to help you recover and get back on track?`;
+    document.getElementById('nudge-txt').innerHTML=`You've allocated <b>£${over.toLocaleString()} more than your income</b> this month — want Val to help you review?`;
     document.getElementById('home-nudge').onclick=()=>goToChat(`I've overspent by £${over} this month. My income is £${USER.income} but I've tracked £${totalSpendCheck} spending and £${totalSavedCheck+groupSavingsCheck} saved. Help me recover.`);
   } else if(USER.biggestLeak){
     document.getElementById('nudge-txt').innerHTML=`Your biggest leak is <b>${USER.biggestLeak}</b> — want me to build a plan to cut it and hit your goals faster?`;
