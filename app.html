@@ -1631,14 +1631,16 @@ function saveEdit(){
 }
 
 function signOut(){
-  if(!confirm('Sign out? Your data stays saved on this device.'))return;
+  if(!confirm('Sign out? Your data is safely stored and will be here when you return.'))return;
+  _supabase.auth.signOut().catch(()=>{});
   USER=null;chatHistory=[];
+  localStorage.removeItem(STORAGE_KEY);
   document.getElementById('main-app').style.display='none';
   document.getElementById('ob-screen').style.display='';
   document.getElementById('ob-screen').classList.add('active');
-  selectedGoals=[];selectedLeak=null;goStep(0);
+  selectedGoals=[];selectedLeak=null;
+  goStep(0);
 }
-
 // ── GROUPS ──
 async function createGroup(){
   const name=document.getElementById('groupName').value.trim();
