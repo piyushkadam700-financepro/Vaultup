@@ -128,7 +128,7 @@ Built by **Piyush Kadam** — finance professional and founder of VaultUp Ltd.
 Background in financial services, with direct experience of the savings behaviour gap that Vaultup addresses. The product is built from a genuine understanding of how young adults in the UK think about money — and why most fintech products fail to change their behaviour.
 
 - **LinkedIn:** [linkedin.com/in/piyushkadam](https://linkedin.com)
-- **Email:** hello@vaultup.app
+- **Email:** hello@vaultup.co.uk
 - **Company:** VaultUp Ltd, Bristol, UK
 
 ---
