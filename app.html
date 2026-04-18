@@ -2092,10 +2092,11 @@ function saveUser(customToast){
         streak:USER.streak,
         xp:USER.xp,
         last_active_date:USER.lastActiveDate,
-        spending_food:USER.spending?.food||0,
-        spending_subs:USER.spending?.subs||0,
-        spending_travel:USER.spending?.travel||0,
-        spending_other:USER.spending?.other||0
+        spending_rent:USER.spending?.rent||0,
+spending_food:USER.spending?.food||0,
+spending_subs:USER.spending?.subs||0,
+spending_travel:USER.spending?.travel||0,
+spending_other:USER.spending?.other||0
       }).eq('id',USER.userId).then(()=>{});
       // Sync goals — delete all and reinsert
       _supabase.from('goals').delete().eq('user_id',USER.userId).then(()=>{
