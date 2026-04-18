@@ -975,6 +975,32 @@ async function openHistoryModal(){
   const listEl=document.getElementById('history-list');
   listEl.innerHTML=`<div style="text-align:center;padding:30px 20px;color:var(--muted);font-size:13px"><div style="font-size:28px;margin-bottom:10px">⏳</div>Loading your history...</div>`;
   if(!USER||!USER.supabaseUser||!USER.userId){
+    // Show demo history for demo users
+    if(USER?.isDemo){
+      const demoHistory=[
+        {month:'March 2026',saved_total:900,spending_rent:850,spending_food:200,spending_subs:45,spending_travel:80,spending_other:60,unaccounted:5,goals_snapshot:[{emoji:'🏖️',name:'Holiday',savedThisMonth:200},{emoji:'💰',name:'Student loan',savedThisMonth:700}]},
+        {month:'February 2026',saved_total:850,spending_rent:850,spending_food:220,spending_subs:45,spending_travel:110,spending_other:90,unaccounted:-65,goals_snapshot:[{emoji:'🏖️',name:'Holiday',savedThisMonth:200},{emoji:'💰',name:'Student loan',savedThisMonth:650}]},
+        {month:'January 2026',saved_total:750,spending_rent:850,spending_food:195,spending_subs:45,spending_travel:95,spending_other:120,unaccounted:45,goals_snapshot:[{emoji:'🏖️',name:'Holiday',savedThisMonth:200},{emoji:'💰',name:'Student loan',savedThisMonth:550}]},
+      ];
+      listEl.innerHTML=`<div style="background:var(--ydim);border:0.5px solid var(--yd);border-radius:12px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:var(--y)">👀 Demo data — sign up to track your real history</div>`+demoHistory.map(r=>{
+        const totalSpend=(r.spending_rent||0)+(r.spending_food||0)+(r.spending_subs||0)+(r.spending_travel||0)+(r.spending_other||0);
+        const unaccountedColor=r.unaccounted>=0?'green':'red';
+        const spendChips=[{label:'🏠 Rent',val:r.spending_rent},{label:'🍔 Food',val:r.spending_food},{label:'📱 Subs',val:r.spending_subs},{label:'🚇 Travel',val:r.spending_travel},{label:'💸 Other',val:r.spending_other}].filter(c=>c.val>0);
+        const goals=r.goals_snapshot||[];
+        return `<div class="hist-card">
+          <div class="hist-month">${r.month}</div>
+          <div class="hist-row"><span class="hist-lbl">Total saved</span><span class="hist-val green">£${r.saved_total.toLocaleString()}</span></div>
+          <div class="hist-row"><span class="hist-lbl">Total spending</span><span class="hist-val">£${totalSpend.toLocaleString()}</span></div>
+          <div class="hist-row"><span class="hist-lbl">Unaccounted</span><span class="hist-val ${unaccountedColor}">${r.unaccounted>=0?'£':'−£'}${Math.abs(r.unaccounted).toLocaleString()}</span></div>
+          <div class="hist-divider"></div>
+          <div class="hist-spend-row">${spendChips.map(c=>`<div class="hist-spend-chip">${c.label} <span>£${c.val}</span></div>`).join('')}</div>
+          <div class="hist-divider"></div>
+          <div style="font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Goals this month</div>
+          ${goals.map(g=>`<div class="hist-row"><span class="hist-lbl">${g.emoji} ${g.name}</span><span class="hist-val green">+£${(g.savedThisMonth||0).toLocaleString()}</span></div>`).join('')}
+        </div>`;
+      }).join('');
+      return;
+    }
     listEl.innerHTML=`<div style="text-align:center;padding:30px 20px;color:var(--muted);font-size:13px"><div style="font-size:28px;margin-bottom:10px">📅</div>No history yet — your data will be saved here at the end of each month.</div>`;
     return;
   }
