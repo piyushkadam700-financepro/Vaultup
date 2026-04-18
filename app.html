@@ -1334,7 +1334,16 @@ document.getElementById('spend-food').textContent='£'+(USER.spending?.food||0);
 document.getElementById('spend-subs').textContent='£'+(USER.spending?.subs||0);
 document.getElementById('spend-travel').textContent='£'+(USER.spending?.travel||0);
 document.getElementById('spend-other').textContent='£'+(USER.spending?.other||0);
-  if(USER.biggestLeak){
+  const sp3=USER.spending||{};
+  const totalSpendCheck=(sp3.rent||0)+(sp3.food||0)+(sp3.subs||0)+(sp3.travel||0)+(sp3.other||0);
+  const totalSavedCheck=(USER.goals||[]).reduce((s,g)=>s+(g.savedThisMonth||0),0);
+  const groupSavingsCheck=getMyGroupSavings();
+  const unaccountedCheck=(USER.income||0)-totalSpendCheck-totalSavedCheck-groupSavingsCheck;
+  if(unaccountedCheck<0){
+    const over=Math.abs(unaccountedCheck);
+    document.getElementById('nudge-txt').innerHTML=`You've spent <b>£${over.toLocaleString()} more than your income</b> this month — want Val to help you recover and get back on track?`;
+    document.getElementById('home-nudge').onclick=()=>goToChat(`I've overspent by £${over} this month. My income is £${USER.income} but I've tracked £${totalSpendCheck} spending and £${totalSavedCheck+groupSavingsCheck} saved. Help me recover.`);
+  } else if(USER.biggestLeak){
     document.getElementById('nudge-txt').innerHTML=`Your biggest leak is <b>${USER.biggestLeak}</b> — want me to build a plan to cut it and hit your goals faster?`;
     document.getElementById('home-nudge').onclick=()=>goToChat(`My biggest spending leak is ${USER.biggestLeak}. Help me cut it down.`);
   }
