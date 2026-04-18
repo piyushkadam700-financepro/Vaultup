@@ -338,9 +338,14 @@ footer{padding:32px 60px;border-top:0.5px solid var(--border);display:flex;align
 
 <script>
   const params = new URLSearchParams(window.location.search);
-  if(!params.get('join') && localStorage.getItem('vaultup_user_v2')){
+  if (params.get('join')) {
+    // Preserve the join code and send to app
+    window.location.replace('/app.html' + window.location.search);
+  } else if (localStorage.getItem('vaultup_user_v2')) {
+    // Logged in user — send to app
     window.location.replace('/app.html');
   }
+  // Otherwise — stay on landing page (new visitor)
 </script>
 </body>
 </html>
