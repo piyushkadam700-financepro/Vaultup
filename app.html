@@ -1378,7 +1378,7 @@ document.getElementById('spend-other').textContent='£'+(USER.spending?.other||0
     if(snGroup)snGroup.textContent='£'+myGroupSavingsStats.toLocaleString();
     snUnaccounted.textContent=(unaccountedFixed>=0?'£':'−£')+Math.abs(unaccountedFixed).toLocaleString();
     snUnaccounted.style.color=unaccountedFixed>=0?'var(--green)':'var(--red)';
-    snLabel.textContent=unaccountedFixed>=0?'potential extra savings not yet allocated':'you may be spending more than tracked';
+    snLabel.textContent=unaccountedFixed>=0?'potential extra savings not yet allocated':''you\'ve spent more than your income this month — ask Val how to recover';
   }
   // GOAL TIMELINES
   const timelines=document.getElementById('sn-goal-timelines');
