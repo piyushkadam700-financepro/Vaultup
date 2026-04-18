@@ -337,12 +337,9 @@ footer{padding:32px 60px;border-top:0.5px solid var(--border);display:flex;align
 </footer>
 
 <script>
-  const params=new URLSearchParams(window.location.search);
-if(params.get('join')){
-  window.location.replace('/app.html'+window.location.search);
-} else if(localStorage.getItem('vaultup_user_v2')){
-  window.location.replace('/app.html');
-}
+  const params = new URLSearchParams(window.location.search);
+  if(!params.get('join') && localStorage.getItem('vaultup_user_v2')){
+    window.location.replace('/app.html');
   }
 </script>
 </body>
