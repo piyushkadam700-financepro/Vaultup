@@ -25,7 +25,7 @@ Vaultup helps 16–28 year olds build better saving habits through an AI coach (
 ## Traction
 
 - **51+ real users** since launch across Bristol, London, and Birmingham
-- Built, shipped, and iterated in under 8 weeks from first line of code
+- Built, shipped, and iterated in under 12 weeks from first line of code
 - Real group savings pots in active use between friends
 - Monthly active engagement tracked via Vercel Insights
 - Privacy policy live, GDPR-compliant data handling in place
