@@ -1222,7 +1222,7 @@ async function checkNotifications(){
   if(!notifs||notifs.length===0)return;
   notifs.forEach((n,idx)=>{
     setTimeout(()=>{
-      document.getElementById('nudge-txt').innerHTML=n.message;
+      document.getElementById('nudge-txt').innerHTML=n.message.replace(' · ', '<br>');
       document.getElementById('home-nudge').onclick=()=>{navigate('chat');sendQuick('I was removed from a savings group. What should I do with the returned balance?');};
     },idx*500);
   });
