@@ -1502,8 +1502,11 @@ document.getElementById('spend-other').textContent=fmt(USER.spending?.other||0);
   document.getElementById('cal-title').textContent=month+' · '+USER.streak+' day streak 🔥';
   // Settings
   document.getElementById('set-name').textContent=USER.name;
-  document.getElementById('set-income').textContent='£'+USER.income+' / month';
-  document.getElementById('set-target').textContent='£'+USER.savingsTarget+' / month';
+  document.getElementById('set-income').textContent=fmt(USER.income)+' / month';
+  document.getElementById('set-target').textContent=fmt(USER.savingsTarget)+' / month';
+  const setCurEl=document.getElementById('set-currency');
+  const curNames={'£':'£ British Pound','$':'$ US Dollar','€':'€ Euro','₹':'₹ Indian Rupee','د.إ':'د.إ UAE Dirham'};
+  if(setCurEl)setCurEl.textContent=curNames[cur()]||cur();
   document.getElementById('set-goals').textContent=(USER.goals||[]).length+' active goals';
   const setSpend=document.getElementById('set-spending');
   if(setSpend)setSpend.textContent=totalSpend>0?'£'+totalSpend+' tracked this month':'Tap to update this month';
