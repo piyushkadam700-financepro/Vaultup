@@ -1432,7 +1432,7 @@ document.getElementById('spend-other').textContent=fmt(USER.spending?.other||0);
     const totalSpendAll=(sp2.rent||0)+(sp2.food||0)+(sp2.subs||0)+(sp2.travel||0)+(sp2.other||0);
     snIncome.textContent=fmt(USER.income||0);
     const totalMonthly=(USER.goals||[]).reduce((s,g)=>s+(g.monthlyAmount||0),0);
-    document.getElementById('sn-target').textContent='£'+(totalMonthly||USER.savingsTarget||0).toLocaleString();
+    document.getElementById('sn-target').textContent=fmt(totalMonthly||USER.savingsTarget||0);
     const myGroupSavingsStats=getMyGroupSavings();
     const totalSavedThisMonthFixed=(USER.goals||[]).reduce((s,g)=>s+(g.savedThisMonth||0),0);
     const unaccountedFixed=USER.income-totalSpendAll-totalSavedThisMonthFixed-myGroupSavingsStats;
