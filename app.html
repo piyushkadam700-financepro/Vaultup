@@ -1490,7 +1490,7 @@ document.getElementById('spend-other').textContent=fmt(USER.spending?.other||0);
       spEl.innerHTML=`<div style="padding:16px;background:var(--s1);border:0.5px solid var(--border);border-radius:14px;text-align:center;font-size:13px;color:var(--muted)">No spending tracked yet — update via Settings 📊</div>`;
     } else {
       const items=[{icon:'🏠',name:'Rent / bills',amt:sp.rent||0,color:'var(--green)'},{icon:'🍔',name:'Food & drink',amt:sp.food||0,color:'var(--red)'},{icon:'📱',name:'Subscriptions',amt:sp.subs||0,color:'var(--yd)'},{icon:'🚇',name:'Travel',amt:sp.travel||0,color:'var(--y)'},{icon:'💸',name:'Other',amt:sp.other||0,color:'var(--muted)'}].filter(i=>i.amt>0);
-      spEl.innerHTML=items.map(i=>{const pct=Math.round((i.amt/totalSpend)*100);return `<div class="sb-row"><div class="sb-icon">${i.icon}</div><div class="sb-info"><div class="sb-name">${i.name}</div><div class="sb-bar-bg"><div class="sb-bar-fill" style="width:${pct}%;background:${i.color}"></div></div></div><div class="sb-right"><div class="sb-amt">£${i.amt}</div><div class="sb-change">${pct}%</div></div></div>`;}).join('');
+      spEl.innerHTML=items.map(i=>{const pct=Math.round((i.amt/totalSpend)*100);return `<div class="sb-row"><div class="sb-icon">${i.icon}</div><div class="sb-info"><div class="sb-name">${i.name}</div><div class="sb-bar-bg"><div class="sb-bar-fill" style="width:${pct}%;background:${i.color}"></div></div></div><div class="sb-right"><div class="sb-amt">${fmt(i.amt)}</div></div></div>`;}).join('');
     }
   }
   // Rewards
