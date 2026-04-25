@@ -856,7 +856,8 @@ async function doLogin(){
       joinedAt:profile.joined_at,lastActiveDate:profile.last_active_date,
       spending:{rent:profile.spending_rent||0,food:profile.spending_food||0,subs:profile.spending_subs||0,travel:profile.spending_travel||0,other:profile.spending_other||0},
       goals:(goals||[]).map(g=>({emoji:g.emoji,name:g.name,target:g.target,saved:g.saved,savedThisMonth:g.saved_this_month||0,monthlyAmount:g.monthly_amount,date:g.date||'',isPrimary:g.is_primary})),
-      userId:data.user.id,supabaseUser:true
+      userId:data.user.id,supabaseUser:true,
+      lastResetMonth:new Date().toISOString().slice(0,7)
     };
     localStorage.setItem(STORAGE_KEY,JSON.stringify(USER));
     showLoginScreen(false);
