@@ -330,10 +330,18 @@ textarea:focus{border-color:var(--yd);}
       <div class="ob-step-label">Step 2 of 4</div>
       <div class="ob-step-title">Your money,<br>your numbers</div>
       <div class="ob-step-sub">Val uses these to give you real advice — not generic tips.</div>
+     <div class="field-label">Currency</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px" id="currency-picker">
+        <button onclick="selectCurrency(this,'£')" class="goal-chip selected" data-cur="£">£ GBP</button>
+        <button onclick="selectCurrency(this,'$')" class="goal-chip" data-cur="$">$ USD</button>
+        <button onclick="selectCurrency(this,'€')" class="goal-chip" data-cur="€">€ EUR</button>
+        <button onclick="selectCurrency(this,'₹')" class="goal-chip" data-cur="₹">₹ INR</button>
+        <button onclick="selectCurrency(this,'د.إ')" class="goal-chip" data-cur="د.إ">د.إ AED</button>
+      </div>
       <div class="field-label">Monthly take-home pay</div>
-      <div class="field-prefix"><span class="field-prefix-sym">£</span><input class="field-input" id="ob-income" type="number" placeholder="e.g. 1800" min="0" max="99999"/></div>
+      <div class="field-prefix"><span class="field-prefix-sym" id="ob-currency-sym">£</span><input class="field-input" id="ob-income" type="number" placeholder="e.g. 1800" min="0" max="99999"/></div>
       <div class="field-label">Monthly savings target</div>
-      <div class="field-prefix"><span class="field-prefix-sym">£</span><input class="field-input" id="ob-target" type="number" placeholder="e.g. 400" min="0" max="99999"/></div>
+      <div class="field-prefix"><span class="field-prefix-sym" id="ob-currency-sym2">£</span><input class="field-input" id="ob-target" type="number" placeholder="e.g. 400" min="0" max="99999"/></div>
     </div>
     <div class="ob-bottom"><button class="ob-cta" onclick="validateStep2()">Continue →</button></div>
   </div>
