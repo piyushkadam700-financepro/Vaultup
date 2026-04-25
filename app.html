@@ -1023,7 +1023,10 @@ async function checkDailyStreak(){
 }
 
 async function snapshotMonthToHistory(u,monthKey){
-  if(!u.supabaseUser||!u.userId)return;
+  const userId=u.userId||USER?.userId;
+  const isSupabase=u.supabaseUser||USER?.supabaseUser;
+  if(!isSupabase||!userId)return;
+  u.userId=userId;
   // Build month label e.g. "March 2026"
   const[year,mon]=monthKey.split('-');
   const monthLabel=new Date(parseInt(year),parseInt(mon)-1,1).toLocaleString('default',{month:'long',year:'numeric'});
