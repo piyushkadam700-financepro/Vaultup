@@ -1386,7 +1386,7 @@ function renderAll(){
   document.getElementById('home-saved').textContent=fmt(displaySaved);
   const totalRemaining=(USER.goals||[]).reduce((s,g)=>s+(Math.max(0,g.target-g.saved)),0);
   const diff=totalGoalTarget>0?-totalRemaining:displaySaved-displayTarget;
-  document.getElementById('home-sub').innerHTML=diff>=0?`You're <b>£${Math.abs(diff).toLocaleString()} ahead</b> of your goals 🔥`:`<b>£${Math.abs(diff).toLocaleString()}</b> still to reach your total goal of £${displayTarget.toLocaleString()}`;
+  const C=cur();document.getElementById('home-sub').innerHTML=diff>=0?`You're <b>${C}${Math.abs(diff).toLocaleString()} ahead</b> of your goals 🔥`:`<b>${C}${Math.abs(diff).toLocaleString()}</b> still to reach your total goal of ${C}${displayTarget.toLocaleString()}`;
   document.getElementById('home-xp').textContent=(USER.xp||50).toLocaleString();
   const level=getLevel(USER.xp||50);
   document.getElementById('home-level').textContent=level.name;
