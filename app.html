@@ -1424,7 +1424,7 @@ document.getElementById('spend-other').textContent=fmt(USER.spending?.other||0);
     const left=g.amount-g.saved;
     const myMember=g.members?g.members.find(m=>m.userId===USER.userId||m.name===USER.name):null;
     const myContrib=myMember?myMember.saved||0:0;
-    goalsEl.innerHTML+=`<div class="goal-card" onclick="navigate('groups')"><div class="goal-em">👥</div><div class="goal-info"><div class="goal-name">${g.name} <span style="font-size:10px;color:var(--muted);font-weight:400">· group</span></div><div class="goal-bar-bg"><div class="goal-bar-fill" style="width:${pct}%;background:var(--yd)"></div></div><div class="goal-meta"><span class="goal-pct">${pct}% done · my pot £${myContrib}</span><span class="goal-left">£${left} to go</span></div></div><div class="goal-rv">${pct}%</div></div>`;
+    goalsEl.innerHTML+=`<div class="goal-card" onclick="navigate('groups')"><div class="goal-em">👥</div><div class="goal-info"><div class="goal-name">${g.name} <span style="font-size:10px;color:var(--muted);font-weight:400">· group</span></div><div class="goal-bar-bg"><div class="goal-bar-fill" style="width:${pct}%;background:var(--yd)"></div></div><div class="goal-meta"><span class="goal-pct">${pct}% done · my pot ${fmt(myContrib)}</span><span class="goal-left">${fmt(left)} to go</span></div></div><div class="goal-rv">${pct}%</div></div>`;
   });
   document.getElementById('chat-welcome-name').textContent='Hey '+name+' 👋';
   // Stats page
