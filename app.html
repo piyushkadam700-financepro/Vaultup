@@ -1315,7 +1315,8 @@ function finishOnboarding(){
       await _supabase.from('users').insert({
         id:authData.user.id,name:USER.name,income:USER.income,savings_target:USER.savingsTarget,
         biggest_leak:USER.biggestLeak,streak:USER.streak,xp:USER.xp,last_active_date:USER.lastActiveDate,
-        spending_rent:0,spending_food:0,spending_subs:0,spending_travel:0,spending_other:0
+        spending_rent:0,spending_food:0,spending_subs:0,spending_travel:0,spending_other:0,
+        currency:USER.currency||'£'
       });
       for(const g of USER.goals){
         await _supabase.from('goals').insert({user_id:authData.user.id,emoji:g.emoji,name:g.name,target:g.target,saved:g.saved,monthly_amount:g.monthlyAmount,date:g.date,is_primary:g.isPrimary});
