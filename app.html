@@ -1276,8 +1276,8 @@ function updateSplitTotals(){
   const status=document.getElementById('split-status');
   if(allocated===0)status.textContent='Enter monthly amounts above';
   else if(allocated===target)status.innerHTML='<span style="color:var(--green)">✓ Perfect — fully allocated!</span>';
-  else if(allocated>target)status.innerHTML='<span style="color:var(--red)">Over by £'+Math.abs(remaining)+'</span>';
-  else status.textContent='£'+remaining+' still to allocate';
+  else if(allocated>target)status.innerHTML='<span style="color:var(--red)">Over by '+selectedCurrency+Math.abs(remaining)+'</span>';
+  else status.textContent=selectedCurrency+remaining+' still to allocate';
 }
 
 function splitEqually(){
