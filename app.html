@@ -881,7 +881,17 @@ function showLoginScreen(show){
   if(!show){document.getElementById('ob-screen').style.display='none';document.getElementById('ob-screen').classList.remove('active');}
 }
 
-// ── DATE HELPERS ──
+// ── CURRENCY HELPER ──
+const CURRENCIES = {
+  '£': {symbol:'£', code:'GBP', name:'British Pound'},
+  '$': {symbol:'$', code:'USD', name:'US Dollar'},
+  '€': {symbol:'€', code:'EUR', name:'Euro'},
+  '₹': {symbol:'₹', code:'INR', name:'Indian Rupee'},
+  'د.إ': {symbol:'د.إ', code:'AED', name:'UAE Dirham'},
+};
+function cur(){return USER?.currency||'£';}
+function fmt(n){return cur()+Number(n||0).toLocaleString();}
+  // ── DATE HELPERS ──
 function getTodayISO(){
   const d=new Date();
   const yyyy=d.getFullYear();
