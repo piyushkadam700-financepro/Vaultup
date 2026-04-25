@@ -1994,7 +1994,13 @@ function saveCurrency(symbol){
   openCurrencyModal();
   closeModal('currency');
 }
-function openModal(id){document.getElementById('modal-'+id).classList.add('open');}
+function openModal(id){
+  document.getElementById('modal-'+id).classList.add('open');
+  if(id==='createGroup'){
+    const lbl=document.getElementById('create-group-amount-label');
+    if(lbl)lbl.textContent='Total amount needed ('+cur()+')';
+  }
+}
 function closeModal(id){document.getElementById('modal-'+id).classList.remove('open');}
 
 function showToast(msg){
