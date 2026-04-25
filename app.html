@@ -1267,7 +1267,7 @@ function updateSplitTotals(){
   let allocated=0;
   for(let i=0;i<selectedGoals.length;i++){const el=document.getElementById('monthly-'+i);allocated+=el?parseInt(el.value)||0:0;}
   const remaining=target-allocated;const pct=target>0?Math.min(100,Math.round((allocated/target)*100)):0;
-  document.getElementById('split-allocated').textContent='£'+allocated;
+  document.getElementById('split-allocated').textContent=selectedCurrency+allocated;
   const remEl=document.getElementById('split-remaining');
   remEl.textContent=remaining>=0?'£'+remaining:'−£'+Math.abs(remaining);
   remEl.style.color=remaining<0?'var(--red)':remaining===0?'var(--green)':'var(--text)';
