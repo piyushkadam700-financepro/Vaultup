@@ -1036,10 +1036,10 @@ async function snapshotMonthToHistory(u,monthKey){
   const unaccounted=(u.income||0)-totalSpend-savedTotal;
   const goalsSnapshot=(u.goals||[]).map(g=>({name:g.name,emoji:g.emoji,savedThisMonth:g.savedThisMonth||0,saved:g.saved,target:g.target}));
   // Check if record for this month already exists to avoid duplicates
-  const{data:existing}=await _supabase.from('monthly_history').select('id').eq('user_id',u.userId).eq('month',monthLabel).single();
-  if(existing)return; // already snapped
+  const{data:existing}=await _supabase.from('monthly_history').select('id').eq('user_id',userId).eq('month',monthLabel).single();
+  if(existing)return;
   await _supabase.from('monthly_history').insert({
-    user_id:u.userId,
+    user_id:userId,
     month:monthLabel,
     saved_total:savedTotal,
     spending_rent:sp.rent||0,
