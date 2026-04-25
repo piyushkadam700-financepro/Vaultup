@@ -1436,11 +1436,11 @@ document.getElementById('spend-other').textContent=fmt(USER.spending?.other||0);
     const myGroupSavingsStats=getMyGroupSavings();
     const totalSavedThisMonthFixed=(USER.goals||[]).reduce((s,g)=>s+(g.savedThisMonth||0),0);
     const unaccountedFixed=USER.income-totalSpendAll-totalSavedThisMonthFixed-myGroupSavingsStats;
-    document.getElementById('sn-spend').textContent='£'+totalSpendAll.toLocaleString();
-    document.getElementById('sn-saved').textContent='£'+totalSavedThisMonthFixed.toLocaleString();
+   document.getElementById('sn-spend').textContent=fmt(totalSpendAll);
+    document.getElementById('sn-saved').textContent=fmt(totalSavedThisMonthFixed);
     const snGroup=document.getElementById('sn-group');
-    if(snGroup)snGroup.textContent='£'+myGroupSavingsStats.toLocaleString();
-    document.getElementById('sn-unaccounted').textContent=(unaccountedFixed>=0?'£':'−£')+Math.abs(unaccountedFixed).toLocaleString();
+    if(snGroup)snGroup.textContent=fmt(myGroupSavingsStats);
+    document.getElementById('sn-unaccounted').textContent=(unaccountedFixed>=0?cur():'−'+cur())+Math.abs(unaccountedFixed).toLocaleString();
     document.getElementById('sn-unaccounted').style.color=unaccountedFixed>=0?'var(--green)':'var(--red)';
     document.getElementById('sn-unaccounted-label').textContent=unaccountedFixed>=0?'potential extra savings not yet allocated':`£${Math.abs(unaccountedFixed).toLocaleString()} more allocated than your monthly income — check your figures`;
   }
