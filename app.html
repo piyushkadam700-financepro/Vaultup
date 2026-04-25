@@ -880,7 +880,21 @@ function showLoginScreen(show){
   if(!show){document.getElementById('ob-screen').style.display='none';document.getElementById('ob-screen').classList.remove('active');}
 }
 
-// ── STATE ──
+// ── DATE HELPERS ──
+function getTodayISO(){
+  const d=new Date();
+  const yyyy=d.getFullYear();
+  const mm=String(d.getMonth()+1).padStart(2,'0');
+  const dd=String(d.getDate()).padStart(2,'0');
+  return `${yyyy}-${mm}-${dd}`;
+}
+function getMonthKey(isoDate){return isoDate.slice(0,7);}
+function daysBetween(isoA,isoB){
+  const a=new Date(isoA+'T00:00:00');
+  const b=new Date(isoB+'T00:00:00');
+  return Math.round((b-a)/(1000*60*60*24));
+}
+  // ── STATE ──
 let USER=null,chatHistory=[],chatLoading=false,selectedGoals=[],selectedLeak=null,editingField=null,selectedGoalEmoji='🎯',lastSendTime=0,editingGoalIndex=-1;
 const STORAGE_KEY='vaultup_user_v2';
 
