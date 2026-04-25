@@ -1254,8 +1254,8 @@ function buildSplitStep(){
         <div style="position:relative"><span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;pointer-events:none">${selectedCurrency}</span>
       </div>
       <div>
-        <div style="font-size:11px;color:var(--dim);margin-bottom:6px;text-transform:uppercase;letter-spacing:.08em">Total goal target (£)</div>
-        <div style="position:relative"><span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;pointer-events:none">£</span><input type="number" id="total-${i}" placeholder="e.g. 1200" min="0" style="width:100%;background:var(--s2);border:0.5px solid var(--border);border-radius:10px;color:var(--text);font-size:15px;padding:11px 12px 11px 28px;font-family:'DM Sans',sans-serif;outline:none"/></div>
+       <div style="font-size:11px;color:var(--dim);margin-bottom:6px;text-transform:uppercase;letter-spacing:.08em">Total goal target (${selectedCurrency})</div>
+        <div style="position:relative"><span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;pointer-events:none">${selectedCurrency}</span>
       </div>
     </div>`;
   }).join('');
