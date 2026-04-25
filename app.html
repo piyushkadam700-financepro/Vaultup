@@ -1578,6 +1578,11 @@ function renderGoalsScreen(){
 
 function openEditGoal(i){
   editingGoalIndex=i;const g=USER.goals[i];
+  const C=cur();
+  const el1=document.getElementById('editGoalTarget-lbl');if(el1)el1.textContent='Target amount ('+C+')';
+  const el2=document.getElementById('editGoalSaved-lbl');if(el2)el2.textContent='Amount saved so far — all time ('+C+')';
+  const el3=document.getElementById('editGoalSavedThisMonth-lbl');if(el3)el3.textContent='Saved this month ('+C+')';
+  const el4=document.getElementById('editGoalMonthly-lbl');if(el4)el4.textContent='Monthly savings amount ('+C+')';
   document.getElementById('editGoalName').value=g.name;
   document.getElementById('editGoalTarget').value=g.target;
   document.getElementById('editGoalSaved').value=g.saved;
