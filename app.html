@@ -1964,6 +1964,31 @@ function saveUser(customToast){
   if(customToast){setTimeout(()=>showToast(customToast),80);}
 }
 
+function openCurrencyModal(){
+  const c=USER?.currency||'£';
+  ['gbp','usd','eur','inr','aed'].forEach(id=>{
+    const tick=document.getElementById('cur-'+id+'-tick');
+    if(tick)tick.style.opacity='0';
+  });
+  const map={'£':'gbp','$':'usd','€':'eur','₹':'inr','د.إ':'aed'};
+  const activeId='cur-'+(map[c]||'gbp')+'-tick';
+  const el=document.getElementById(activeId);
+  if(el)el.style.opacity='1';
+  openModal('currency');
+}
+
+function saveCurrency(symbol){
+  if(!USER)return;
+  USER.currency=symbol;
+  const names={'£':'£ British Pound','$':'$ US Dollar','€':'€ Euro','₹':'₹ Indian Rupee','د.إ':'د.إ UAE Dirham'};
+  const setCur=document.getElementById('set-currency');
+  if(setCur)setCur.textContent=names[symbol]||symbol;
+  saveUser('Currency updated ✓');
+  closeModal('currency');
+  // Refresh ticks
+  openCurrencyModal();
+  closeModal('currency');
+}
 function openModal(id){document.getElementById('modal-'+id).classList.add('open');}
 function closeModal(id){document.getElementById('modal-'+id).classList.remove('open');}
 
