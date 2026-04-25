@@ -1730,6 +1730,12 @@ function saveNewGoal(){
 // ── SPENDING ──
 function openSpendingModal(){
   if(!USER)return;
+  const C=cur();
+  ['rent','food','subs','travel','other'].forEach(k=>{
+    const lbl=document.getElementById('sp-'+k+'-lbl');
+    const names={rent:'Rent / bills',food:'Food & drink',subs:'Subscriptions',travel:'Travel',other:'Other expenses'};
+    if(lbl)lbl.textContent=names[k]+' ('+C+')';
+  });
   document.getElementById('sp-rent').value=USER.spending?.rent||'';
   document.getElementById('sp-food').value=USER.spending?.food||'';
   document.getElementById('sp-subs').value=USER.spending?.subs||'';
