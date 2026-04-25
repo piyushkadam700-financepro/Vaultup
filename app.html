@@ -1215,7 +1215,7 @@ function validateStep3b(){
   let allocated=0,allFilled=true;
   for(let i=0;i<selectedGoals.length;i++){const mEl=document.getElementById('monthly-'+i);const monthly=mEl?parseInt(mEl.value)||0:0;allocated+=monthly;if(monthly<=0)allFilled=false;}
   if(!allFilled){showToast('Fill in monthly amount and total target for each goal');return;}
-  if(allocated!==target){const diff=target-allocated;showToast(diff>0?'Still £'+diff+' to allocate':'Over budget by £'+Math.abs(diff));return;}
+  if(allocated!==target){const diff=target-allocated;showToast(diff>0?'Still '+selectedCurrency+diff+' to allocate':'Over budget by '+selectedCurrency+Math.abs(diff));return;}
   goStep(4);
 }
 function showObError(id,msg){const el=document.getElementById(id);if(el){el.style.borderColor='var(--red)';setTimeout(()=>{el.style.borderColor=''},2000);}showToast(msg);}
