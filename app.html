@@ -1417,7 +1417,7 @@ document.getElementById('spend-other').textContent=fmt(USER.spending?.other||0);
   (USER.goals||[]).slice(0,3).forEach(g=>{
     const pct=g.target>0?Math.min(100,Math.round((g.saved/g.target)*100)):0;
     const left=g.target-g.saved;
-    goalsEl.innerHTML+=`<div class="goal-card" onclick="navigate('goals')"><div class="goal-em">${g.emoji}</div><div class="goal-info"><div class="goal-name">${g.name}</div><div class="goal-bar-bg"><div class="goal-bar-fill" style="width:${pct}%;background:var(--y)"></div></div><div class="goal-meta"><span class="goal-pct">${pct}% done</span><span class="goal-left">£${left} to go</span></div></div><div class="goal-rv">${pct}%</div></div>`;
+    goalsEl.innerHTML+=`<div class="goal-card" onclick="navigate('goals')"><div class="goal-em">${g.emoji}</div><div class="goal-info"><div class="goal-name">${g.name}</div><div class="goal-bar-bg"><div class="goal-bar-fill" style="width:${pct}%;background:var(--y)"></div></div><div class="goal-meta"><span class="goal-pct">${pct}% done</span><span class="goal-left">${fmt(left)} to go</span></div></div><div class="goal-rv">${pct}%</div></div>`;
   });
   (USER.groups||[]).forEach(g=>{
     const pct=g.amount>0?Math.min(100,Math.round((g.saved/g.amount)*100)):0;
