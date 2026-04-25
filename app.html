@@ -1443,7 +1443,7 @@ document.getElementById('spend-other').textContent=fmt(USER.spending?.other||0);
     if(snGroup)snGroup.textContent=fmt(myGroupSavingsStats);
     document.getElementById('sn-unaccounted').textContent=(unaccountedFixed>=0?cur():'−'+cur())+Math.abs(unaccountedFixed).toLocaleString();
     document.getElementById('sn-unaccounted').style.color=unaccountedFixed>=0?'var(--green)':'var(--red)';
-    document.getElementById('sn-unaccounted-label').textContent=unaccountedFixed>=0?'potential extra savings not yet allocated':`£${Math.abs(unaccountedFixed).toLocaleString()} more allocated than your monthly income — check your figures`;
+    document.getElementById('sn-unaccounted-label').textContent=unaccountedFixed>=0?'potential extra savings not yet allocated':`${cur()}${Math.abs(unaccountedFixed).toLocaleString()} more allocated than your monthly income — check your figures`;
   }
   // Goal timelines
   const timelines=document.getElementById('sn-goal-timelines');
