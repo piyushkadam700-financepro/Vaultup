@@ -2011,6 +2011,12 @@ function openModal(id){
     const lbl=document.getElementById('create-group-amount-label');
     if(lbl)lbl.textContent='Total amount needed ('+cur()+')';
   }
+  if(id==='addGoal'){
+    const lbl=document.getElementById('addGoal-amount-lbl');
+    if(lbl)lbl.textContent='Target amount ('+cur()+')';
+    const sym=document.getElementById('addGoal-currency-sym');
+    if(sym)sym.textContent=cur();
+  }
 }
 function closeModal(id){document.getElementById('modal-'+id).classList.remove('open');}
 
