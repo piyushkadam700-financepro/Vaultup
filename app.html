@@ -1240,7 +1240,7 @@ function selectCurrency(btn,symbol){
 }
 function buildSplitStep(){
   const target=parseInt(document.getElementById('ob-target').value)||0;
-  document.getElementById('split-target-display').textContent='£'+target;
+  document.getElementById('split-target-display').textContent=selectedCurrency+target;
   const list=document.getElementById('goal-split-list');
   list.innerHTML=selectedGoals.map((g,i)=>{
     const emoji=g.split(' ')[0];const name=g.split(' ').slice(1).join(' ')||g;const isPrimary=i===0;
