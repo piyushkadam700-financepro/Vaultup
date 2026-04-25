@@ -1390,11 +1390,11 @@ function renderAll(){
   document.getElementById('home-xp').textContent=(USER.xp||50).toLocaleString();
   const level=getLevel(USER.xp||50);
   document.getElementById('home-level').textContent=level.name;
-  document.getElementById('spend-rent').textContent='£'+(USER.spending?.rent||0);
-  document.getElementById('spend-food').textContent='£'+(USER.spending?.food||0);
-  document.getElementById('spend-subs').textContent='£'+(USER.spending?.subs||0);
-  document.getElementById('spend-travel').textContent='£'+(USER.spending?.travel||0);
-  document.getElementById('spend-other').textContent='£'+(USER.spending?.other||0);
+  document.getElementById('spend-rent').textContent=fmt(USER.spending?.rent||0);
+document.getElementById('spend-food').textContent=fmt(USER.spending?.food||0);
+document.getElementById('spend-subs').textContent=fmt(USER.spending?.subs||0);
+document.getElementById('spend-travel').textContent=fmt(USER.spending?.travel||0);
+document.getElementById('spend-other').textContent=fmt(USER.spending?.other||0);
   // Smart nudge — over-allocated vs biggest leak
   const sp3=USER.spending||{};
   const totalSpendCheck=(sp3.rent||0)+(sp3.food||0)+(sp3.subs||0)+(sp3.travel||0)+(sp3.other||0);
