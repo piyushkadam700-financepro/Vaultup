@@ -1254,7 +1254,7 @@ function finishOnboarding(){
       saved:0,savedThisMonth:0,date:'',isPrimary:i===0
     })),
     biggestLeak:selectedLeak||'general spending',savedThisMonth:0,streak:1,xp:50,
-    joinedAt:new Date().toISOString(),lastActiveDate:new Date().toDateString(),
+    joinedAt:new Date().toISOString(),lastActiveDate:getTodayISO(),
     lastResetMonth:new Date().toISOString().slice(0,7),
     spending:{rent:0,food:0,subs:0,travel:0,other:0},groups:[]
   };
