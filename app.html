@@ -933,29 +933,93 @@ async function checkDailyStreak(){
   const saved=localStorage.getItem(STORAGE_KEY);
   if(!saved)return;
   const u=JSON.parse(saved);
-  if(!u.lastActiveDate){u.lastActiveDate=new Date().toDateString();localStorage.setItem(STORAGE_KEY,JSON.stringify(u));return;}
-  const today=new Date().toDateString();
-  const last=new Date(u.lastActiveDate);
-  const diff=Math.floor((new Date()-last)/(1000*60*60*24));
+  const today=getTodayISO();
+  const currentMonth=getMonthKey(today);
+
+  // First ever open
+  if(!u.lastActiveDate){
+    u.lastActiveDate=today;
+    u.lastResetMonth=currentMonth;
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(u));
+    return;
+  }
+
+  // Migrate old toDateString() format to ISO if needed
+  if(u.lastActiveDate.length>10){
+    u.lastActiveDate=today;
+  }
+
+  // Already counted today
   if(u.lastActiveDate===today)return;
+
+  // Streak logic
+  const diff=daysBetween(u.lastActiveDate,today);
   if(diff===1){u.streak=(u.streak||1)+1;}
   else if(diff>1){u.streak=1;}
+
+  // Update lastActiveDate first before anything else
   u.lastActiveDate=today;
+
   // Monthly reset check
-  const currentMonth=new Date().toISOString().slice(0,7);
-  if(u.lastResetMonth&&u.lastResetMonth!==currentMonth){
-    // 1. Snapshot previous month to history before resetting
-    await snapshotMonthToHistory(u,u.lastResetMonth);
-    // 2. Reset savedThisMonth on all goals
-    (u.goals||[]).forEach(g=>{g.savedThisMonth=0;});
-    // 3. Reset spending to zero
-    if(u.spending){
-      u.spending.rent=0;u.spending.food=0;u.spending.subs=0;u.spending.travel=0;u.spending.other=0;
+  const lastResetMonth=u.lastResetMonth||currentMonth;
+  if(lastResetMonth!==currentMonth){
+    // Save lastResetMonth BEFORE snapshot in case of crash
+    u.lastResetMonth=currentMonth;
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(u));
+
+    // Snapshot previous month
+    await snapshotMonthToHistory(u,lastResetMonth);
+
+    // Reset only monthly fields — never touch target, monthlyAmount, saved (all time)
+    (u.goals||[]).forEach(g=>{
+      g.savedThisMonth=0;
+      // g.saved        — NEVER reset (all time total)
+      // g.target       — NEVER reset (user set this)
+      // g.monthlyAmount — NEVER reset (user set this)
+    });
+
+    // Reset spending to zero
+    if(!u.spending)u.spending={};
+    u.spending.rent=0;
+    u.spending.food=0;
+    u.spending.subs=0;
+    u.spending.travel=0;
+    u.spending.other=0;
+
+    // Update USER in memory so UI renders correct data immediately
+    if(USER){
+      USER.streak=u.streak;
+      USER.lastActiveDate=u.lastActiveDate;
+      USER.lastResetMonth=u.lastResetMonth;
+      (USER.goals||[]).forEach(g=>{g.savedThisMonth=0;});
+      if(!USER.spending)USER.spending={};
+      USER.spending.rent=0;USER.spending.food=0;
+      USER.spending.subs=0;USER.spending.travel=0;USER.spending.other=0;
     }
-    showToast('New month! Last month saved to your history 📅');
+
+    showToast('New month — last month saved to your history 📅');
+  } else {
+    u.lastResetMonth=currentMonth;
   }
-  u.lastResetMonth=currentMonth;
+
+  // Save everything
   localStorage.setItem(STORAGE_KEY,JSON.stringify(u));
+
+  // Update USER in memory
+  if(USER){
+    USER.streak=u.streak;
+    USER.lastActiveDate=u.lastActiveDate;
+    USER.lastResetMonth=u.lastResetMonth;
+  }
+
+  // Sync streak to Supabase
+  if((u.supabaseUser||USER?.supabaseUser)&&(u.userId||USER?.userId)){
+    const uid=u.userId||USER.userId;
+    _supabase.from('users').update({
+      streak:u.streak,
+      last_active_date:u.lastActiveDate
+    }).eq('id',uid).then(()=>{}).catch(()=>{});
+  }
 }
 
 async function snapshotMonthToHistory(u,monthKey){
