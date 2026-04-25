@@ -765,15 +765,15 @@ textarea:focus{border-color:var(--yd);}
       <div class="modal-handle"></div>
       <div class="modal-title">Update spending</div>
       <div class="modal-sub">This month so far</div>
-      <div class="modal-label">Rent / bills (£)</div>
+     <div class="modal-label" id="sp-rent-lbl">Rent / bills (£)</div>
       <input class="modal-input" id="sp-rent" type="number" placeholder="0"/>
-      <div class="modal-label">Food & drink (£)</div>
+      <div class="modal-label" id="sp-food-lbl">Food & drink (£)</div>
       <input class="modal-input" id="sp-food" type="number" placeholder="0"/>
-      <div class="modal-label">Subscriptions (£)</div>
+      <div class="modal-label" id="sp-subs-lbl">Subscriptions (£)</div>
       <input class="modal-input" id="sp-subs" type="number" placeholder="0"/>
-      <div class="modal-label">Travel (£)</div>
+      <div class="modal-label" id="sp-travel-lbl">Travel (£)</div>
       <input class="modal-input" id="sp-travel" type="number" placeholder="0"/>
-      <div class="modal-label">Other expenses (£)</div>
+      <div class="modal-label" id="sp-other-lbl">Other expenses (£)</div>
       <input class="modal-input" id="sp-other" type="number" placeholder="0"/>
       <button class="modal-btn" onclick="saveSpending()">Save →</button>
       <button class="modal-btn secondary" onclick="closeModal('spending')">Cancel</button>
