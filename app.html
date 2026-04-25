@@ -1206,7 +1206,20 @@ function toggleGoal(btn,label){
   else{if(selectedGoals.length>=3){showToast('Max 3 goals for now!');return;}btn.classList.add('selected');selectedGoals.push(label);}
 }
 function toggleLeak(btn,label){document.querySelectorAll('#leak-chips .goal-chip').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');selectedLeak=label;}
-
+let selectedCurrency='£';
+function selectCurrency(btn,symbol){
+  document.querySelectorAll('#currency-picker .goal-chip').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedCurrency=symbol;
+  // Update the prefix symbols live
+  const s1=document.getElementById('ob-currency-sym');
+  const s2=document.getElementById('ob-currency-sym2');
+  if(s1)s1.textContent=symbol;
+  if(s2)s2.textContent=symbol;
+  // Update split step display too
+  const st=document.getElementById('split-target-display');
+  if(st)st.textContent=symbol+(parseInt(document.getElementById('ob-target')?.value)||0);
+}
 function buildSplitStep(){
   const target=parseInt(document.getElementById('ob-target').value)||0;
   document.getElementById('split-target-display').textContent='£'+target;
