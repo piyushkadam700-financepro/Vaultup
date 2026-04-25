@@ -1122,7 +1122,7 @@ function loadDemo(){
   USER={name:'Alex',income:2100,savingsTarget:900,userId:'demo-user',isDemo:true,
     goals:[{emoji:'🏖️',name:'Holiday',target:1200,monthlyAmount:200,saved:410,savedThisMonth:200,date:'2026-08-01',isPrimary:true},{emoji:'💰',name:'Student loan',target:5000,monthlyAmount:700,saved:1400,savedThisMonth:700,date:'2027-01-01',isPrimary:false}],
     biggestLeak:'Online shopping',savedThisMonth:0,streak:9,xp:380,
-    joinedAt:new Date(Date.now()-30*24*60*60*1000).toISOString(),lastActiveDate:new Date().toDateString(),
+    joinedAt:new Date(Date.now()-30*24*60*60*1000).toISOString(),lastActiveDate:getTodayISO(),
     spending:{rent:850,food:180,subs:45,travel:95,other:100},
     groups:[{name:'Ibiza Squad',goal:'Ibiza 2026 flights + hotel',amount:2400,date:'2026-06-01',members:[{name:'Alex',saved:320},{name:'Racheet',saved:280},{name:'Priya',saved:200}],saved:800,code:'IBZ26A'}]
   };
