@@ -1953,11 +1953,12 @@ function saveUser(customToast){
     localStorage.setItem(STORAGE_KEY,JSON.stringify(USER));
     if(USER?.supabaseUser&&USER?.userId){
       _supabase.from('users').update({
-        name:USER.name,income:USER.income,savings_target:USER.savingsTarget,biggest_leak:USER.biggestLeak,
-        streak:USER.streak,xp:USER.xp,last_active_date:USER.lastActiveDate,
-        spending_rent:USER.spending?.rent||0,spending_food:USER.spending?.food||0,
-        spending_subs:USER.spending?.subs||0,spending_travel:USER.spending?.travel||0,spending_other:USER.spending?.other||0
-      }).eq('id',USER.userId).then(()=>{});
+  name:USER.name,income:USER.income,savings_target:USER.savingsTarget,biggest_leak:USER.biggestLeak,
+  streak:USER.streak,xp:USER.xp,last_active_date:USER.lastActiveDate,
+  spending_rent:USER.spending?.rent||0,spending_food:USER.spending?.food||0,
+  spending_subs:USER.spending?.subs||0,spending_travel:USER.spending?.travel||0,spending_other:USER.spending?.other||0,
+  currency:USER.currency||'£'
+}).eq('id',USER.userId).then(()=>{});
       _supabase.from('goals').delete().eq('user_id',USER.userId).then(()=>{
         (USER.goals||[]).forEach(g=>{
           _supabase.from('goals').insert({user_id:USER.userId,emoji:g.emoji,name:g.name,target:g.target,saved:g.saved,saved_this_month:g.savedThisMonth||0,monthly_amount:g.monthlyAmount,date:g.date||null,is_primary:g.isPrimary||false}).then(()=>{});
