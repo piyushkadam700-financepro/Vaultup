@@ -1632,7 +1632,7 @@ function buildSystemPrompt(){
     const mc=g.members?g.members.length:1;
     let eta='no deadline';
     if(g.date){const daysLeft=Math.ceil((new Date(g.date)-new Date())/(1000*60*60*24));eta=daysLeft<=0?'deadline passed':Math.ceil(daysLeft/30)+' months until deadline';}
-    return `  - ${g.name}: group target £${g.amount}, total saved £${g.saved} (${pct}%), my pot £${myContrib}, ${mc} member${mc!==1?'s':''}, goal: ${g.goal}, ${eta}`;
+    return `  - ${g.name}: group target ${cur()}${g.amount}, total saved ${cur()}${g.saved} (${pct}%), my pot ${cur()}${myContrib}, ${mc} member${mc!==1?'s':''}, goal: ${g.goal}, ${eta}`;
   }).join('\n');
   return `You are Val, the AI money coach inside Vaultup — a personal finance app for young adults (16-28) in the UK. Be a sharp, friendly mate who knows money — direct, casual, zero jargon, zero waffle.\n\n${USER.name}'s full financial picture:\n- Currency: ${cur()} (${CURRENCIES[cur()]?.code||'GBP'})
 - Monthly take-home: ${cur()}${USER.income}
