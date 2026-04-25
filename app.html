@@ -809,6 +809,22 @@ textarea:focus{border-color:var(--yd);}
     </div>
   </div>
 
+  <!-- CURRENCY MODAL -->
+  <div class="modal-overlay" id="modal-currency" onclick="closeModal('currency')">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="modal-handle"></div>
+      <div class="modal-title">Currency</div>
+      <div class="modal-sub">Choose your currency — updates everywhere in the app</div>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px">
+        <div onclick="saveCurrency('£')" class="setting-row" id="cur-gbp"><div class="setting-left"><div class="setting-icon">🇬🇧</div><div><div class="setting-title">£ British Pound (GBP)</div></div></div><div id="cur-gbp-tick" style="color:var(--y);font-size:18px">✓</div></div>
+        <div onclick="saveCurrency('$')" class="setting-row" id="cur-usd"><div class="setting-left"><div class="setting-icon">🇺🇸</div><div><div class="setting-title">$ US Dollar (USD)</div></div></div><div id="cur-usd-tick" style="color:var(--y);font-size:18px;opacity:0">✓</div></div>
+        <div onclick="saveCurrency('€')" class="setting-row" id="cur-eur"><div class="setting-left"><div class="setting-icon">🇪🇺</div><div><div class="setting-title">€ Euro (EUR)</div></div></div><div id="cur-eur-tick" style="color:var(--y);font-size:18px;opacity:0">✓</div></div>
+        <div onclick="saveCurrency('₹')" class="setting-row" id="cur-inr"><div class="setting-left"><div class="setting-icon">🇮🇳</div><div><div class="setting-title">₹ Indian Rupee (INR)</div></div></div><div id="cur-inr-tick" style="color:var(--y);font-size:18px;opacity:0">✓</div></div>
+        <div onclick="saveCurrency('د.إ')" class="setting-row" id="cur-aed"><div class="setting-left"><div class="setting-icon">🇦🇪</div><div><div class="setting-title">د.إ UAE Dirham (AED)</div></div></div><div id="cur-aed-tick" style="color:var(--y);font-size:18px;opacity:0">✓</div></div>
+      </div>
+      <button class="modal-btn secondary" onclick="closeModal('currency')">Done</button>
+    </div>
+  </div>
   <!-- HISTORY MODAL -->
   <div class="modal-overlay" id="modal-history" onclick="closeModal('history')">
     <div class="modal" onclick="event.stopPropagation()" style="max-height:90vh;">
