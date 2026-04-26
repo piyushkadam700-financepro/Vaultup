@@ -887,6 +887,7 @@ async function doLogin(){
     };
     localStorage.setItem(STORAGE_KEY,JSON.stringify(USER));
     showLoginScreen(false);
+    await checkDailyStreak();
     launchApp();
     const pendingCode=localStorage.getItem('pendingJoin');
     if(pendingCode){
