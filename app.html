@@ -1051,8 +1051,8 @@ async function checkDailyStreak(){
   }
 
   // Sync streak to Supabase
-  if((u.supabaseUser||USER?.supabaseUser)&&(u.userId||USER?.userId)){
-    const uid=u.userId||USER.userId;
+  if(u.supabaseUser&&u.userId){
+    const uid=u.userId;
     _supabase.from('users').update({
       streak:u.streak,
       last_active_date:u.lastActiveDate
