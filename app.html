@@ -1953,13 +1953,6 @@ async function leaveGroup(groupIdx){
     const newTotal=remaining.reduce((s,m)=>s+m.saved,0);
     await _supabase.from('groups').update({saved:newTotal}).eq('id',g.supabaseId);
   }
-  // Add balance to primary goal
-  if(bal>0&&USER.goals&&USER.goals.length>0){
-    const primaryIdx=USER.goals.findIndex(g=>g.isPrimary)||0;
-    const idx=primaryIdx>=0?primaryIdx:0;
-    USER.goals[idx].saved=(USER.goals[idx].saved||0)+bal;
-    USER.goals[idx].savedThisMonth=(USER.goals[idx].savedThisMonth||0)+bal;
-  }
  USER.groups.splice(groupIdx,1);
   saveUser();renderGroups();renderAll();
   if(bal>0){
@@ -1969,7 +1962,6 @@ async function leaveGroup(groupIdx){
     showToast(`Left ${g.name} 👋`);
   }
 }
-
 async function loadUserGroups(){
   if(!USER.supabaseUser||!USER.userId)return;
   const{data:adminGroups}=await _supabase.from('groups').select('*').eq('admin_id',USER.userId);
