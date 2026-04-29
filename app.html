@@ -1960,9 +1960,14 @@ async function leaveGroup(groupIdx){
     USER.goals[idx].saved=(USER.goals[idx].saved||0)+bal;
     USER.goals[idx].savedThisMonth=(USER.goals[idx].savedThisMonth||0)+bal;
   }
-  USER.groups.splice(groupIdx,1);
+ USER.groups.splice(groupIdx,1);
   saveUser();renderGroups();renderAll();
-  showToast(`Left ${g.name} · ${fmt(bal)} added to your ${USER.goals?.[0]?.name||'primary goal'} 🎯`);
+  if(bal>0){
+    goToChat(`I just left ${g.name} and have ${fmt(bal)} freed up from my pot. Which of my goals should I add it to?`);
+  } else {
+    navigate('groups');
+    showToast(`Left ${g.name} 👋`);
+  }
 }
 
 async function loadUserGroups(){
