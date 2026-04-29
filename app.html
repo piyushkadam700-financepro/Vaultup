@@ -1933,7 +1933,7 @@ async function removeMember(groupIdx,memberName){
     const{data:remaining}=await _supabase.from('group_members').select('saved').eq('group_id',g.supabaseId);
     const newTotal=(remaining||[]).reduce((s,m)=>s+(m.saved||0),0);
     await _supabase.from('groups').update({saved:newTotal}).eq('id',g.supabaseId);
-if(member.userId){await _supabase.from('notifications').insert({user_id:member.userId,message:`You were removed from "${g.name}"<br>£${bal} added to your primary goal 💰`});}
+if(member.userId){await _supabase.from('notifications').insert({user_id:member.userId,message:`Removed from "${g.name}" · ${fmt(bal)} added to your savings 💰`});}
     await loadUserGroups();
   } else {
     g.members=g.members.filter(m=>m.name!==memberName);g.saved=g.members.reduce((s,m)=>s+m.saved,0);
