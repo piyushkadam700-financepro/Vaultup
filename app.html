@@ -1900,8 +1900,28 @@ async function saveLogPayment(){
 
 function shareGroup(i){const g=USER.groups[i];document.getElementById('invite-link-txt').textContent=`https://vaultup.vercel.app?join=${g.code}`;openModal('invite');}
 function copyInviteLink(){const txt=document.getElementById('invite-link-txt').textContent;navigator.clipboard.writeText(txt).then(()=>showToast('Link copied! 🔗')).catch(()=>showToast('Copy: '+txt));}
-function deleteGroup(i){if(!confirm('Delete this group?'))return;USER.groups.splice(i,1);saveUser();renderGroups();showToast('Group deleted');}
-
+async function deleteGroup(i){
+  if(!confirm('Delete this group? All member pot balances will be returned to their accounts.'))return;
+  const g=USER.groups[i];
+  if(USER.supabaseUser&&g.supabaseId){
+    // Notify each member their balance is returned
+    const members=(g.members||[]).filter(m=>m.userId&&m.userId!==USER.userId);
+    for(const m of members){
+      const bal=m.saved||0;
+      if(bal>0){
+        await _supabase.from('notifications').insert({
+          user_id:m.userId,
+          message:`You were removed from "${g.name}" · £${bal} returned to your savings 💰`
+        });
+      }
+    }
+    // Delete members then the group itself
+    await _supabase.from('group_members').delete().eq('group_id',g.supabaseId);
+    await _supabase.from('groups').delete().eq('id',g.supabaseId);
+  }
+  USER.groups.splice(i,1);
+  saveUser();renderGroups();showToast('Group deleted — member balances returned');
+}
 async function removeMember(groupIdx,memberName){
   const g=USER.groups[groupIdx];const member=g.members.find(m=>m.name===memberName);if(!member)return;
   const bal=member.saved||0;
