@@ -1915,7 +1915,7 @@ async function deleteGroup(i){
       if(bal>0){
         await _supabase.from('notifications').insert({
           user_id:m.userId,
-          message:`You were removed from "${g.name}" · £${bal} returned to your savings 💰`
+          message:`Group "${g.name}" was deleted · £${bal} freed up 💰`
         });
       }
     }
