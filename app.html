@@ -1946,7 +1946,7 @@ async function leaveGroup(groupIdx){
   const g=USER.groups[groupIdx];
   const myPot=g.members?g.members.find(m=>m.userId===USER.userId||m.name===USER.name):null;
   const bal=myPot?myPot.saved:0;
-  if(!confirm(`Leave ${g.name}? Your £${bal} pot balance will be added to your primary goal.`))return;
+  if(!confirm(`Leave ${g.name}? Val will help you allocate your ${fmt(bal)} pot balance.`))return;
   if(USER.supabaseUser&&g.supabaseId){
     await _supabase.from('group_members').delete().eq('group_id',g.supabaseId).eq('user_id',USER.userId);
     const remaining=g.members.filter(m=>m.userId!==USER.userId&&m.name!==USER.name);
