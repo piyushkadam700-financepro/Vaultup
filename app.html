@@ -1353,8 +1353,9 @@ async function checkNotifications(){
   if(!USER.supabaseUser||!USER.userId)return;
   const{data:notifs}=await _supabase.from('notifications').select('*').eq('user_id',USER.userId).eq('read',false).order('created_at',{ascending:false});
   if(!notifs||notifs.length===0)return;
-  notifs.forEach((n,idx)=>{
+ notifs.forEach((n,idx)=>{
     setTimeout(()=>{
+      document.getElementById('nudge-txt').innerHTML=n.message.replace(' · ','<br>');
       document.getElementById('home-nudge').onclick=()=>{
   const balMatch=n.message.match(/£([\d,]+)/);
   const bal=balMatch?balMatch[0]:'some money';
