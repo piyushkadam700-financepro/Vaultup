@@ -1356,7 +1356,11 @@ async function checkNotifications(){
   notifs.forEach((n,idx)=>{
     setTimeout(()=>{
       document.getElementById('nudge-txt').innerHTML=n.message.replace(' · ', '<br>');
-      document.getElementById('home-nudge').onclick=()=>{navigate('chat');sendQuick('I was removed from a savings group. What should I do with the returned balance?');};
+      document.getElementById('home-nudge').onclick=()=>{
+        const balMatch=n.message.match(/£([\d,]+)/);
+        const bal=balMatch?balMatch[0]:'some money';
+        goToChat(`I was removed from a savings group and have ${bal} freed up. Which of my goals should I add it to?`);
+      };
     },idx*500);
   });
   showToast(notifs[0].message.slice(0,60)+'...');
