@@ -1021,6 +1021,25 @@ async function migrateUserIfNeeded(){
     await _supabase.from('goals').update({saved_this_month:0}).eq('id',g.id);
   }
 }
+
+function nudgeMonthlyRefresh(){
+  const now=new Date();
+  const dayOfMonth=now.getDate();
+  if(dayOfMonth>7)return; // only show in first week
+
+  const currentMonth=now.toISOString().slice(0,7);
+  const key='vaultup_nudge_'+currentMonth;
+  if(localStorage.getItem(key))return;
+  localStorage.setItem(key,'1');
+
+  const prevDate=new Date(now.getFullYear(),now.getMonth()-1,1);
+  const prevMonthName=prevDate.toLocaleString('default',{month:'long'});
+
+  setTimeout(()=>{
+    document.getElementById('nudge-txt').innerHTML=`Your <b>${prevMonthName} snapshot is ready</b> — see how you did last month 📅`;
+    document.getElementById('home-nudge').onclick=()=>openHistoryModal();
+  },1500);
+}
   
 // ── BOOT ──
 async function boot(){
