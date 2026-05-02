@@ -1069,7 +1069,12 @@ function nudgeMonthlyRefresh(){
     document.getElementById('home-nudge').onclick=()=>openHistoryModal();
   },1500);
 }
-  
+ // Clear stale auth session on load
+_supabase.auth.getSession().then(({data:{session},error})=>{
+  if(error||!session){
+    _supabase.auth.signOut().catch(()=>{});
+  }
+}); 
 // ── BOOT ──
 async function boot(){
   await migrateUserIfNeeded();
