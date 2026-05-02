@@ -921,7 +921,27 @@ async function doLogin(){
       await loadUserGroups();navigate('groups');showToast('You\'ve joined the group! 🎉');
     }
   } else {
-    errEl.textContent='Account not found — please sign up first';errEl.style.display='block';
+    const saved=localStorage.getItem(STORAGE_KEY);
+    const local=saved?JSON.parse(saved):null;
+    if(local&&local.name){
+      await _supabase.from('users').insert({
+        id:data.user.id,name:local.name,income:local.income||0,
+        savings_target:local.savingsTarget||0,biggest_leak:local.biggestLeak||'',
+        streak:1,xp:50,last_active_date:getTodayISO(),
+        spending_rent:0,spending_food:0,spending_subs:0,spending_travel:0,spending_other:0,
+        currency:local.currency||'£'
+      });
+      for(const g of local.goals||[]){
+        await _supabase.from('goals').insert({
+          user_id:data.user.id,emoji:g.emoji,name:g.name,target:g.target,
+          saved:0,monthly_amount:g.monthlyAmount,date:g.date||null,is_primary:g.isPrimary||false
+        });
+      }
+      doLogin();
+    } else {
+      errEl.textContent='Account not found — please sign up first';
+      errEl.style.display='block';
+    }
   }
 }
 
