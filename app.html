@@ -1007,10 +1007,10 @@ async function migrateUserIfNeeded(){
 // ── BOOT ──
 async function boot(){
   await migrateUserIfNeeded();
-  const saved=localStorage.getItem(STORAGE_KEY);
   updateSocialCount();
   await checkDailyStreak();
   const hasInvite=checkInviteLink();
+  const saved=localStorage.getItem(STORAGE_KEY);
   if(saved){
     USER=JSON.parse(saved);
     if(hasInvite){
