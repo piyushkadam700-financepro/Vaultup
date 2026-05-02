@@ -1416,6 +1416,7 @@ function finishOnboarding(){
   };
   localStorage.setItem(STORAGE_KEY,JSON.stringify(USER));
   fetch('/api/count',{method:'POST'}).catch(()=>{});
+  showToast('Check your email to confirm your account 📧');
   _supabase.auth.signUp({email,password}).then(async({data:authData,error})=>{
     if(authData?.user){
       await _supabase.from('users').insert({
