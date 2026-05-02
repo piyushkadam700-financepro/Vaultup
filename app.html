@@ -987,8 +987,16 @@ async function checkDailyStreak(){
     u.lastActiveDate=today;
   }
 
-  // Already counted today
-  if(u.lastActiveDate===today)return;
+ // Already counted today — but still check monthly reset
+  if(u.lastActiveDate===today){
+    const currentMonth=getMonthKey(today);
+    const lastResetMonth=u.lastResetMonth||currentMonth;
+    if(lastResetMonth!==currentMonth){
+      // Force monthly reset even if already counted today
+      await doMonthlyReset(u,lastResetMonth,currentMonth);
+    }
+    return;
+  }
 
   // Streak logic
   const diff=daysBetween(u.lastActiveDate,today);
