@@ -966,6 +966,28 @@ async function updateSocialCount(){
   try{const res=await fetch('/api/count');const data=await res.json();if(data.show&&data.count>=10){document.getElementById('socialCount').innerHTML=`<b>${data.count.toLocaleString()}</b> people saving smarter`;document.getElementById('socialWrap').style.display='flex';}}catch(e){}
 }
 
+  async function doMonthlyReset(u, lastResetMonth, currentMonth){
+  u.lastResetMonth=currentMonth;
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(u));
+
+  await snapshotMonthToHistory(u,lastResetMonth);
+
+  (u.goals||[]).forEach(g=>{g.savedThisMonth=0;});
+  if(!u.spending)u.spending={};
+  u.spending.rent=0;u.spending.food=0;
+  u.spending.subs=0;u.spending.travel=0;u.spending.other=0;
+
+  if(USER){
+    USER.lastResetMonth=currentMonth;
+    (USER.goals||[]).forEach(g=>{g.savedThisMonth=0;});
+    if(!USER.spending)USER.spending={};
+    USER.spending.rent=0;USER.spending.food=0;
+    USER.spending.subs=0;USER.spending.travel=0;USER.spending.other=0;
+  }
+
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(u));
+  showToast('New month — last month saved to your history 📅');
+}
 // ── MONTHLY RESET + HISTORY SNAPSHOT ──
 async function checkDailyStreak(){
   const saved=localStorage.getItem(STORAGE_KEY);
