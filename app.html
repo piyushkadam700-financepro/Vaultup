@@ -885,6 +885,24 @@ async function doLogin(){
      currency:profile.currency||'£',
      lastResetMonth:new Date().toISOString().slice(0,7)
     };
+    // ── POST-LOGIN MONTHLY RESET CHECK ──
+    const currentMonth=new Date().toISOString().slice(0,7);
+    const profileLastReset=profile.last_reset_month||'2026-04';
+    if(profileLastReset!==currentMonth){
+      USER.spending={rent:0,food:0,subs:0,travel:0,other:0};
+      USER.goals.forEach(g=>{g.savedThisMonth=0;});
+      USER.lastResetMonth=currentMonth;
+      await _supabase.from('users').update({
+        spending_rent:0,spending_food:0,spending_subs:0,
+        spending_travel:0,spending_other:0,
+        last_reset_month:currentMonth
+      }).eq('id',data.user.id);
+      const{data:dbGoals}=await _supabase.from('goals').select('id').eq('user_id',data.user.id);
+      for(const g of dbGoals||[]){
+        await _supabase.from('goals').update({saved_this_month:0}).eq('id',g.id);
+      }
+    }
+
     localStorage.setItem(STORAGE_KEY,JSON.stringify(USER));
     showLoginScreen(false);
     await checkDailyStreak();
