@@ -1028,48 +1028,17 @@ async function checkDailyStreak(){
   // Update lastActiveDate first before anything else
   u.lastActiveDate=today;
 
-  // Monthly reset check
+ // Monthly reset check
   const lastResetMonth=u.lastResetMonth||currentMonth;
   if(lastResetMonth!==currentMonth){
-    // Save lastResetMonth BEFORE snapshot in case of crash
-    u.lastResetMonth=currentMonth;
-    localStorage.setItem(STORAGE_KEY,JSON.stringify(u));
-
-    // Snapshot previous month
-    await snapshotMonthToHistory(u,lastResetMonth);
-
-    // Reset only monthly fields — never touch target, monthlyAmount, saved (all time)
-    (u.goals||[]).forEach(g=>{
-      g.savedThisMonth=0;
-      // g.saved        — NEVER reset (all time total)
-      // g.target       — NEVER reset (user set this)
-      // g.monthlyAmount — NEVER reset (user set this)
-    });
-
-    // Reset spending to zero
-    if(!u.spending)u.spending={};
-    u.spending.rent=0;
-    u.spending.food=0;
-    u.spending.subs=0;
-    u.spending.travel=0;
-    u.spending.other=0;
-
-    // Update USER in memory so UI renders correct data immediately
+    await doMonthlyReset(u,lastResetMonth,currentMonth);
     if(USER){
       USER.streak=u.streak;
       USER.lastActiveDate=u.lastActiveDate;
-      USER.lastResetMonth=u.lastResetMonth;
-      (USER.goals||[]).forEach(g=>{g.savedThisMonth=0;});
-      if(!USER.spending)USER.spending={};
-      USER.spending.rent=0;USER.spending.food=0;
-      USER.spending.subs=0;USER.spending.travel=0;USER.spending.other=0;
     }
-
-    showToast('New month — last month saved to your history 📅');
   } else {
     u.lastResetMonth=currentMonth;
   }
-
   // Save everything
   localStorage.setItem(STORAGE_KEY,JSON.stringify(u));
 
