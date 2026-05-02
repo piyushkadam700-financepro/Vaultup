@@ -972,7 +972,7 @@ async function migrateUserIfNeeded(){
   }));
   const unaccounted=(u.income||0)-totalSpend-totalSaved;
 
-  await _supabase.from('monthly_history').insert({
+ await _supabase.from('monthly_history').insert({
     user_id:u.userId,
     month:'April 2026',
     saved_total:totalSaved,
@@ -984,6 +984,24 @@ async function migrateUserIfNeeded(){
     unaccounted:unaccounted,
     goals_snapshot:goalsSnapshot
   });
+
+  // Snapshot written — now reset monthly fields in localStorage
+  u.spending.rent=0;u.spending.food=0;
+  u.spending.subs=0;u.spending.travel=0;u.spending.other=0;
+  (u.goals||[]).forEach(g=>{g.savedThisMonth=0;});
+  u.lastActiveDate=getTodayISO();
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(u));
+
+  // Reset in Supabase too
+  await _supabase.from('users').update({
+    spending_rent:0,spending_food:0,
+    spending_subs:0,spending_travel:0,spending_other:0
+  }).eq('id',u.userId);
+
+  const{data:dbGoals}=await _supabase.from('goals').select('id').eq('user_id',u.userId);
+  for(const g of dbGoals||[]){
+    await _supabase.from('goals').update({saved_this_month:0}).eq('id',g.id);
+  }
 }
   
 // ── BOOT ──
