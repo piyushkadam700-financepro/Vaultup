@@ -925,33 +925,7 @@ async function doLogin(){
     errEl.textContent='Account not found — please sign up first';errEl.style.display='block';
   }
 }
-
-async function resendConfirmation(){
-  const email=document.getElementById('login-email').value.trim();
-  if(!email){showToast('Enter your email address first');return;}
-  const btn=document.getElementById('resend-btn');
-  if(btn.disabled)return;
-  const{error}=await _supabase.auth.resend({type:'signup',email});
-  if(error){showToast('Could not resend — '+error.message);return;}
-  showToast('Confirmation email sent — check your inbox 📧');
-  btn.disabled=true;
-  btn.style.color='var(--dim)';
-  btn.style.textDecoration='none';
-  let seconds=60;
-  btn.textContent=`Resend again in ${seconds}s`;
-  const timer=setInterval(()=>{
-    seconds--;
-    btn.textContent=`Resend again in ${seconds}s`;
-    if(seconds<=0){
-      clearInterval(timer);
-      btn.disabled=false;
-      btn.style.color='var(--y)';
-      btn.style.textDecoration='underline';
-      btn.textContent='Resend confirmation email';
-    }
-  },1000);
-}
-
+  
 function showLoginScreen(show){
   
   function showLoginScreen(show){
