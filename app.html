@@ -1438,25 +1438,8 @@ function finishOnboarding(){
   };
   localStorage.setItem(STORAGE_KEY,JSON.stringify(USER));
   fetch('/api/count',{method:'POST'}).catch(()=>{});
-        id:authData.user.id,name:USER.name,income:USER.income,savings_target:USER.savingsTarget,
-        biggest_leak:USER.biggestLeak,streak:USER.streak,xp:USER.xp,last_active_date:USER.lastActiveDate,
-        spending_rent:0,spending_food:0,spending_subs:0,spending_travel:0,spending_other:0,
-        currency:USER.currency||'£'
-      });
-      for(const g of USER.goals){
-        await _supabase.from('goals').insert({user_id:authData.user.id,emoji:g.emoji,name:g.name,target:g.target,saved:g.saved,monthly_amount:g.monthlyAmount,date:g.date,is_primary:g.isPrimary});
-      }
-      USER.userId=authData.user.id;USER.supabaseUser=true;
-      localStorage.setItem(STORAGE_KEY,JSON.stringify(USER));
-      const pendingCode=localStorage.getItem('pendingJoin');
-      if(pendingCode){
-        localStorage.removeItem('pendingJoin');
-        const{data:groupData}=await _supabase.from('groups').select('*').eq('code',pendingCode).single();
-        if(groupData){await _supabase.from('group_members').upsert({group_id:groupData.id,user_id:authData.user.id,saved:0,user_name:USER.name},{onConflict:'group_id,user_id'});}
         USER.userId=authData.user.id;USER.supabaseUser=true;
-        localStorage.setItem(STORAGE_KEY,JSON.stringify(USER));
-        setTimeout(async()=>{await loadUserGroups();navigate('groups');showToast('You\'ve joined the group! 🎉');},1000);
-      }
+      localStorage.setItem(STORAGE_KEY,JSON.stringify(USER));
     }
   }).catch(()=>{});
   // Show email confirmation screen instead of launching app
