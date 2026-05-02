@@ -1438,7 +1438,9 @@ function finishOnboarding(){
   };
   localStorage.setItem(STORAGE_KEY,JSON.stringify(USER));
   fetch('/api/count',{method:'POST'}).catch(()=>{});
-        USER.userId=authData.user.id;USER.supabaseUser=true;
+  _supabase.auth.signUp({email,password}).then(async({data:authData,error})=>{
+    if(authData?.user){
+      USER.userId=authData.user.id;USER.supabaseUser=true;
       localStorage.setItem(STORAGE_KEY,JSON.stringify(USER));
     }
   }).catch(()=>{});
