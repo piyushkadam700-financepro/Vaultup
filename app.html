@@ -1438,9 +1438,6 @@ function finishOnboarding(){
   };
   localStorage.setItem(STORAGE_KEY,JSON.stringify(USER));
   fetch('/api/count',{method:'POST'}).catch(()=>{});
-  _supabase.auth.signUp({email,password}).then(async({data:authData,error})=>{
-    if(authData?.user){
-      await _supabase.from('users').insert({
         id:authData.user.id,name:USER.name,income:USER.income,savings_target:USER.savingsTarget,
         biggest_leak:USER.biggestLeak,streak:USER.streak,xp:USER.xp,last_active_date:USER.lastActiveDate,
         spending_rent:0,spending_food:0,spending_subs:0,spending_travel:0,spending_other:0,
