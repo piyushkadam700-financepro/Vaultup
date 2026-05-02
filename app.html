@@ -889,32 +889,7 @@ async function doLogin(){
      currency:profile.currency||'£',
      lastResetMonth:new Date().toISOString().slice(0,7)
     };
-    async function resendConfirmation(){
-  const email=document.getElementById('login-email').value.trim();
-  if(!email){showToast('Enter your email address first');return;}
-  const btn=document.getElementById('resend-btn');
-  if(btn.disabled)return;
-  const{error}=await _supabase.auth.resend({type:'signup',email});
-  if(error){showToast('Could not resend — '+error.message);return;}
-  showToast('Confirmation email sent — check your inbox 📧');
-  // Start 60 second countdown
-  btn.disabled=true;
-  btn.style.color='var(--dim)';
-  btn.style.textDecoration='none';
-  let seconds=60;
-  btn.textContent=`Resend again in ${seconds}s`;
-  const timer=setInterval(()=>{
-    seconds--;
-    btn.textContent=`Resend again in ${seconds}s`;
-    if(seconds<=0){
-      clearInterval(timer);
-      btn.disabled=false;
-      btn.style.color='var(--y)';
-      btn.style.textDecoration='underline';
-      btn.textContent='Resend confirmation email';
-    }
-  },1000);
-}
+    
     // ── POST-LOGIN MONTHLY RESET CHECK ──
     const currentMonth=new Date().toISOString().slice(0,7);
     const profileLastReset=profile.last_reset_month||'2026-04';
