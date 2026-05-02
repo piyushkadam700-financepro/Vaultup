@@ -936,6 +936,56 @@ function daysBetween(isoA,isoB){
 let USER=null,chatHistory=[],chatLoading=false,selectedGoals=[],selectedLeak=null,editingField=null,selectedGoalEmoji='🎯',lastSendTime=0,editingGoalIndex=-1;
 const STORAGE_KEY='vaultup_user_v2';
 
+async function migrateUserIfNeeded(){
+  const saved=localStorage.getItem(STORAGE_KEY);
+  if(!saved)return;
+  const u=JSON.parse(saved);
+  if(!u.supabaseUser||!u.userId)return;
+
+  // Fix old date format
+  if(u.lastActiveDate&&u.lastActiveDate.length>10){
+    u.lastActiveDate='2026-04-30';
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(u));
+  }
+
+  // Only rescue if there's actual April data worth saving
+  const sp=u.spending||{};
+  const totalSpend=(sp.rent||0)+(sp.food||0)+(sp.subs||0)+(sp.travel||0)+(sp.other||0);
+  const totalSaved=(u.goals||[]).reduce((s,g)=>s+(g.savedThisMonth||0),0);
+  const hasAprilData=totalSpend>0||totalSaved>0;
+  if(!hasAprilData)return;
+
+  // Check April snapshot doesn't already exist
+  const{data:existing}=await _supabase
+    .from('monthly_history')
+    .select('id')
+    .eq('user_id',u.userId)
+    .eq('month','April 2026')
+    .maybeSingle();
+  if(existing)return;
+
+  // Write April snapshot
+  const goalsSnapshot=(u.goals||[]).map(g=>({
+    name:g.name,emoji:g.emoji,
+    savedThisMonth:g.savedThisMonth||0,
+    saved:g.saved,target:g.target
+  }));
+  const unaccounted=(u.income||0)-totalSpend-totalSaved;
+
+  await _supabase.from('monthly_history').insert({
+    user_id:u.userId,
+    month:'April 2026',
+    saved_total:totalSaved,
+    spending_rent:sp.rent||0,
+    spending_food:sp.food||0,
+    spending_subs:sp.subs||0,
+    spending_travel:sp.travel||0,
+    spending_other:sp.other||0,
+    unaccounted:unaccounted,
+    goals_snapshot:goalsSnapshot
+  });
+}
+  
 // ── BOOT ──
 function boot(){
   const saved=localStorage.getItem(STORAGE_KEY);
