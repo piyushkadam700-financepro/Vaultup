@@ -987,10 +987,11 @@ async function migrateUserIfNeeded(){
 }
   
 // ── BOOT ──
-function boot(){
+async function boot(){
+  await migrateUserIfNeeded();
   const saved=localStorage.getItem(STORAGE_KEY);
   updateSocialCount();
-  checkDailyStreak();
+  await checkDailyStreak();
   const hasInvite=checkInviteLink();
   if(saved){
     USER=JSON.parse(saved);
