@@ -968,8 +968,8 @@ async function showForgotPassword(){
     return;
   }
   const{error}=await _supabase.auth.resetPasswordForEmail(email,{
-    redirectTo:'https://vaultup.co.uk/app.html'
-  });
+    redirectTo:'https://vaultup.vercel.app/app.html'
+});
   if(error){
     errEl.textContent='Could not send reset email — '+error.message;
     errEl.style.display='block';
