@@ -1016,6 +1016,8 @@ async function resendConfirmation(){
 
 function showLoginScreen(show){
   document.getElementById('login-screen').style.display=show?'flex':'none';
+  const resetMsg=document.getElementById('reset-sent-msg');
+  if(resetMsg)resetMsg.remove(); // ← add this line
   if(!show){document.getElementById('ob-screen').style.display='none';document.getElementById('ob-screen').classList.remove('active');}
 }
 
