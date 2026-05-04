@@ -295,6 +295,18 @@ textarea:focus{border-color:var(--yd);}
 </div>
 </div>
 
+<!-- RESET PASSWORD SCREEN -->
+<div id="reset-screen" style="display:none;flex-direction:column;height:100vh;height:100dvh;max-width:420px;margin:0 auto;background:var(--black);padding:28px;justify-content:center;">
+  <div style="font-family:'Bebas Neue',sans-serif;font-size:48px;letter-spacing:.06em;color:var(--y);margin-bottom:8px">Vaultup</div>
+  <div style="font-size:14px;color:var(--muted);margin-bottom:32px">Choose a new password for your account</div>
+  <div class="field-label">New password</div>
+  <input class="field-input" id="reset-password" type="password" placeholder="New password (6+ chars)" autocomplete="new-password"/>
+  <div class="field-label">Confirm password</div>
+  <input class="field-input" id="reset-password-confirm" type="password" placeholder="Confirm new password" autocomplete="new-password"/>
+  <div id="reset-error" style="font-size:13px;color:var(--red);margin-bottom:14px;display:none"></div>
+  <button onclick="doResetPassword()" style="width:100%;padding:15px;background:var(--y);border:none;border-radius:14px;color:var(--black);font-size:16px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;margin-bottom:12px">Set new password →</button>
+</div>
+  
 <!-- ONBOARDING -->
 <div class="ob-screen" id="ob-screen">
   <div class="ob-step" id="ob-step-0">
