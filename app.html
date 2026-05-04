@@ -2256,7 +2256,32 @@ function declineJoin(){
   pendingJoinCode=null;document.getElementById('join-screen').style.display='none';
   if(USER){launchApp();}else{document.getElementById('ob-screen').style.display='';document.getElementById('ob-screen').classList.add('active');goStep(0);}
 }
+async function doResetPassword(){
+  const password=document.getElementById('reset-password').value;
+  const confirm=document.getElementById('reset-password-confirm').value;
+  const errEl=document.getElementById('reset-error');
+  errEl.style.display='none';
+  if(password.length<6){errEl.textContent='Password must be at least 6 characters';errEl.style.display='block';return;}
+  if(password!==confirm){errEl.textContent='Passwords do not match';errEl.style.display='block';return;}
+  const btn=document.querySelector('#reset-screen button');
+  btn.textContent='Updating...';btn.disabled=true;
+  const{error}=await _supabase.auth.updateUser({password});
+  btn.textContent='Set new password →';btn.disabled=false;
+  if(error){errEl.textContent=error.message;errEl.style.display='block';return;}
+  document.getElementById('reset-screen').style.display='none';
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('login-screen').querySelector('div[style*="margin-bottom:36px"]').textContent='Password updated — sign in with your new password.';
+  showToast('Password updated successfully ✓');
+}
 
+function checkPasswordReset(){
+  const hash=window.location.hash;
+  if(hash&&hash.includes('type=recovery')){
+    document.getElementById('reset-screen').style.display='flex';
+    return true;
+  }
+  return false;
+}
 boot();
 </script>
 </body>
