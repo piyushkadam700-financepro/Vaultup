@@ -964,21 +964,38 @@ if(!emailRegex.test(email)){errEl.textContent='Please enter a valid email addres
 async function showForgotPassword(){
   const email=document.getElementById('login-email').value.trim();
   const errEl=document.getElementById('login-error');
+  errEl.style.display='none';
   if(!email){
     errEl.textContent='Enter your email address first, then tap Forgot password';
     errEl.style.display='block';
     return;
   }
+  const emailRegex=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if(!emailRegex.test(email)){
+    errEl.textContent='Please enter a valid email address first';
+    errEl.style.display='block';
+    return;
+  }
+  const btn=document.querySelector('button[onclick="showForgotPassword()"]');
+  btn.textContent='Sending...';
   const{error}=await _supabase.auth.resetPasswordForEmail(email,{
     redirectTo:'https://vaultup.vercel.app/app.html'
-});
+  });
+  btn.textContent='Forgot password?';
   if(error){
     errEl.textContent='Could not send reset email — '+error.message;
     errEl.style.display='block';
     return;
   }
   errEl.style.display='none';
-  showToast('Password reset email sent — check your inbox 📧');
+  // Show persistent confirmation below the button
+  const existing=document.getElementById('reset-sent-msg');
+  if(existing)existing.remove();
+  const msg=document.createElement('div');
+  msg.id='reset-sent-msg';
+  msg.style.cssText='text-align:center;margin-top:12px;padding:12px 16px;background:var(--ydim);border:0.5px solid var(--yd);border-radius:12px;font-size:13px;color:var(--y);line-height:1.6';
+  msg.innerHTML=`📧 Reset link sent to <b>${email}</b><br><span style="font-size:11px;color:var(--yd)">Check your inbox and spam folder — tap the link to reset</span>`;
+  document.querySelector('button[onclick="showForgotPassword()"]').parentElement.after(msg);
 }
 async function resendConfirmation(){
   const email=document.getElementById('login-email').value.trim();
