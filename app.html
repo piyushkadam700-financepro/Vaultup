@@ -1456,6 +1456,8 @@ function finishOnboarding(){
   const email=document.getElementById('ob-email').value.trim();
   const password=document.getElementById('ob-password').value;
   if(!email||!password){showToast('Enter your email and password to continue');return;}
+const emailRegex=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+if(!emailRegex.test(email)){showToast('Please enter a valid email address 📧');return;}
   if(password.length<6){showToast('Password must be at least 6 characters');return;}
   USER={
     name,income,savingsTarget:target,userId:crypto.randomUUID(),
