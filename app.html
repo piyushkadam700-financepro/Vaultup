@@ -1098,6 +1098,7 @@ async function migrateUserIfNeeded(){
   
 // ── BOOT ──
 async function boot(){
+  if(checkPasswordReset())return;
   await migrateUserIfNeeded();
   updateSocialCount();
   await checkDailyStreak();
